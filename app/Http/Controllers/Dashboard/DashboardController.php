@@ -14,6 +14,11 @@ class DashboardController extends Controller
         return match ($role) {
             'admin' => view('admin.dashboard'),
             'kasir' => view('kasir.dashboard'),
+            'kurir' => view('kurir.dashboard'),
+            'customer' => view('customer.dashboard'),
+            'admin' => view('purchasing.dashboard'),
+            'super-admin' => view('super-admin.dashboard'),
+
             default => view('dashboard.index'),
         };
     }
