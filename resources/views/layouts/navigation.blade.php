@@ -23,7 +23,6 @@
     </div>
 
     <div class="flex-1 px-4 overflow-y-auto">
-
         <p class="px-3 mb-2 text-[10px] font-bold uppercase tracking-[0.12em] text-white/45">Menu</p>
 
         <a href="{{ route('dashboard') }}"
@@ -40,9 +39,9 @@
                     <span class="text-xs transition-transform group-open:rotate-180">⌄</span>
                 </summary>
                 <div class="ml-8 mt-1 space-y-1">
-                    <a href="{{ route('sale.index') }}" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Penjualan</a>
-                    <a href="{{ route('purchase.index') }}" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Pembelian</a>
-                    <a href="{{ route('order.index') }}" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Pesanan</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Penjualan</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Pembelian</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Pesanan</a>
                 </div>
             </details>
 
@@ -52,10 +51,10 @@
                     <span class="text-xs transition-transform group-open:rotate-180">⌄</span>
                 </summary>
                 <div class="ml-8 mt-1 space-y-1">
-                    <a href="{{ route('products.index') }}" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Produk</a>
-                    <a href="{{ route('distributor.index') }}" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Distributor</a>
-                    <a href="{{ route('clients.index') }}" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Client</a>
-                    <a href="{{ route('couriers.index') }}" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Kurir</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Produk</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Distributor</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Client</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Kurir</a>
                 </div>
             </details>
 
@@ -77,7 +76,7 @@
                     <span class="text-xs transition-transform group-open:rotate-180">⌄</span>
                 </summary>
                 <div class="ml-8 mt-1 space-y-1">
-                    <a href="{{ route('users.index') }}" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Pengguna</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Pengguna</a>
                     <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Pengaturan Sistem</a>
                 </div>
             </details>
