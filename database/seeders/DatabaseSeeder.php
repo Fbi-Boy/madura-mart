@@ -3,23 +3,62 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $users = [
+            [
+                'name' => 'Super Admin',
+                'email' => 'superadmin@maduramart.test',
+                'role' => 'super_admin',
+            ],
+            [
+                'name' => 'Admin Madura Mart',
+                'email' => 'admin@maduramart.test',
+                'role' => 'admin',
+            ],
+            [
+                'name' => 'Staff Gudang',
+                'email' => 'gudang@maduramart.test',
+                'role' => 'gudang',
+            ],
+            [
+                'name' => 'Kasir Madura Mart',
+                'email' => 'kasir@maduramart.test',
+                'role' => 'kasir',
+            ],
+            [
+                'name' => 'Staff Purchasing',
+                'email' => 'purchasing@maduramart.test',
+                'role' => 'purchasing',
+            ],
+            [
+                'name' => 'Kurir Madura Mart',
+                'email' => 'kurir@maduramart.test',
+                'role' => 'kurir',
+            ],
+            [
+                'name' => 'Customer Madura Mart',
+                'email' => 'customer@maduramart.test',
+                'role' => 'customer',
+            ],
+        ];
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        foreach ($users as $user) {
+            User::updateOrCreate(
+                [
+                    'email' => $user['email'],
+                ],
+                [
+                    'name' => $user['name'],
+                    'role' => $user['role'],
+                    'password' => Hash::make('password'),
+                ]
+            );
+        }
     }
 }
