@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ config('app.name', 'Madura Mart') }}</title>
+    <title>{{ config('app.name', 'WAR-MART') }}</title>
 
     <script>
         if (localStorage.getItem('theme') === 'dark') {
@@ -16,67 +16,73 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-[#5B3FA6] text-gray-800 dark:bg-[#30205C] dark:text-gray-100 transition-colors duration-200">
+<body class="min-h-screen bg-[#C2A5F9] text-[#171719] dark:bg-[#241D32] dark:text-white transition-colors duration-200">
 
-    <div class="min-h-screen flex">
+    <div class="min-h-screen flex gap-4 p-4 sm:gap-5 sm:p-5 lg:gap-6 lg:p-6">
 
         {{-- SIDEBAR --}}
         @include('layouts.navigation')
 
-        {{-- MAIN WORKSPACE --}}
-        <div class="flex-1 min-w-0 bg-[#5B3FA6] dark:bg-[#30205C] p-4 sm:p-5 lg:p-6">
+        {{-- MAIN CONTENT CARD --}}
+        <div class="flex-1 min-w-0 min-h-[calc(100vh-2rem)] sm:min-h-[calc(100vh-2.5rem)] lg:min-h-[calc(100vh-3rem)]
+                    flex flex-col overflow-hidden rounded-[20px]
+                    bg-[#FCFCFB] dark:bg-[#111113]
+                    shadow-[0_10px_35px_rgba(55,35,100,0.12)]
+                    transition-colors duration-200">
 
-            {{-- PAGE CONTAINER --}}
-            <div class="min-h-[calc(100vh-2rem)] sm:min-h-[calc(100vh-2.5rem)] lg:min-h-[calc(100vh-3rem)]
-                        flex flex-col overflow-hidden rounded-[24px]
-                        bg-white dark:bg-gray-900 shadow-[0_10px_35px_rgba(30,20,70,0.12)]
-                        transition-colors duration-200">
+            {{-- TOPBAR --}}
+            <header class="h-16 shrink-0 flex items-center justify-between px-5 sm:px-6
+                           bg-[#FCFCFB] dark:bg-[#111113]
+                           border-b border-black/5 dark:border-white/5">
 
-                {{-- TOPBAR --}}
-                <header class="h-16 shrink-0 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800
-                               flex items-center justify-between px-5 sm:px-6 transition-colors duration-200">
+                <div>
+                    <h1 class="text-lg font-semibold text-[#171719] dark:text-white">
+                        WAR-MART
+                    </h1>
+                    <p class="hidden sm:block text-[11px] text-black/40 dark:text-white/40 mt-0.5">
+                        Management System
+                    </p>
+                </div>
 
-                    <div>
-                        <h1 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                            Madura Mart
-                        </h1>
-                        <p class="hidden sm:block text-[11px] text-gray-400 dark:text-gray-500 mt-0.5">
-                            Management System
+                <div class="flex items-center gap-3 sm:gap-4">
+
+                    <button id="themeToggle"
+                            type="button"
+                            class="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl
+                                   border border-black/10 dark:border-white/10
+                                   bg-white dark:bg-white/5
+                                   text-black dark:text-white
+                                   hover:bg-black/5 dark:hover:bg-white/10 transition"
+                            aria-label="Gunakan Dark Mode">
+                        ☾
+                    </button>
+
+                    <div class="text-right">
+                        <p class="text-sm font-semibold text-black/75 dark:text-white/85">
+                            {{ auth()->user()->name }}
+                        </p>
+                        <p class="text-[11px] text-black/40 dark:text-white/40">
+                            {{ str_replace('_', ' ', ucfirst(auth()->user()->role)) }}
                         </p>
                     </div>
 
-                    <div class="flex items-center gap-3 sm:gap-4">
-                        <button id="themeToggle" type="button"
-                                class="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl
-                                       border border-gray-200 bg-white text-gray-600 hover:bg-gray-100
-                                       dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 transition"
-                                aria-label="Gunakan Dark Mode">
-                            ☾
-                        </button>
+                </div>
+            </header>
 
-                        <div class="text-right">
-                            <p class="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                                {{ auth()->user()->name }}
-                            </p>
-                            <p class="text-[11px] text-gray-400 dark:text-gray-500">
-                                {{ str_replace('_', ' ', ucfirst(auth()->user()->role)) }}
-                            </p>
-                        </div>
-                    </div>
-                </header>
+            @isset($header)
+                <div class="shrink-0 px-5 sm:px-6 py-4
+                            bg-[#FCFCFB] dark:bg-[#111113]
+                            border-b border-black/5 dark:border-white/5">
+                    {{ $header }}
+                </div>
+            @endisset
 
-                @isset($header)
-                    <div class="shrink-0 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 px-5 sm:px-6 py-4">
-                        {{ $header }}
-                    </div>
-                @endisset
+            <main class="flex-1 min-h-0 overflow-auto bg-[#FCFCFB] dark:bg-[#111113]">
+                {{ $slot }}
+            </main>
 
-                <main class="flex-1 min-h-0 bg-white dark:bg-gray-900 overflow-auto">
-                    {{ $slot }}
-                </main>
-
-            </div>
         </div>
     </div>
+
 </body>
 </html>
