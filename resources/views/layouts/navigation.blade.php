@@ -2,7 +2,9 @@
 
     <div class="h-20 px-6 flex items-center">
         <a href="{{ route('dashboard') }}" class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center font-bold text-lg">M</div>
+            <div class="w-10 h-10 rounded-xl bg-[#F4C430] text-[#5B3FA6] flex items-center justify-center font-black text-lg">
+                M
+            </div>
             <div>
                 <p class="text-[15px] font-bold leading-none">Madura Mart</p>
                 <p class="text-[10px] text-white/55 mt-1">Management System</p>
@@ -26,84 +28,84 @@
         <p class="px-3 mb-2 text-[10px] font-bold uppercase tracking-[0.12em] text-white/45">Menu</p>
 
         <a href="{{ route('dashboard') }}"
-           class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-xl text-sm font-medium bg-white/15">
-            <span class="w-2 h-2 rounded-full bg-white"></span>
+           class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-xl text-sm font-medium text-[#F4C430]">
+            <span class="w-2 h-2 rounded-full bg-[#F4C430]"></span>
             Dashboard
         </a>
 
         @if(auth()->user()->role === 'admin')
 
             <details class="group mb-1">
-                <summary class="list-none cursor-pointer flex items-center justify-between px-3 py-2.5 rounded-xl text-sm text-white/75 hover:bg-white/10">
+                <summary class="list-none cursor-pointer flex items-center justify-between px-3 py-2.5 rounded-xl text-sm text-white/75 hover:text-[#F4C430]">
                     <span class="flex items-center gap-3"><span class="w-2 h-2 rounded-full bg-white/50"></span>Transaksi</span>
                     <span class="text-xs transition-transform group-open:rotate-180">⌄</span>
                 </summary>
                 <div class="ml-8 mt-1 space-y-1">
-                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Penjualan</a>
-                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Pembelian</a>
-                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Pesanan</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:text-[#F4C430]">Penjualan</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:text-[#F4C430]">Pembelian</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:text-[#F4C430]">Pesanan</a>
                 </div>
             </details>
 
             <details class="group mb-1">
-                <summary class="list-none cursor-pointer flex items-center justify-between px-3 py-2.5 rounded-xl text-sm text-white/75 hover:bg-white/10">
+                <summary class="list-none cursor-pointer flex items-center justify-between px-3 py-2.5 rounded-xl text-sm text-white/75 hover:text-[#F4C430]">
                     <span class="flex items-center gap-3"><span class="w-2 h-2 rounded-full bg-white/50"></span>Master Data</span>
                     <span class="text-xs transition-transform group-open:rotate-180">⌄</span>
                 </summary>
                 <div class="ml-8 mt-1 space-y-1">
-                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Produk</a>
-                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Distributor</a>
-                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Client</a>
-                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Kurir</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:text-[#F4C430]">Produk</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:text-[#F4C430]">Distributor</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:text-[#F4C430]">Client</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:text-[#F4C430]">Kurir</a>
                 </div>
             </details>
 
             <details class="group mb-1">
-                <summary class="list-none cursor-pointer flex items-center justify-between px-3 py-2.5 rounded-xl text-sm text-white/75 hover:bg-white/10">
+                <summary class="list-none cursor-pointer flex items-center justify-between px-3 py-2.5 rounded-xl text-sm text-white/75 hover:text-[#F4C430]">
                     <span class="flex items-center gap-3"><span class="w-2 h-2 rounded-full bg-white/50"></span>Laporan</span>
                     <span class="text-xs transition-transform group-open:rotate-180">⌄</span>
                 </summary>
                 <div class="ml-8 mt-1 space-y-1">
-                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Penjualan</a>
-                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Pembelian</a>
-                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Stok</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:text-[#F4C430]">Penjualan</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:text-[#F4C430]">Pembelian</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:text-[#F4C430]">Stok</a>
                 </div>
             </details>
 
             <details class="group mb-1">
-                <summary class="list-none cursor-pointer flex items-center justify-between px-3 py-2.5 rounded-xl text-sm text-white/75 hover:bg-white/10">
+                <summary class="list-none cursor-pointer flex items-center justify-between px-3 py-2.5 rounded-xl text-sm text-white/75 hover:text-[#F4C430]">
                     <span class="flex items-center gap-3"><span class="w-2 h-2 rounded-full bg-white/50"></span>Manajemen</span>
                     <span class="text-xs transition-transform group-open:rotate-180">⌄</span>
                 </summary>
                 <div class="ml-8 mt-1 space-y-1">
-                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Pengguna</a>
-                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Pengaturan Sistem</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:text-[#F4C430]">Pengguna</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:text-[#F4C430]">Pengaturan Sistem</a>
                 </div>
             </details>
 
         @elseif(auth()->user()->role === 'kasir')
 
             <details class="group mb-1">
-                <summary class="list-none cursor-pointer flex items-center justify-between px-3 py-2.5 rounded-xl text-sm text-white/75 hover:bg-white/10">
+                <summary class="list-none cursor-pointer flex items-center justify-between px-3 py-2.5 rounded-xl text-sm text-white/75 hover:text-[#F4C430]">
                     <span class="flex items-center gap-3"><span class="w-2 h-2 rounded-full bg-white/50"></span>Penjualan</span>
                     <span class="text-xs transition-transform group-open:rotate-180">⌄</span>
                 </summary>
                 <div class="ml-8 mt-1 space-y-1">
-                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Transaksi Baru</a>
-                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Riwayat Transaksi</a>
-                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Retur</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:text-[#F4C430]">Transaksi Baru</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:text-[#F4C430]">Riwayat Transaksi</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:text-[#F4C430]">Retur</a>
                 </div>
             </details>
 
             <details class="group mb-1">
-                <summary class="list-none cursor-pointer flex items-center justify-between px-3 py-2.5 rounded-xl text-sm text-white/75 hover:bg-white/10">
+                <summary class="list-none cursor-pointer flex items-center justify-between px-3 py-2.5 rounded-xl text-sm text-white/75 hover:text-[#F4C430]">
                     <span class="flex items-center gap-3"><span class="w-2 h-2 rounded-full bg-white/50"></span>Shift</span>
                     <span class="text-xs transition-transform group-open:rotate-180">⌄</span>
                 </summary>
                 <div class="ml-8 mt-1 space-y-1">
-                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Buka Shift</a>
-                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Tutup Shift</a>
-                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:bg-white/10 hover:text-white">Riwayat Shift</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:text-[#F4C430]">Buka Shift</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:text-[#F4C430]">Tutup Shift</a>
+                    <a href="#" class="block px-3 py-2 rounded-lg text-xs text-white/60 hover:text-[#F4C430]">Riwayat Shift</a>
                 </div>
             </details>
 
