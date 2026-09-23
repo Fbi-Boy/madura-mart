@@ -1,4 +1,4 @@
-<nav class="w-60 h-[calc(100vh-1.5rem)] shrink-0 self-start rounded-[20px]
+<nav class="w-56 h-[calc(100vh-2rem)] shrink-0 self-start rounded-[20px]
                   bg-[#202024] dark:bg-[#FCFCFB]
                   text-white dark:text-[#171719]
                   flex flex-col overflow-hidden
@@ -28,12 +28,6 @@
     {{-- NAVIGATION --}}
     <div class="flex-1 px-3 overflow-y-auto">
 
-        {{-- MAIN --}}
-        <p class="px-3 mb-2 text-[9px] font-semibold uppercase tracking-[0.14em]
-                  text-white/35 dark:text-black/35">
-            Main
-        </p>
-
         <a href="{{ route('dashboard') }}"
            class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-xl
                   text-sm font-medium transition
@@ -50,13 +44,7 @@
 
         @if(auth()->user()->role === 'admin')
 
-            {{-- TRANSAKSI --}}
-            <p class="px-3 mt-4 mb-2 text-[9px] font-semibold uppercase tracking-[0.14em]
-                      text-white/35 dark:text-black/35">
-                Transaksi
-            </p>
-
-            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
                                text-white/75 dark:text-black/70 hover:text-white dark:hover:text-black transition">
                 <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M3 4h18v16H3z"></path>
@@ -65,7 +53,7 @@
                 Penjualan
             </a>
 
-            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
                                text-white/75 dark:text-black/70 hover:text-white dark:hover:text-black transition">
                 <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M4 5h16v14H4z"></path>
@@ -74,7 +62,7 @@
                 Pembelian
             </a>
 
-            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
                                text-white/75 dark:text-black/70 hover:text-white dark:hover:text-black transition">
                 <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="9" cy="9" r="3"></circle>
@@ -84,13 +72,7 @@
                 Pesanan
             </a>
 
-            {{-- MASTER DATA --}}
-            <p class="px-3 mt-4 mb-2 text-[9px] font-semibold uppercase tracking-[0.14em]
-                      text-white/35 dark:text-black/35">
-                Master Data
-            </p>
-
-            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
                                text-white/75 dark:text-black/70 hover:text-white dark:hover:text-black transition">
                 <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M4 4h16v16H4z"></path>
@@ -99,7 +81,7 @@
                 Produk
             </a>
 
-            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
                                text-white/75 dark:text-black/70 hover:text-white dark:hover:text-black transition">
                 <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M3 7h18"></path>
@@ -109,7 +91,7 @@
                 Distributor
             </a>
 
-            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
                                text-white/75 dark:text-black/70 hover:text-white dark:hover:text-black transition">
                 <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="8" r="3"></circle>
@@ -118,7 +100,7 @@
                 Client
             </a>
 
-            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
                                text-white/75 dark:text-black/70 hover:text-white dark:hover:text-black transition">
                 <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="3" y="5" width="18" height="14" rx="2"></rect>
@@ -127,32 +109,26 @@
                 Kurir
             </a>
 
-            {{-- LAPORAN --}}
-            <p class="px-3 mt-4 mb-2 text-[9px] font-semibold uppercase tracking-[0.14em]
-                      text-white/35 dark:text-black/35">
-                Laporan
-            </p>
-
-            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
                                text-white/75 dark:text-black/70 hover:text-white dark:hover:text-black transition">
                 <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M4 19V5"></path>
                     <path d="M4 19h16"></path>
                     <path d="m7 15 3-4 3 2 4-6"></path>
                 </svg>
-                Penjualan
+                Laporan Penjualan
             </a>
 
-            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
                                text-white/75 dark:text-black/70 hover:text-white dark:hover:text-black transition">
                 <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M4 4h16v16H4z"></path>
                     <path d="M8 8h8M8 12h8M8 16h5"></path>
                 </svg>
-                Pembelian
+                Laporan Pembelian
             </a>
 
-            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
                                text-white/75 dark:text-black/70 hover:text-white dark:hover:text-black transition">
                 <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M5 20V9"></path>
@@ -163,13 +139,7 @@
                 Stok
             </a>
 
-            {{-- MANAJEMEN --}}
-            <p class="px-3 mt-4 mb-2 text-[9px] font-semibold uppercase tracking-[0.14em]
-                      text-white/35 dark:text-black/35">
-                Manajemen
-            </p>
-
-            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
                                text-white/75 dark:text-black/70 hover:text-white dark:hover:text-black transition">
                 <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="8" r="3"></circle>
@@ -178,24 +148,18 @@
                 Pengguna
             </a>
 
-            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
                                text-white/75 dark:text-black/70 hover:text-white dark:hover:text-black transition">
                 <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="3"></circle>
                     <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.8 1.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V20h-2.5v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1-1.8-1.8.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H6v-2.5h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1 1.8-1.8.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.6V5h2.5v.1a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1 1.8 1.8-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.1v2.5h-.1a1.7 1.7 0 0 0-1.6 1z"></path>
                 </svg>
-                Pengaturan Sistem
+                Pengaturan
             </a>
 
         @elseif(auth()->user()->role === 'kasir')
 
-            {{-- SALES --}}
-            <p class="px-3 mt-4 mb-2 text-[9px] font-semibold uppercase tracking-[0.14em]
-                      text-white/35 dark:text-black/35">
-                Penjualan
-            </p>
-
-            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
                                text-white/75 dark:text-black/70 hover:text-white dark:hover:text-black transition">
                 <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M3 4h18v16H3z"></path>
@@ -204,7 +168,7 @@
                 Transaksi Baru
             </a>
 
-            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
                                text-white/75 dark:text-black/70 hover:text-white dark:hover:text-black transition">
                 <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M5 4h14v16H5z"></path>
@@ -213,7 +177,7 @@
                 Riwayat Transaksi
             </a>
 
-            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
                                text-white/75 dark:text-black/70 hover:text-white dark:hover:text-black transition">
                 <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M4 5h16v14H4z"></path>
@@ -222,13 +186,7 @@
                 Retur
             </a>
 
-            {{-- SHIFT --}}
-            <p class="px-3 mt-4 mb-2 text-[9px] font-semibold uppercase tracking-[0.14em]
-                      text-white/35 dark:text-black/35">
-                Shift
-            </p>
-
-            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
                                text-white/75 dark:text-black/70 hover:text-white dark:hover:text-black transition">
                 <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="8"></circle>
@@ -237,7 +195,7 @@
                 Buka Shift
             </a>
 
-            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
                                text-white/75 dark:text-black/70 hover:text-white dark:hover:text-black transition">
                 <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="8"></circle>
@@ -246,7 +204,7 @@
                 Tutup Shift
             </a>
 
-            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
                                text-white/75 dark:text-black/70 hover:text-white dark:hover:text-black transition">
                 <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="8"></circle>
@@ -259,39 +217,58 @@
 
     </div>
 
-    {{-- PROFILE + LOGOUT --}}
-    <div class="px-4 pt-3 pb-4">
+    {{-- PROFILE CARD + LOGOUT --}}
+    <div class="px-3 pb-3 pt-2">
 
-        <div class="flex justify-center mb-3">
-            <div class="w-10 h-10 rounded-full
-                        bg-white dark:bg-[#171719]
-                        text-[#202024] dark:text-white
-                        flex items-center justify-center
-                        text-sm font-bold">
-                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+        <div class="rounded-[18px] p-3
+                    bg-[#B9F23D] dark:bg-[#B9F23D]
+                    text-[#171719]">
+
+            <div class="flex items-center gap-3">
+
+                <div class="w-10 h-10 shrink-0 rounded-full
+                            bg-white dark:bg-[#202024]
+                            text-[#171719] dark:text-white
+                            flex items-center justify-center
+                            text-sm font-bold">
+                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                </div>
+
+                <div class="min-w-0">
+                    <p class="text-sm font-semibold truncate">
+                        {{ auth()->user()->name }}
+                    </p>
+
+                    <p class="text-[10px] opacity-60 truncate">
+                        {{ str_replace('_', ' ', ucfirst(auth()->user()->role)) }}
+                    </p>
+                </div>
+
             </div>
+
+            <form method="POST" action="{{ route('logout') }}" class="mt-3">
+
+                @csrf
+
+                <button type="submit"
+                        class="w-full flex items-center justify-center gap-2
+                               rounded-xl py-2
+                               bg-black/10 hover:bg-black/15
+                               text-sm font-medium transition">
+
+                    <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10 17l5-5-5-5"></path>
+                        <path d="M15 12H3"></path>
+                        <path d="M15 4h5v16h-5"></path>
+                    </svg>
+
+                    Logout
+
+                </button>
+
+            </form>
+
         </div>
-
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-
-            <button type="submit"
-                    class="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl
-                           text-sm font-medium
-                           text-white/70 dark:text-black/65
-                           hover:text-white dark:hover:text-black
-                           hover:bg-white/10 dark:hover:bg-black/5
-                           transition">
-
-                <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M10 17l5-5-5-5"></path>
-                    <path d="M15 12H3"></path>
-                    <path d="M15 4h5v16h-5"></path>
-                </svg>
-
-                Logout
-            </button>
-        </form>
 
     </div>
 
