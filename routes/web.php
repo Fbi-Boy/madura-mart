@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('admin/monitoring')
         ->name('admin.monitoring.')
+        ->middleware('role:admin,super-admin')
         ->group(function () {
             Route::get('/penjualan', [MonitoringPenjualanController::class, 'index'])->name('penjualan');
             Route::get('/pembelian', [MonitoringPembelianController::class, 'index'])->name('pembelian');
@@ -51,6 +52,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('admin/report')
         ->name('admin.report.')
+        ->middleware('role:admin,super-admin')
         ->group(function () {
             Route::get('/penjualan', [ReportPenjualanController::class, 'index'])->name('penjualan');
             Route::get('/pembelian', [ReportPembelianController::class, 'index'])->name('pembelian');
@@ -65,6 +67,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('kasir')
         ->name('kasir.')
+        ->middleware('role:kasir')
         ->group(function () {
             Route::view('/transaksi-baru', 'kasir.transaksi-baru.index')->name('transaksi-baru');
             Route::view('/riwayat-transaksi', 'kasir.riwayat-transaksi.index')->name('riwayat-transaksi');
