@@ -553,3 +553,7 @@ Setiap fitur baru harus:
 
 Jangan membuat fitur yang berada di luar sitemap tanpa memperbarui
 dokumen ini terlebih dahulu.
+
+# 13. ROUTE ACCESS RULES
+
+Administrative monitoring and report routes are restricted to `admin` and `super-admin`. Cashier transaction and shift routes are restricted to `kasir`. Authentication is required before role authorization is evaluated.
