@@ -1,0 +1,57 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\Product;
+use App\Models\Supplier;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class PurchaseTransactionTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_admin_can_record_purchase_and_increase_stock(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $supplier = Supplier::factory()->create();
+        $product = Product::factory()->create(['stock' => 10]);
+
+        $this->actingAs($admin)->post(route('admin.purchases.store'), [
+            'invoice' => 'PO-TEST-001',
+            'supplier_id' => $supplier->id,
+            'purchase_date' => '2026-09-24',
+            'items' => [[
+                'product_id' => $product->id,
+                'quantity' => 5,
+                'unit_price' => 12000,
+            ]],
+        ])->assertRedirect(route('admin.purchases.index'));
+
+        $this->assertDatabaseHas('purchases', [
+            'invoice' => 'PO-TEST-001',
+            'total' => 60000,
+            'status' => 'received',
+        ]);
+        $this->assertDatabaseHas('purchase_items', [
+            'product_id' => $product->id,
+            'quantity' => 5,
+            'subtotal' => 60000,
+        ]);
+        $this->assertDatabaseHas('products', ['id' => $product->id, 'stock' => 15]);
+    }
+
+    public function test_purchase_requires_at_least_one_item(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $supplier = Supplier::factory()->create();
+
+        $this->actingAs($admin)->post(route('admin.purchases.store'), [
+            'invoice' => 'PO-TEST-002',
+            'supplier_id' => $supplier->id,
+            'purchase_date' => '2026-09-24',
+            'items' => [],
+        ])->assertSessionHasErrors('items');
+    }
+}
