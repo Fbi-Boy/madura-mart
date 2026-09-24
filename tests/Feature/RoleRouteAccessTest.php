@@ -51,7 +51,7 @@ class RoleRouteAccessTest extends TestCase
 
         $this->actingAs($user)
             ->get('/admin/monitoring/pembelian')
-            .assertForbidden();
+            ->assertForbidden();
     }
 
     public function test_customer_cannot_access_admin_monitoring_pesanan(): void
@@ -60,7 +60,7 @@ class RoleRouteAccessTest extends TestCase
 
         $this->actingAs($user)
             ->get('/admin/monitoring/pesanan')
-            .assertForbidden();
+            ->assertForbidden();
     }
 
     public function test_customer_cannot_access_admin_monitoring_produk(): void
@@ -69,7 +69,7 @@ class RoleRouteAccessTest extends TestCase
 
         $this->actingAs($user)
             ->get('/admin/monitoring/produk')
-            .assertForbidden();
+            ->assertForbidden();
     }
 
     public function test_customer_cannot_access_admin_monitoring_distributor(): void
@@ -78,7 +78,7 @@ class RoleRouteAccessTest extends TestCase
 
         $this->actingAs($user)
             ->get('/admin/monitoring/distributor')
-            .assertForbidden();
+            ->assertForbidden();
     }
 
     public function test_customer_cannot_access_admin_monitoring_client(): void
@@ -87,7 +87,7 @@ class RoleRouteAccessTest extends TestCase
 
         $this->actingAs($user)
             ->get('/admin/monitoring/client')
-            .assertForbidden();
+            ->assertForbidden();
     }
 
     public function test_customer_cannot_access_admin_monitoring_kurir(): void
@@ -96,7 +96,7 @@ class RoleRouteAccessTest extends TestCase
 
         $this->actingAs($user)
             ->get('/admin/monitoring/kurir')
-            .assertForbidden();
+            ->assertForbidden();
     }
 
     public function test_customer_cannot_access_admin_report_penjualan(): void
@@ -105,7 +105,7 @@ class RoleRouteAccessTest extends TestCase
 
         $this->actingAs($user)
             ->get('/admin/report/penjualan')
-            .assertForbidden();
+            ->assertForbidden();
     }
 
     public function test_customer_cannot_access_admin_report_pembelian(): void
@@ -114,7 +114,7 @@ class RoleRouteAccessTest extends TestCase
 
         $this->actingAs($user)
             ->get('/admin/report/pembelian')
-            .assertForbidden();
+            ->assertForbidden();
     }
 
     public function test_customer_cannot_access_admin_report_stok(): void
@@ -123,7 +123,7 @@ class RoleRouteAccessTest extends TestCase
 
         $this->actingAs($user)
             ->get('/admin/report/stok')
-            .assertForbidden();
+            ->assertForbidden();
     }
 
     public function test_admin_cannot_access_cashier_transaction_history(): void
@@ -132,7 +132,7 @@ class RoleRouteAccessTest extends TestCase
 
         $this->actingAs($user)
             ->get('/kasir/riwayat-transaksi')
-            .assertForbidden();
+            ->assertForbidden();
     }
 
     public function test_admin_cannot_access_cashier_returns(): void
@@ -141,7 +141,7 @@ class RoleRouteAccessTest extends TestCase
 
         $this->actingAs($user)
             ->get('/kasir/retur')
-            .assertForbidden();
+            ->assertForbidden();
     }
 
     public function test_admin_cannot_access_cashier_open_shift(): void
@@ -150,7 +150,7 @@ class RoleRouteAccessTest extends TestCase
 
         $this->actingAs($user)
             ->get('/kasir/buka-shift')
-            .assertForbidden();
+            ->assertForbidden();
     }
 
     public function test_admin_cannot_access_cashier_close_shift(): void
@@ -159,7 +159,7 @@ class RoleRouteAccessTest extends TestCase
 
         $this->actingAs($user)
             ->get('/kasir/tutup-shift')
-            .assertForbidden();
+            ->assertForbidden();
     }
 
     public function test_admin_cannot_access_cashier_shift_history(): void
@@ -168,7 +168,7 @@ class RoleRouteAccessTest extends TestCase
 
         $this->actingAs($user)
             ->get('/kasir/riwayat-shift')
-            .assertForbidden();
+            ->assertForbidden();
     }
 
     public function test_super_admin_can_access_admin_monitoring(): void
@@ -177,7 +177,7 @@ class RoleRouteAccessTest extends TestCase
 
         $this->actingAs($user)
             ->get('/admin/monitoring/penjualan')
-            .assertOk();
+            ->assertOk();
     }
 
     public function test_super_admin_can_access_admin_reports(): void
@@ -186,7 +186,7 @@ class RoleRouteAccessTest extends TestCase
 
         $this->actingAs($user)
             ->get('/admin/report/penjualan')
-            .assertOk();
+            ->assertOk();
     }
 
 }
