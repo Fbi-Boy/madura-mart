@@ -76,9 +76,15 @@
                              stroke-width="1.9"
                              stroke-linecap="round"
                              stroke-linejoin="round">
-                            <rect x="4" y="4" width="16" height="16" rx="4"></rect>
-                            <path d="M8 12h8"></path>
-                            <path d="M12 8v8"></path>
+                            <circle cx="12" cy="12" r="4"></circle>
+                            <path d="M12 2v2"></path>
+                            <path d="M12 20v2"></path>
+                            <path d="m4.93 4.93 1.42 1.42"></path>
+                            <path d="m17.65 17.65 1.42 1.42"></path>
+                            <path d="M2 12h2"></path>
+                            <path d="M20 12h2"></path>
+                            <path d="m4.93 19.07 1.42-1.42"></path>
+                            <path d="m17.65 6.35 1.42-1.42"></path>
                         </svg>
                     </button>
 
