@@ -119,3 +119,11 @@ Protected application routes are scoped by authenticated role. Administrative mo
 - Dokumentasi: `docs/master-data/couriers.md`.
 - Dokumentasi: `docs/master-data/distributors.md`.
 - Dokumentasi: `docs/master-data/suppliers.md` dan `docs/master-data/customers.md`.
+## Continuous Integration
+
+Every push to `main` and every pull request targeting `main` is validated by two GitHub Actions workflows:
+
+- **CI** — installs dependencies, builds Vite assets, and runs the Laravel test suite.
+- **Laravel Quality** — runs the same application quality validation in the CI pipeline.
+
+A change is considered ready only after the required checks complete successfully.
