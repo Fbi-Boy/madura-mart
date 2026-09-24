@@ -98,7 +98,18 @@
                            uppercase tracking-[0.04em]
                            text-[#58752B]"
                 >
-                    <span>↔</span>
+                    <svg
+                        class="w-3 h-3 shrink-0"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <path d="M3 12h4l2-4 4 8 2-4h6"></path>
+                    </svg>
                     REAL-TIME SUPPLIER INFLOW
                 </span>
 
@@ -148,8 +159,24 @@
                                text-black/60 dark:text-white/60
                                shadow-[0_3px_12px_rgba(0,0,0,0.025)]"
                     >
-                        Bulan Ini (Jan 2025)
-                        <span class="ml-1 text-black/30 dark:text-white/30">▣</span>
+                        <span class="inline-flex items-center gap-1.5">
+                            <svg
+                                class="w-3 h-3 shrink-0"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                aria-hidden="true"
+                            >
+                                <rect x="3" y="4" width="18" height="17" rx="2"></rect>
+                                <path d="M16 2v4"></path>
+                                <path d="M8 2v4"></path>
+                                <path d="M3 10h18"></path>
+                            </svg>
+                            <span>Bulan Ini (Jan 2025)</span>
+                        </span>
                     </button>
 
                     <button
@@ -162,8 +189,26 @@
                                text-black/60 dark:text-white/60
                                shadow-[0_3px_12px_rgba(0,0,0,0.025)]"
                     >
-                        <span class="mr-1.5">☷</span>
-                        Filter Status
+                        <span class="inline-flex items-center gap-1.5">
+                            <svg
+                                class="w-3 h-3 shrink-0"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                aria-hidden="true"
+                            >
+                                <line x1="4" y1="6" x2="20" y2="6"></line>
+                                <line x1="4" y1="12" x2="20" y2="12"></line>
+                                <line x1="4" y1="18" x2="20" y2="18"></line>
+                                <circle cx="9" cy="6" r="2"></circle>
+                                <circle cx="15" cy="12" r="2"></circle>
+                                <circle cx="11" cy="18" r="2"></circle>
+                            </svg>
+                            <span>Filter Status</span>
+                        </span>
                     </button>
 
                     <button
@@ -175,8 +220,23 @@
                                text-white
                                shadow-[0_4px_14px_rgba(39,49,66,0.12)]"
                     >
-                        <span class="mr-1.5 text-[#A8F23A]">↓</span>
-                        Unduh Rekap Audit PO
+                        <span class="inline-flex items-center gap-1.5">
+                            <svg
+                                class="w-3 h-3 shrink-0 text-[#A8F23A]"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                aria-hidden="true"
+                            >
+                                <path d="M12 3v12"></path>
+                                <path d="m7 10 5 5 5-5"></path>
+                                <path d="M5 21h14"></path>
+                            </svg>
+                            <span>Unduh Rekap Audit PO</span>
+                        </span>
                     </button>
 
                 </div>
