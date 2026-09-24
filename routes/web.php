@@ -1,5 +1,15 @@
 <?php
 
+use App\Http\Controllers\Admin\Monitoring\ClientController;
+use App\Http\Controllers\Admin\Monitoring\DistributorController;
+use App\Http\Controllers\Admin\Monitoring\KurirController;
+use App\Http\Controllers\Admin\Monitoring\PembelianController as MonitoringPembelianController;
+use App\Http\Controllers\Admin\Monitoring\PenjualanController as MonitoringPenjualanController;
+use App\Http\Controllers\Admin\Monitoring\PesananController;
+use App\Http\Controllers\Admin\Monitoring\ProdukController;
+use App\Http\Controllers\Admin\Report\PembelianController as ReportPembelianController;
+use App\Http\Controllers\Admin\Report\PenjualanController as ReportPenjualanController;
+use App\Http\Controllers\Admin\Report\StokController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -21,15 +31,17 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::prefix('admin/monitoring')->name('admin.monitoring.')->group(function () {
-        Route::view('/penjualan', 'admin.monitoring.penjualan.index')->name('penjualan');
-        Route::view('/pembelian', 'admin.monitoring.pembelian.index')->name('pembelian');
-        Route::view('/pesanan', 'admin.monitoring.pesanan.index')->name('pesanan');
-        Route::view('/produk', 'admin.monitoring.produk.index')->name('produk');
-        Route::view('/distributor', 'admin.monitoring.distributor.index')->name('distributor');
-        Route::view('/client', 'admin.monitoring.client.index')->name('client');
-        Route::view('/kurir', 'admin.monitoring.kurir.index')->name('kurir');
-    });
+    Route::prefix('admin/monitoring')
+        ->name('admin.monitoring.')
+        ->group(function () {
+            Route::get('/penjualan', [MonitoringPenjualanController::class, 'index'])->name('penjualan');
+            Route::get('/pembelian', [MonitoringPembelianController::class, 'index'])->name('pembelian');
+            Route::get('/pesanan', [PesananController::class, 'index'])->name('pesanan');
+            Route::get('/produk', [ProdukController::class, 'index'])->name('produk');
+            Route::get('/distributor', [DistributorController::class, 'index'])->name('distributor');
+            Route::get('/client', [ClientController::class, 'index'])->name('client');
+            Route::get('/kurir', [KurirController::class, 'index'])->name('kurir');
+        });
 
     /*
     |--------------------------------------------------------------------------
@@ -37,11 +49,13 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::prefix('admin/report')->name('admin.report.')->group(function () {
-        Route::view('/penjualan', 'admin.report.penjualan.index')->name('penjualan');
-        Route::view('/pembelian', 'admin.report.pembelian.index')->name('pembelian');
-        Route::view('/stok', 'admin.report.stok.index')->name('stok');
-    });
+    Route::prefix('admin/report')
+        ->name('admin.report.')
+        ->group(function () {
+            Route::get('/penjualan', [ReportPenjualanController::class, 'index'])->name('penjualan');
+            Route::get('/pembelian', [ReportPembelianController::class, 'index'])->name('pembelian');
+            Route::get('/stok', [StokController::class, 'index'])->name('stok');
+        });
 
     /*
     |--------------------------------------------------------------------------
@@ -49,14 +63,16 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::prefix('kasir')->name('kasir.')->group(function () {
-        Route::view('/transaksi-baru', 'kasir.transaksi-baru.index')->name('transaksi-baru');
-        Route::view('/riwayat-transaksi', 'kasir.riwayat-transaksi.index')->name('riwayat-transaksi');
-        Route::view('/retur', 'kasir.retur.index')->name('retur');
-        Route::view('/buka-shift', 'kasir.buka-shift.index')->name('buka-shift');
-        Route::view('/tutup-shift', 'kasir.tutup-shift.index')->name('tutup-shift');
-        Route::view('/riwayat-shift', 'kasir.riwayat-shift.index')->name('riwayat-shift');
-    });
+    Route::prefix('kasir')
+        ->name('kasir.')
+        ->group(function () {
+            Route::view('/transaksi-baru', 'kasir.transaksi-baru.index')->name('transaksi-baru');
+            Route::view('/riwayat-transaksi', 'kasir.riwayat-transaksi.index')->name('riwayat-transaksi');
+            Route::view('/retur', 'kasir.retur.index')->name('retur');
+            Route::view('/buka-shift', 'kasir.buka-shift.index')->name('buka-shift');
+            Route::view('/tutup-shift', 'kasir.tutup-shift.index')->name('tutup-shift');
+            Route::view('/riwayat-shift', 'kasir.riwayat-shift.index')->name('riwayat-shift');
+        });
 
     Route::get('/profile', [ProfileController::class, 'edit'])
         ->name('profile.edit');
