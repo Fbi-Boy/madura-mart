@@ -135,4 +135,13 @@ class RoleRouteAccessTest extends TestCase
             .assertForbidden();
     }
 
+    public function test_admin_cannot_access_cashier_returns(): void
+    {
+        $user = User::factory()->create(['role' => 'admin']);
+
+        $this->actingAs($user)
+            ->get('/kasir/retur')
+            .assertForbidden();
+    }
+
 }
