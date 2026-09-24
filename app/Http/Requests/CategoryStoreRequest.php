@@ -1,14 +1,14 @@
 <?php
 
-namespace App\\Http\\Requests;
+namespace App\Http\Requests;
 
-use Illuminate\\Foundation\\Http\\FormRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
 class CategoryStoreRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->role === 'admin' || $this->user()?->role === 'super-admin';
+        return in_array($this->user()?->role, ['admin', 'super-admin'], true);
     }
 
     public function rules(): array
