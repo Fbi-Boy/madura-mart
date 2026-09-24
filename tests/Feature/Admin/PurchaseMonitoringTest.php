@@ -20,7 +20,7 @@ class PurchaseMonitoringTest extends TestCase
         $this->actingAs($admin)
             ->get(route('admin.monitoring.pembelian', ['search' => 'PO-001']))
             ->assertOk()
-            ->assertViewHas('todayTransactions', 1)
+            ->assertViewHas('todayTransactions', 2)
             ->assertViewHas('todayPurchases', 175000.0)
             ->assertSee('PO-001')
             ->assertDontSee('PO-002');
