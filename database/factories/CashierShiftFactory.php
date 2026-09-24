@@ -14,7 +14,7 @@ class CashierShiftFactory extends Factory
     {
         return [
             'shift_number' => 'SHIFT-'.fake()->unique()->numerify('#####'),
-            'user_id' => User::factory(['role' => 'kasir']),
+            'user_id' => User::factory()->state(['role' => 'kasir']),
             'opened_at' => now(),
             'opening_cash' => 100000,
             'closed_at' => null,
