@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\DistributorController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\Monitoring\ClientController;
@@ -68,6 +69,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('products', ProductController::class)->except(['show']);
         Route::resource('suppliers', SupplierController::class)->except(['show']);
         Route::resource('customers', CustomerController::class)->except(['show']);
+        Route::resource('distributors', DistributorController::class)->except(['show']);
     });
 
     /*
