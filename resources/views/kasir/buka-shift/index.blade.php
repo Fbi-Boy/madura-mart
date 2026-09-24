@@ -1,7 +1,6 @@
 <x-app-layout>
-    <div class="h-full">
-        <h2 class="text-xl font-semibold text-[#171719] dark:text-white">
-            Buka Shift
-        </h2>
-    </div>
-</x-app-layout>
+<div class="h-full flex flex-col gap-5">
+<div><p class="text-sm text-black/45 dark:text-white/45">Kasir</p><h2 class="mt-1 text-2xl font-semibold text-[#171719] dark:text-white">Buka Shift</h2></div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><div class="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 p-5"><p class="text-sm text-black/45 dark:text-white/45">Total Data</p><p class="mt-2 text-2xl font-semibold text-[#171719] dark:text-white">0</p></div><div class="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 p-5"><p class="text-sm text-black/45 dark:text-white/45">Status</p><p class="mt-2 text-sm font-medium text-[#171719] dark:text-white">Belum ada data</p></div><div class="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 p-5"><p class="text-sm text-black/45 dark:text-white/45">Informasi</p><p class="mt-2 text-sm font-medium text-[#171719] dark:text-white">Halaman siap digunakan</p></div></div>
+<div class="flex-1 rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 overflow-hidden"><div class="px-5 py-4 border-b border-black/5 dark:border-white/10"><h3 class="text-sm font-semibold text-[#171719] dark:text-white">Data Buka Shift</h3></div><div class="h-full flex items-center justify-center"><div class="text-center"><div class="mx-auto w-12 h-12 rounded-2xl bg-[#A8F23A]/20 flex items-center justify-center"><span class="text-xl">▦</span></div><p class="mt-4 text-sm font-medium text-[#171719] dark:text-white">Belum ada data</p><p class="mt-1 text-xs text-black/40 dark:text-white/40">Data buka shift akan tampil di halaman ini.</p></div></div></div>
+</div></x-app-layout>
