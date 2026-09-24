@@ -1,9 +1,9 @@
 <?php
 
-namespace AppHttpRequests;
+namespace App\Http\Requests;
 
-use IlluminateFoundationHttpFormRequest;
-use IlluminateValidationRule;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CustomerUpdateRequest extends FormRequest
 {
@@ -17,18 +17,13 @@ class CustomerUpdateRequest extends FormRequest
         $customer = $this->route('customer');
 
         return [
-            'code' => [
-                'required',
-                'string',
-                'max:30',
-                Rule::unique('customers', 'code')->ignore($customer),
-            ],
-            'name' => ['required', 'string', 'max:150'],
-            'phone' => ['nullable', 'string', 'max:30'],
-            'email' => ['nullable', 'email', 'max:150'],
-            'address' => ['nullable', 'string', 'max:2000'],
-            'city' => ['nullable', 'string', 'max:100'],
-            'is_active' => ['nullable', 'boolean'],
+            'code'=>['required','string','max:30',Rule::unique('customers','code')->ignore($customer)],
+            'name'=>['required','string','max:150'],
+            'phone'=>['nullable','string','max:30'],
+            'email'=>['nullable','email','max:150'],
+            'address'=>['nullable','string','max:2000'],
+            'city'=>['nullable','string','max:100'],
+            'is_active'=>['nullable','boolean'],
         ];
     }
 }
