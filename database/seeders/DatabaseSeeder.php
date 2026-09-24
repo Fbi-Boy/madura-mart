@@ -64,6 +64,7 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
             SupplierSeeder::class,
             DistributorSeeder::class,
+            CourierSeeder::class,
             CustomerSeeder::class,
         ]);
     }
