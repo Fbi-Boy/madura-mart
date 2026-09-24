@@ -81,10 +81,10 @@
             <div class="flex flex-wrap items-center gap-2 mb-2">
 
                 <span
-                    class="inline-flex h-6 items-center gap-1.5 rounded-md
+                    class="inline-flex h-8 items-center gap-1.5 rounded-md
                            border border-[#A8F23A]/40
                            bg-[#A8F23A]/[0.12]
-                           px-2.5 text-[8px] font-semibold
+                           px-3 text-[10px] font-semibold
                            text-[#58752B]"
                 >
                     <span class="w-1.5 h-1.5 rounded-full bg-[#A8F23A]"></span>
@@ -92,9 +92,9 @@
                 </span>
 
                 <span
-                    class="inline-flex h-6 items-center gap-1.5 rounded-md
+                    class="inline-flex h-8 items-center gap-1.5 rounded-md
                            bg-[#E8F5C9]
-                           px-2.5 text-[7px] font-semibold
+                           px-2.5 text-[9px] font-semibold
                            uppercase tracking-[0.04em]
                            text-[#58752B]"
                 >
@@ -113,7 +113,7 @@
                     REAL-TIME SUPPLIER INFLOW
                 </span>
 
-                <span class="text-[8px] text-black/30 dark:text-white/30">
+                <span class="text-[9px] text-black/30 dark:text-white/30">
                     Sinkronisasi: 2 Menit Lalu (Hub Gudang Pusat)
                 </span>
 
@@ -126,7 +126,7 @@
                 <div class="min-w-0">
 
                     <h1
-                        class="text-[24px] sm:text-[27px] leading-none
+                        class="text-[30px] sm:text-[34px] leading-none
                                font-bold tracking-[-0.035em]
                                text-[#171719] dark:text-white"
                     >
@@ -135,7 +135,7 @@
 
                     <p
                         class="mt-2 max-w-[650px]
-                               text-[9px] sm:text-[10px]
+                               text-[11px] sm:text-[12px]
                                leading-[1.5]
                                text-black/45 dark:text-white/45"
                     >
@@ -151,11 +151,11 @@
 
                     <button
                         type="button"
-                        class="h-9 rounded-full
+                        class="h-11 rounded-full
                                bg-white dark:bg-white/[0.06]
                                border border-black/[0.05] dark:border-white/[0.08]
-                               px-3.5
-                               text-[8px] font-medium
+                               px-4
+                               text-[10px] font-medium
                                text-black/60 dark:text-white/60
                                shadow-[0_3px_12px_rgba(0,0,0,0.025)]"
                     >
@@ -181,11 +181,11 @@
 
                     <button
                         type="button"
-                        class="h-9 rounded-full
+                        class="h-11 rounded-full
                                bg-white dark:bg-white/[0.06]
                                border border-black/[0.05] dark:border-white/[0.08]
-                               px-3.5
-                               text-[8px] font-medium
+                               px-4
+                               text-[10px] font-medium
                                text-black/60 dark:text-white/60
                                shadow-[0_3px_12px_rgba(0,0,0,0.025)]"
                     >
@@ -213,10 +213,10 @@
 
                     <button
                         type="button"
-                        class="h-9 rounded-full
+                        class="h-11 rounded-full
                                bg-[#273142]
                                px-4
-                               text-[8px] font-semibold
+                               text-[10px] font-semibold
                                text-white
                                shadow-[0_4px_14px_rgba(39,49,66,0.12)]"
                     >
@@ -257,18 +257,18 @@
         >
 
             <div
-                class="min-h-[58px] flex flex-col sm:flex-row sm:items-center
+                class="min-h-[64px] flex flex-col sm:flex-row sm:items-center
                        justify-between gap-3
                        border-b border-black/[0.05] dark:border-white/[0.07]
                        px-4 py-3"
             >
 
                 <div>
-                    <h3 class="text-[12px] font-semibold text-[#171719] dark:text-white">
+                    <h3 class="text-[14px] font-semibold text-[#171719] dark:text-white">
                         Purchase Order Aktif
                     </h3>
 
-                    <p class="mt-1 text-[8px] text-black/35 dark:text-white/35">
+                    <p class="mt-1 text-[9px] text-black/35 dark:text-white/35">
                         Monitoring pengadaan barang dan status supplier.
                     </p>
                 </div>
@@ -277,9 +277,9 @@
 
                     <button
                         type="button"
-                        class="h-8 rounded-full
+                        class="h-9 rounded-full
                                border border-black/[0.07] dark:border-white/[0.1]
-                               px-3.5 text-[8px] font-semibold
+                               px-4 text-[10px] font-semibold
                                text-black/55 dark:text-white/55"
                     >
                         Lihat Semua
@@ -287,9 +287,9 @@
 
                     <button
                         type="button"
-                        class="h-8 rounded-full
+                        class="h-9 rounded-full
                                bg-[#20242B] dark:bg-white
-                               px-4 text-[8px] font-semibold
+                               px-4 text-[10px] font-semibold
                                text-white dark:text-[#171719]"
                     >
                         + Buat PO
@@ -307,35 +307,35 @@
                     <thead>
                         <tr class="border-b border-black/[0.04] dark:border-white/[0.06]">
 
-                            <th class="px-4 py-3 text-left text-[8px] font-semibold uppercase tracking-[0.05em] text-black/35 dark:text-white/35">
+                            <th class="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.05em] text-black/35 dark:text-white/35">
                                 Nomor PO
                             </th>
 
-                            <th class="px-4 py-3 text-left text-[8px] font-semibold uppercase tracking-[0.05em] text-black/35 dark:text-white/35">
+                            <th class="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.05em] text-black/35 dark:text-white/35">
                                 Supplier
                             </th>
 
-                            <th class="px-4 py-3 text-left text-[8px] font-semibold uppercase tracking-[0.05em] text-black/35 dark:text-white/35">
+                            <th class="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.05em] text-black/35 dark:text-white/35">
                                 Tanggal
                             </th>
 
-                            <th class="px-4 py-3 text-left text-[8px] font-semibold uppercase tracking-[0.05em] text-black/35 dark:text-white/35">
+                            <th class="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.05em] text-black/35 dark:text-white/35">
                                 SKU
                             </th>
 
-                            <th class="px-4 py-3 text-left text-[8px] font-semibold uppercase tracking-[0.05em] text-black/35 dark:text-white/35">
+                            <th class="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.05em] text-black/35 dark:text-white/35">
                                 Nilai
                             </th>
 
-                            <th class="px-4 py-3 text-left text-[8px] font-semibold uppercase tracking-[0.05em] text-black/35 dark:text-white/35">
+                            <th class="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.05em] text-black/35 dark:text-white/35">
                                 Status
                             </th>
 
-                            <th class="px-4 py-3 text-left text-[8px] font-semibold uppercase tracking-[0.05em] text-black/35 dark:text-white/35">
+                            <th class="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.05em] text-black/35 dark:text-white/35">
                                 Pembayaran
                             </th>
 
-                            <th class="px-4 py-3 text-right text-[8px] font-semibold uppercase tracking-[0.05em] text-black/35 dark:text-white/35">
+                            <th class="px-4 py-3 text-right text-[10px] font-semibold uppercase tracking-[0.05em] text-black/35 dark:text-white/35">
                                 Aksi
                             </th>
 
@@ -385,7 +385,7 @@
                                 <td class="px-4">
 
                                     <span
-                                        class="text-[9px] text-[#171719] dark:text-white"
+                                        class="text-[10px] text-[#171719] dark:text-white"
                                         x-text="purchase.supplier"
                                     ></span>
 
@@ -393,13 +393,13 @@
 
 
                                 <td
-                                    class="px-4 text-[9px] text-black/45 dark:text-white/45"
+                                    class="px-4 text-[10px] text-black/45 dark:text-white/45"
                                     x-text="purchase.date"
                                 ></td>
 
 
                                 <td
-                                    class="px-4 text-[9px] text-black/45 dark:text-white/45"
+                                    class="px-4 text-[10px] text-black/45 dark:text-white/45"
                                     x-text="purchase.items + ' SKU'"
                                 ></td>
 
@@ -413,7 +413,7 @@
                                 <td class="px-4">
 
                                     <span
-                                        class="rounded-full px-2 py-1 text-[7px] font-semibold"
+                                        class="rounded-full px-2 py-1 text-[9px] font-semibold"
                                         :class="{
                                             'bg-[#FFF0C2] text-[#856400]': purchase.status === 'Approval',
                                             'bg-[#E7ECFF] text-[#5868AA]': purchase.status === 'Dikirim',
@@ -428,7 +428,7 @@
                                 <td class="px-4">
 
                                     <span
-                                        class="rounded-full px-2 py-1 text-[7px] font-semibold"
+                                        class="rounded-full px-2 py-1 text-[9px] font-semibold"
                                         :class="{
                                             'bg-[#FFF0C2] text-[#856400]': purchase.payment === 'Jatuh Tempo',
                                             'bg-[#FFE8E8] text-[#B04444]': purchase.payment === 'Belum Lunas',
@@ -445,7 +445,7 @@
                                     <button
                                         type="button"
                                         @click.stop="selectedId = purchase.id"
-                                        class="text-[8px] font-semibold text-[#5969B1]"
+                                        class="text-[10px] font-semibold text-[#5969B1]"
                                     >
                                         Detail
                                     </button>
@@ -470,7 +470,7 @@
                        px-4"
             >
 
-                <p class="text-[8px] text-black/35 dark:text-white/35">
+                <p class="text-[9px] text-black/35 dark:text-white/35">
                     1–5 dari 28 purchase order
                 </p>
 
@@ -488,7 +488,7 @@
                     <button
                         type="button"
                         class="h-6 min-w-6 rounded-md
-                               bg-[#A8F23A] text-[8px] font-semibold text-[#171719]"
+                               bg-[#A8F23A] text-[10px] font-semibold text-[#171719]"
                     >
                         1
                     </button>
@@ -555,19 +555,19 @@
             >
 
                 <div
-                    class="min-h-[58px] flex items-center justify-between
+                    class="min-h-[64px] flex items-center justify-between
                            border-b border-black/[0.05] dark:border-white/[0.07]
                            px-4"
                 >
 
                     <div>
 
-                        <p class="text-[8px] text-black/35 dark:text-white/35">
+                        <p class="text-[9px] text-black/35 dark:text-white/35">
                             Detail Purchase Order
                         </p>
 
                         <h3
-                            class="mt-1 text-[12px] font-semibold text-[#171719] dark:text-white"
+                            class="mt-1 text-[14px] font-semibold text-[#171719] dark:text-white"
                             x-text="selectedPurchase.invoice"
                         ></h3>
 
@@ -576,7 +576,7 @@
 
                     <span
                         class="rounded-full bg-[#FFF0C2] px-2.5 py-1
-                               text-[7px] font-semibold text-[#856400]"
+                               text-[9px] font-semibold text-[#856400]"
                         x-text="selectedPurchase.status"
                     ></span>
 
@@ -588,7 +588,7 @@
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
 
                         <div>
-                            <p class="text-[8px] text-black/35 dark:text-white/35">
+                            <p class="text-[9px] text-black/35 dark:text-white/35">
                                 Supplier
                             </p>
 
@@ -599,7 +599,7 @@
                         </div>
 
                         <div>
-                            <p class="text-[8px] text-black/35 dark:text-white/35">
+                            <p class="text-[9px] text-black/35 dark:text-white/35">
                                 Tanggal
                             </p>
 
@@ -610,7 +610,7 @@
                         </div>
 
                         <div>
-                            <p class="text-[8px] text-black/35 dark:text-white/35">
+                            <p class="text-[9px] text-black/35 dark:text-white/35">
                                 Total SKU
                             </p>
 
@@ -621,7 +621,7 @@
                         </div>
 
                         <div>
-                            <p class="text-[8px] text-black/35 dark:text-white/35">
+                            <p class="text-[9px] text-black/35 dark:text-white/35">
                                 Total Pembelian
                             </p>
 
@@ -637,7 +637,7 @@
                     {{-- PROGRESS --}}
                     <div class="mt-5">
 
-                        <p class="text-[8px] font-semibold text-[#171719] dark:text-white">
+                        <p class="text-[10px] font-semibold text-[#171719] dark:text-white">
                             Progress Pengadaan
                         </p>
 
@@ -645,35 +645,35 @@
 
                             <div>
                                 <div class="h-1 rounded-full bg-[#A8F23A]"></div>
-                                <p class="mt-1.5 text-[7px] font-semibold text-black/50 dark:text-white/50">
+                                <p class="mt-1.5 text-[9px] font-semibold text-black/50 dark:text-white/50">
                                     Draft
                                 </p>
                             </div>
 
                             <div>
                                 <div class="h-1 rounded-full bg-[#A8F23A]"></div>
-                                <p class="mt-1.5 text-[7px] font-semibold text-black/50 dark:text-white/50">
+                                <p class="mt-1.5 text-[9px] font-semibold text-black/50 dark:text-white/50">
                                     Approval
                                 </p>
                             </div>
 
                             <div>
                                 <div class="h-1 rounded-full bg-[#A8F23A]"></div>
-                                <p class="mt-1.5 text-[7px] font-semibold text-black/50 dark:text-white/50">
+                                <p class="mt-1.5 text-[9px] font-semibold text-black/50 dark:text-white/50">
                                     Purchase Order
                                 </p>
                             </div>
 
                             <div>
                                 <div class="h-1 rounded-full bg-black/10 dark:bg-white/10"></div>
-                                <p class="mt-1.5 text-[7px] text-black/35 dark:text-white/35">
+                                <p class="mt-1.5 text-[9px] text-black/35 dark:text-white/35">
                                     Diterima
                                 </p>
                             </div>
 
                             <div>
                                 <div class="h-1 rounded-full bg-black/10 dark:bg-white/10"></div>
-                                <p class="mt-1.5 text-[7px] text-black/35 dark:text-white/35">
+                                <p class="mt-1.5 text-[9px] text-black/35 dark:text-white/35">
                                     Selesai
                                 </p>
                             </div>
@@ -720,11 +720,11 @@
                         <span class="mt-1 w-1.5 h-1.5 shrink-0 rounded-full bg-[#E94B4B]"></span>
 
                         <div>
-                            <p class="text-[8px] font-semibold text-[#171719] dark:text-white">
+                            <p class="text-[10px] font-semibold text-[#171719] dark:text-white">
                                 3 invoice belum dibayar
                             </p>
 
-                            <p class="mt-0.5 text-[7px] text-black/35 dark:text-white/35">
+                            <p class="mt-0.5 text-[9px] text-black/35 dark:text-white/35">
                                 Perlu ditindaklanjuti
                             </p>
                         </div>
@@ -737,11 +737,11 @@
                         <span class="mt-1 w-1.5 h-1.5 shrink-0 rounded-full bg-[#E8B83E]"></span>
 
                         <div>
-                            <p class="text-[8px] font-semibold text-[#171719] dark:text-white">
+                            <p class="text-[10px] font-semibold text-[#171719] dark:text-white">
                                 2 PO menunggu approval
                             </p>
 
-                            <p class="mt-0.5 text-[7px] text-black/35 dark:text-white/35">
+                            <p class="mt-0.5 text-[9px] text-black/35 dark:text-white/35">
                                 Menunggu supervisor
                             </p>
                         </div>
@@ -754,11 +754,11 @@
                         <span class="mt-1 w-1.5 h-1.5 shrink-0 rounded-full bg-[#A8F23A]"></span>
 
                         <div>
-                            <p class="text-[8px] font-semibold text-[#171719] dark:text-white">
+                            <p class="text-[10px] font-semibold text-[#171719] dark:text-white">
                                 4 barang belum lengkap
                             </p>
 
-                            <p class="mt-0.5 text-[7px] text-black/35 dark:text-white/35">
+                            <p class="mt-0.5 text-[9px] text-black/35 dark:text-white/35">
                                 Periksa penerimaan gudang
                             </p>
                         </div>
@@ -771,11 +771,11 @@
                         <span class="mt-1 w-1.5 h-1.5 shrink-0 rounded-full bg-[#7786D8]"></span>
 
                         <div>
-                            <p class="text-[8px] font-semibold text-[#171719] dark:text-white">
+                            <p class="text-[10px] font-semibold text-[#171719] dark:text-white">
                                 1 supplier perlu evaluasi
                             </p>
 
-                            <p class="mt-0.5 text-[7px] text-black/35 dark:text-white/35">
+                            <p class="mt-0.5 text-[9px] text-black/35 dark:text-white/35">
                                 Review performa supplier
                             </p>
                         </div>
@@ -787,9 +787,9 @@
 
                 <button
                     type="button"
-                    class="mt-5 w-full h-8 rounded-full
+                    class="mt-5 w-full h-9 rounded-full
                            bg-[#F0F1F5] dark:bg-white/[0.07]
-                           text-[8px] font-semibold
+                           text-[10px] font-semibold
                            text-black/55 dark:text-white/55"
                 >
                     Lihat Semua
