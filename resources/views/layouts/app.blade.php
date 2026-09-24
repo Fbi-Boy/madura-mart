@@ -31,10 +31,10 @@
                     flex flex-col overflow-hidden">
 
             {{-- HEADER --}}
-            <header class="h-20 shrink-0 flex items-center justify-between px-5 sm:px-7">
+            <header class="h-[72px] shrink-0 flex items-start justify-between px-5 sm:px-7 pt-1">
 
-                <h1 class="text-2xl sm:text-[28px] font-black tracking-[-0.03em]
-                           text-[#171719] dark:text-white">
+                <h1 class="text-2xl sm:text-[28px] font-black tracking-[-0.04em]
+                           leading-tight text-[#171719] dark:text-white">
                     Selamat datang, {{ auth()->user()->name }} 👋
                 </h1>
 
