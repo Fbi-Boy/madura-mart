@@ -16,36 +16,32 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="min-h-screen
+<body class="h-screen overflow-hidden
              bg-[#FCFCFB] dark:bg-[#111113]
              text-[#171719] dark:text-white
              transition-colors duration-200">
 
-    <div class="min-h-screen flex gap-4 p-4 sm:gap-5 sm:p-5 lg:gap-6 lg:p-6">
+    <div class="h-screen flex gap-4 p-4 sm:gap-5 sm:p-5 lg:gap-6 lg:p-6 overflow-hidden">
 
         {{-- SIDEBAR --}}
         @include('layouts.navigation')
 
         {{-- MAIN CONTENT --}}
         <div class="flex-1 min-w-0 h-[calc(100vh-2rem)]
-                    flex flex-col overflow-hidden rounded-[20px]
-                    bg-[#FCFCFB] dark:bg-[#111113]
-                    shadow-[0_10px_35px_rgba(0,0,0,0.06)]
-                    dark:shadow-[0_10px_35px_rgba(0,0,0,0.16)]
-                    transition-colors duration-200">
+                    flex flex-col overflow-hidden">
 
-            {{-- TOPBAR --}}
-            <header class="h-16 shrink-0 flex items-center justify-between px-5 sm:px-6
-                           bg-[#FCFCFB] dark:bg-[#111113]
-                           border-b border-black/5 dark:border-white/5">
+            {{-- HEADER --}}
+            <header class="h-20 shrink-0 flex items-center justify-between px-5 sm:px-7">
 
                 <div>
-                    <h1 class="text-lg font-semibold text-[#171719] dark:text-white">
-                        WAR-MART
+                    <h1 class="text-xl sm:text-2xl font-semibold tracking-tight
+                               text-[#171719] dark:text-white">
+                        Selamat datang, {{ auth()->user()->name }} 👋
                     </h1>
 
-                    <p class="hidden sm:block text-[11px] text-black/40 dark:text-white/40 mt-0.5">
-                        Management System
+                    <p class="text-xs sm:text-sm mt-1
+                              text-black/40 dark:text-white/40">
+                        Senang melihatmu kembali di WAR-MART.
                     </p>
                 </div>
 
@@ -55,14 +51,14 @@
                             type="button"
                             class="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl
                                    border border-black/10 dark:border-white/10
-                                   bg-white dark:bg-white/5
+                                   bg-white/70 dark:bg-white/5
                                    text-black dark:text-white
                                    hover:bg-black/5 dark:hover:bg-white/10 transition"
                             aria-label="Gunakan Dark Mode">
                         ☾
                     </button>
 
-                    <div class="text-right">
+                    <div class="hidden sm:block text-right">
                         <p class="text-sm font-semibold text-black/75 dark:text-white/85">
                             {{ auth()->user()->name }}
                         </p>
@@ -73,17 +69,17 @@
                     </div>
 
                 </div>
+
             </header>
 
             @isset($header)
-                <div class="shrink-0 px-5 sm:px-6 py-4
-                            bg-[#FCFCFB] dark:bg-[#111113]
-                            border-b border-black/5 dark:border-white/5">
+                <div class="shrink-0 px-5 sm:px-7 py-4">
                     {{ $header }}
                 </div>
             @endisset
 
-            <main class="flex-1 min-h-0 overflow-auto bg-[#FCFCFB] dark:bg-[#111113]">
+            {{-- PAGE CONTENT --}}
+            <main class="flex-1 min-h-0 overflow-auto">
                 {{ $slot }}
             </main>
 
