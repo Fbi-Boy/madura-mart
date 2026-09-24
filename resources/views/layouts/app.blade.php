@@ -33,17 +33,10 @@
             {{-- HEADER --}}
             <header class="h-20 shrink-0 flex items-center justify-between px-5 sm:px-7">
 
-                <div>
-                    <h1 class="text-xl sm:text-2xl font-semibold tracking-tight
-                               text-[#171719] dark:text-white">
-                        Selamat datang, {{ auth()->user()->name }} 👋
-                    </h1>
-
-                    <p class="text-xs sm:text-sm mt-1
-                              text-black/40 dark:text-white/40">
-                        Senang melihatmu kembali di WAR-MART.
-                    </p>
-                </div>
+                <h1 class="text-2xl sm:text-[28px] font-black tracking-[-0.03em]
+                           text-[#171719] dark:text-white">
+                    Selamat datang, {{ auth()->user()->name }} 👋
+                </h1>
 
                 <div class="flex items-center gap-3 sm:gap-4">
 
@@ -72,14 +65,8 @@
 
             </header>
 
-            @isset($header)
-                <div class="shrink-0 px-5 sm:px-7 py-4">
-                    {{ $header }}
-                </div>
-            @endisset
-
             {{-- PAGE CONTENT --}}
-            <main class="flex-1 min-h-0 overflow-hidden">
+            <main class="flex-1 min-h-0 overflow-hidden px-5 sm:px-7 pt-0">
                 {{ $slot }}
             </main>
 
