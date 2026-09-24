@@ -15,12 +15,15 @@ class PurchaseMonitoringTest extends TestCase
     {
         $admin = User::factory()->create(['role' => 'admin']);
         Purchase::factory()->create(['invoice' => 'PO-001', 'purchase_date' => now(), 'total' => 125000]);
+        Purchase::factory()->create(['invoice' => 'PO-002', 'purchase_date' => now(), 'total' => 50000]);
 
         $this->actingAs($admin)
             ->get(route('admin.monitoring.pembelian', ['search' => 'PO-001']))
             ->assertOk()
             ->assertViewHas('todayTransactions', 1)
-            ->assertViewHas('todayPurchases', 125000.0);
+            ->assertViewHas('todayPurchases', 175000.0)
+            ->assertSee('PO-001')
+            ->assertDontSee('PO-002');
     }
 
     public function test_kasir_cannot_monitor_purchases(): void
