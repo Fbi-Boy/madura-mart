@@ -1,10 +1,19 @@
 import Alpine from 'alpinejs';
+import { createIcons, Download, Activity, CalendarDays, SlidersHorizontal } from 'lucide';
 
 window.Alpine = Alpine;
 
 Alpine.start();
 
 document.addEventListener('DOMContentLoaded', () => {
+    createIcons({
+        icons: {
+            Download,
+            Activity,
+            CalendarDays,
+            SlidersHorizontal,
+        },
+    });
     const themeToggle = document.getElementById('themeToggle');
 
     if (!themeToggle) {
