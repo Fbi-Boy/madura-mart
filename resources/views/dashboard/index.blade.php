@@ -4,7 +4,8 @@
 
         {{-- PAGE TITLE --}}
         <div class="mb-5">
-            <h2 class="text-[22px] font-bold tracking-[-0.02em] text-[#171719] dark:text-white">
+            <h2 class="text-[22px] font-bold tracking-[-0.02em]
+                       leading-none text-[#171719] dark:text-white">
                 Dashboard
             </h2>
         </div>
