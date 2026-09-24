@@ -17,8 +17,6 @@ class SaleTransactionTest extends TestCase
     {
         $kasir = User::factory()->create(['role' => 'kasir']);
         CashierShift::create(['shift_number' => 'SHIFT-TEST-1', 'user_id' => $kasir->id, 'opened_at' => now(), 'opening_cash' => 100000, 'status' => 'open']);
-        CashierShift::create(['shift_number' => 'SHIFT-TEST-2', 'user_id' => $kasir->id, 'opened_at' => now(), 'opening_cash' => 100000, 'status' => 'open']);
-        CashierShift::create(['shift_number' => 'SHIFT-TEST-3', 'user_id' => $kasir->id, 'opened_at' => now(), 'opening_cash' => 100000, 'status' => 'open']);
         $product = Product::factory()->create([
             'stock' => 10,
             'price' => 12500,
@@ -78,6 +76,7 @@ class SaleTransactionTest extends TestCase
     public function test_sale_rejects_quantity_above_stock(): void
     {
         $kasir = User::factory()->create(['role' => 'kasir']);
+        CashierShift::create(['shift_number' => 'SHIFT-TEST-3', 'user_id' => $kasir->id, 'opened_at' => now(), 'opening_cash' => 100000, 'status' => 'open']);
         $product = Product::factory()->create([
             'stock' => 2,
             'is_active' => true,
