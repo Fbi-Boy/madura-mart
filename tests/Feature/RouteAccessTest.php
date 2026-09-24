@@ -25,4 +25,14 @@ class RouteAccessTest extends TestCase
     {
         $this->get('/admin/report/stok')->assertRedirect('/login');
     }
+
+    public function test_guest_cannot_access_the_profile_page(): void
+    {
+        $this->get('/profile')->assertRedirect('/login');
+    }
+
+    public function test_guest_cannot_update_the_profile(): void
+    {
+        $this->patch('/profile', [])->assertRedirect('/login');
+    }
 }
