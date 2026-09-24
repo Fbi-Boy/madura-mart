@@ -1,11 +1,13 @@
 <?php
 
-use AppHttpControllersProfileController;
-use AppHttpControllersDashboardDashboardController;
-use IlluminateSupportFacadesRoute;
+use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return auth()->check()
+        ? redirect()->route('dashboard')
+        : redirect()->route('login');
 });
 
 Route::middleware('auth')->group(function () {
@@ -13,32 +15,48 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
-    Route::get('/menu/{menu}', function (string $menu) {
-        $menus = [
-            'penjualan' => 'Penjualan',
-            'pembelian' => 'Pembelian',
-            'pesanan' => 'Pesanan',
-            'produk' => 'Produk',
-            'distributor' => 'Distributor',
-            'client' => 'Client',
-            'kurir' => 'Kurir',
-            'laporan-penjualan' => 'Laporan Penjualan',
-            'laporan-pembelian' => 'Laporan Pembelian',
-            'stok' => 'Stok',
-            'transaksi-baru' => 'Transaksi Baru',
-            'riwayat-transaksi' => 'Riwayat Transaksi',
-            'retur' => 'Retur',
-            'buka-shift' => 'Buka Shift',
-            'tutup-shift' => 'Tutup Shift',
-            'riwayat-shift' => 'Riwayat Shift',
-        ];
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN - MONITORING
+    |--------------------------------------------------------------------------
+    */
 
-        abort_unless(isset($menus[$menu]), 404);
+    Route::prefix('admin/monitoring')->name('admin.monitoring.')->group(function () {
+        Route::view('/penjualan', 'admin.monitoring.penjualan.index')->name('penjualan');
+        Route::view('/pembelian', 'admin.monitoring.pembelian.index')->name('pembelian');
+        Route::view('/pesanan', 'admin.monitoring.pesanan.index')->name('pesanan');
+        Route::view('/produk', 'admin.monitoring.produk.index')->name('produk');
+        Route::view('/distributor', 'admin.monitoring.distributor.index')->name('distributor');
+        Route::view('/client', 'admin.monitoring.client.index')->name('client');
+        Route::view('/kurir', 'admin.monitoring.kurir.index')->name('kurir');
+    });
 
-        return view('menu.index', [
-            'title' => $menus[$menu],
-        ]);
-    })->name('menu.show');
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN - REPORT
+    |--------------------------------------------------------------------------
+    */
+
+    Route::prefix('admin/report')->name('admin.report.')->group(function () {
+        Route::view('/penjualan', 'admin.report.penjualan.index')->name('penjualan');
+        Route::view('/pembelian', 'admin.report.pembelian.index')->name('pembelian');
+        Route::view('/stok', 'admin.report.stok.index')->name('stok');
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | KASIR
+    |--------------------------------------------------------------------------
+    */
+
+    Route::prefix('kasir')->name('kasir.')->group(function () {
+        Route::view('/transaksi-baru', 'kasir.transaksi-baru.index')->name('transaksi-baru');
+        Route::view('/riwayat-transaksi', 'kasir.riwayat-transaksi.index')->name('riwayat-transaksi');
+        Route::view('/retur', 'kasir.retur.index')->name('retur');
+        Route::view('/buka-shift', 'kasir.buka-shift.index')->name('buka-shift');
+        Route::view('/tutup-shift', 'kasir.tutup-shift.index')->name('tutup-shift');
+        Route::view('/riwayat-shift', 'kasir.riwayat-shift.index')->name('riwayat-shift');
+    });
 
     Route::get('/profile', [ProfileController::class, 'edit'])
         ->name('profile.edit');
