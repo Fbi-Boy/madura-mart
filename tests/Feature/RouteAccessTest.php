@@ -21,6 +21,16 @@ class RouteAccessTest extends TestCase
         $this->get('/admin/monitoring/produk')->assertRedirect('/login');
     }
 
+    public function test_guest_cannot_access_admin_sales_monitoring(): void
+    {
+        $this->get('/admin/monitoring/penjualan')->assertRedirect('/login');
+    }
+
+    public function test_guest_cannot_access_admin_purchase_monitoring(): void
+    {
+        $this->get('/admin/monitoring/pembelian')->assertRedirect('/login');
+    }
+
     public function test_guest_cannot_access_admin_reports(): void
     {
         $this->get('/admin/report/stok')->assertRedirect('/login');
