@@ -23,6 +23,7 @@ use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Kasir\SaleController;
 use App\Http\Controllers\Kasir\SaleReturnController;
+use App\Http\Controllers\Kasir\CashierShiftController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -98,9 +99,11 @@ Route::middleware('auth')->group(function () {
             Route::get('/retur', [SaleReturnController::class, 'index'])->name('retur');
             Route::get('/retur/baru', [SaleReturnController::class, 'create'])->name('retur.create');
             Route::post('/retur', [SaleReturnController::class, 'store'])->name('retur.store');
-            Route::view('/buka-shift', 'kasir.buka-shift.index')->name('buka-shift');
-            Route::view('/tutup-shift', 'kasir.tutup-shift.index')->name('tutup-shift');
-            Route::view('/riwayat-shift', 'kasir.riwayat-shift.index')->name('riwayat-shift');
+            Route::get('/buka-shift', [CashierShiftController::class, 'openForm'])->name('buka-shift');
+            Route::post('/buka-shift', [CashierShiftController::class, 'open'])->name('buka-shift.store');
+            Route::get('/tutup-shift', [CashierShiftController::class, 'closeForm'])->name('tutup-shift');
+            Route::post('/tutup-shift', [CashierShiftController::class, 'close'])->name('tutup-shift.store');
+            Route::get('/riwayat-shift', [CashierShiftController::class, 'history'])->name('riwayat-shift');
         });
 
     Route::get('/profile', [ProfileController::class, 'edit'])
