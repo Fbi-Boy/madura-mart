@@ -1,13 +1,13 @@
 <?php
 
-namespace App\\Http\\Controllers\\Admin;
+namespace App\Http\Controllers\Admin;
 
-use App\\Http\\Controllers\\Controller;
-use App\\Http\\Requests\\CategoryStoreRequest;
-use App\\Http\\Requests\\CategoryUpdateRequest;
-use App\\Models\\Category;
-use Illuminate\\Http\\RedirectResponse;
-use Illuminate\\View\\View;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\CategoryStoreRequest;
+use App\Http\Requests\CategoryUpdateRequest;
+use App\Models\Category;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
