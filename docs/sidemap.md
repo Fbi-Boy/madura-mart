@@ -475,7 +475,7 @@ Pengembangan Madura Mart dilakukan secara bertahap.
 ## PHASE 2 — MASTER DATA
 - [ ] User
 - [ ] Role & Permission
-- [ ] Kategori
+- [x] Kategori
 - [ ] Produk
 - [ ] Supplier
 - [ ] Customer
