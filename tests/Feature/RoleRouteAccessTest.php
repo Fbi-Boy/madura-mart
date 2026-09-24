@@ -45,4 +45,13 @@ class RoleRouteAccessTest extends TestCase
             ->get('/admin/monitoring/produk')
             ->assertForbidden();
     }
+    public function test_customer_cannot_access_admin_monitoring_pembelian(): void
+    {
+        $user = User::factory()->create(['role' => 'customer']);
+
+        $this->actingAs($user)
+            ->get('/admin/monitoring/pembelian')
+            .assertForbidden();
+    }
+
 }
