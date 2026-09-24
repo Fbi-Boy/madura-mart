@@ -54,3 +54,7 @@ A pull request should explain:
 - any follow-up work that remains.
 
 Do not commit `.env` files, credentials, generated dependencies, or local machine configuration.
+
+## Authorization Changes
+
+When adding or changing a protected route, update its role middleware and add a feature test that verifies both permitted and denied access where applicable.
