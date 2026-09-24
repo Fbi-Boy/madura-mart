@@ -10,7 +10,7 @@ use App\Http\Controllers\Admin\DistributorController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\Monitoring\ClientController;
-use App\Http\Controllers\Admin\Monitoring\DistributorController;
+use App\Http\Controllers\Admin\Monitoring\DistributorController as MonitoringDistributorController;
 use App\Http\Controllers\Admin\Monitoring\KurirController;
 use App\Http\Controllers\Admin\Monitoring\PembelianController as MonitoringPembelianController;
 use App\Http\Controllers\Admin\Monitoring\PenjualanController as MonitoringPenjualanController;
