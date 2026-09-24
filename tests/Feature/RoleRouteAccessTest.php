@@ -171,4 +171,13 @@ class RoleRouteAccessTest extends TestCase
             .assertForbidden();
     }
 
+    public function test_super_admin_can_access_admin_monitoring(): void
+    {
+        $user = User::factory()->create(['role' => 'super-admin']);
+
+        $this->actingAs($user)
+            ->get('/admin/monitoring/penjualan')
+            .assertOk();
+    }
+
 }
