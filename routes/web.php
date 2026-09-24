@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\CourierController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UnitController;
+use App\Http\Controllers\Admin\PurchaseController;
 use App\Http\Controllers\Admin\DistributorController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SupplierController;
@@ -75,6 +76,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('couriers', CourierController::class)->except(['show']);
         Route::resource('users', UserController::class)->except(['show']);
         Route::resource('units', UnitController::class)->except(['show']);
+        Route::resource('purchases', PurchaseController::class)->only(['index','create','store']);
         Route::resource('distributors', DistributorController::class)->except(['show']);
     });
 
