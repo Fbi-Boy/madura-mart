@@ -51,6 +51,7 @@
                 <a href="{{ route('admin.report.pembelian') }}" class="menu-link">Laporan Pembelian</a>
                 <a href="{{ route('admin.report.stok') }}" class="menu-link">Stok</a>
                 <a href="{{ route('admin.categories.index') }}" class="menu-link">Kategori</a>
+                <a href="{{ route('admin.products.index') }}" class="menu-link">Produk Master</a>
             </div>
 
         @elseif(auth()->user()->role === 'kasir')
