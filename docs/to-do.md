@@ -27,3 +27,10 @@ A feature or fix is ready for review when:
 - Existing behavior is not knowingly broken.
 - Documentation is updated when the behavior or workflow changes.
 - Local validation commands complete successfully.
+
+## Authorization hardening
+
+- [x] Apply role middleware to administrative monitoring routes.
+- [x] Apply role middleware to administrative report routes.
+- [x] Apply role middleware to cashier routes.
+- [x] Add feature coverage for allowed and denied role access.
