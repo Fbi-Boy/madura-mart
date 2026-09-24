@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/pembelian', [MonitoringPembelianController::class, 'index'])->name('pembelian');
             Route::get('/pesanan', [PesananController::class, 'index'])->name('pesanan');
             Route::get('/produk', [ProdukController::class, 'index'])->name('produk');
-            Route::get('/distributor', [DistributorController::class, 'index'])->name('distributor');
+            Route::get('/distributor', [MonitoringDistributorController::class, 'index'])->name('distributor');
             Route::get('/client', [ClientController::class, 'index'])->name('client');
             Route::get('/kurir', [KurirController::class, 'index'])->name('kurir');
         });
