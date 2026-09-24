@@ -1,6 +1,19 @@
 <x-app-layout>
-<div class="h-full flex flex-col gap-5">
-<div><p class="text-sm text-black/45 dark:text-white/45">Report</p><h2 class="mt-1 text-2xl font-semibold text-[#171719] dark:text-white">Laporan Penjualan</h2></div>
-<div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><div class="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 p-5"><p class="text-sm text-black/45 dark:text-white/45">Total Data</p><p class="mt-2 text-2xl font-semibold text-[#171719] dark:text-white">0</p></div><div class="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 p-5"><p class="text-sm text-black/45 dark:text-white/45">Status</p><p class="mt-2 text-sm font-medium text-[#171719] dark:text-white">Belum ada data</p></div><div class="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 p-5"><p class="text-sm text-black/45 dark:text-white/45">Informasi</p><p class="mt-2 text-sm font-medium text-[#171719] dark:text-white">Halaman siap digunakan</p></div></div>
-<div class="flex-1 rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 overflow-hidden"><div class="px-5 py-4 border-b border-black/5 dark:border-white/10"><h3 class="text-sm font-semibold text-[#171719] dark:text-white">Data Laporan Penjualan</h3></div><div class="h-full flex items-center justify-center"><div class="text-center"><div class="mx-auto w-12 h-12 rounded-2xl bg-[#A8F23A]/20 flex items-center justify-center"><span class="text-xl">▦</span></div><p class="mt-4 text-sm font-medium text-[#171719] dark:text-white">Belum ada data</p><p class="mt-1 text-xs text-black/40 dark:text-white/40">Data laporan penjualan akan tampil di halaman ini.</p></div></div></div>
-</div></x-app-layout>
+<div class="space-y-5">
+    <div><p class="text-sm text-black/45 dark:text-white/45">Report</p><h2 class="mt-1 text-2xl font-semibold">Laporan Penjualan</h2></div>
+    <form method="GET" class="grid grid-cols-1 gap-3 rounded-2xl border border-black/5 bg-white p-5 sm:grid-cols-3">
+        <div><label class="text-sm font-medium">Dari</label><input type="date" name="from" value="{{ $from->format('Y-m-d') }}" class="mt-2 w-full rounded-xl border px-3 py-2.5"></div>
+        <div><label class="text-sm font-medium">Sampai</label><input type="date" name="to" value="{{ $to->format('Y-m-d') }}" class="mt-2 w-full rounded-xl border px-3 py-2.5"></div>
+        <div class="flex items-end"><button class="w-full rounded-xl bg-[#171719] px-4 py-2.5 font-semibold text-white">Filter</button></div>
+    </form>
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div class="rounded-2xl border bg-white p-5"><p class="text-sm text-black/45">Total Transaksi</p><p class="mt-2 text-2xl font-semibold">{{ $totalTransactions }}</p></div>
+        <div class="rounded-2xl border bg-white p-5"><p class="text-sm text-black/45">Total Penjualan</p><p class="mt-2 text-2xl font-semibold">Rp {{ number_format($totalSales,0,',','.') }}</p></div>
+    </div>
+    <div class="overflow-hidden rounded-2xl border bg-white">
+        <div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead class="border-b text-xs uppercase text-black/45"><tr><th class="px-5 py-4">Invoice</th><th class="px-5 py-4">Tanggal</th><th class="px-5 py-4">Kasir</th><th class="px-5 py-4">Pembayaran</th><th class="px-5 py-4 text-right">Total</th></tr></thead>
+        <tbody class="divide-y">@forelse($sales as $sale)<tr><td class="px-5 py-4 font-medium">{{ $sale->invoice }}</td><td class="px-5 py-4">{{ $sale->sale_date->format('d/m/Y H:i') }}</td><td class="px-5 py-4">{{ $sale->user->name }}</td><td class="px-5 py-4 uppercase">{{ $sale->payment_method }}</td><td class="px-5 py-4 text-right font-semibold">Rp {{ number_format((float)$sale->total,0,',','.') }}</td></tr>@empty<tr><td colspan="5" class="px-5 py-12 text-center text-black/40">Tidak ada transaksi pada periode ini.</td></tr>@endforelse</tbody></table></div>
+        @if($sales->hasPages())<div class="border-t px-5 py-4">{{ $sales->links() }}</div>@endif
+    </div>
+</div>
+</x-app-layout>
