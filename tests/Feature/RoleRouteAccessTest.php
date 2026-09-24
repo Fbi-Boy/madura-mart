@@ -180,4 +180,13 @@ class RoleRouteAccessTest extends TestCase
             .assertOk();
     }
 
+    public function test_super_admin_can_access_admin_reports(): void
+    {
+        $user = User::factory()->create(['role' => 'super-admin']);
+
+        $this->actingAs($user)
+            ->get('/admin/report/penjualan')
+            .assertOk();
+    }
+
 }
