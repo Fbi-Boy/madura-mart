@@ -1,51 +1,23 @@
 <?php
 
-namespace DatabaseSeeders;
+namespace Database\Seeders;
 
-use AppModelsUser;
-use IlluminateDatabaseSeeder;
-use IlluminateSupportFacadesHash;
+use App\Models\User;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
         $users = [
-            [
-                'name' => 'Super Admin',
-                'email' => 'superadmin@maduramart.test',
-                'role' => 'super_admin',
-            ],
-            [
-                'name' => 'Admin Madura Mart',
-                'email' => 'admin@maduramart.test',
-                'role' => 'admin',
-            ],
-            [
-                'name' => 'Staff Gudang',
-                'email' => 'gudang@maduramart.test',
-                'role' => 'gudang',
-            ],
-            [
-                'name' => 'Kasir Madura Mart',
-                'email' => 'kasir@maduramart.test',
-                'role' => 'kasir',
-            ],
-            [
-                'name' => 'Staff Purchasing',
-                'email' => 'purchasing@maduramart.test',
-                'role' => 'purchasing',
-            ],
-            [
-                'name' => 'Kurir Madura Mart',
-                'email' => 'kurir@maduramart.test',
-                'role' => 'kurir',
-            ],
-            [
-                'name' => 'Customer Madura Mart',
-                'email' => 'customer@maduramart.test',
-                'role' => 'customer',
-            ],
+            ['name' => 'Super Admin', 'email' => 'superadmin@maduramart.test', 'role' => 'super-admin'],
+            ['name' => 'Admin Madura Mart', 'email' => 'admin@maduramart.test', 'role' => 'admin'],
+            ['name' => 'Staff Gudang', 'email' => 'gudang@maduramart.test', 'role' => 'gudang'],
+            ['name' => 'Kasir Madura Mart', 'email' => 'kasir@maduramart.test', 'role' => 'kasir'],
+            ['name' => 'Staff Purchasing', 'email' => 'purchasing@maduramart.test', 'role' => 'purchasing'],
+            ['name' => 'Kurir Madura Mart', 'email' => 'kurir@maduramart.test', 'role' => 'kurir'],
+            ['name' => 'Customer Madura Mart', 'email' => 'customer@maduramart.test', 'role' => 'customer'],
         ];
 
         foreach ($users as $user) {
