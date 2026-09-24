@@ -42,73 +42,53 @@
 
             <div class="mt-3 space-y-0.5">
 
-                <a href="#" class="h-10 flex items-center gap-3 px-3 rounded-[11px] text-[13px] text-white/72 dark:text-black/68 hover:bg-white/[0.06] dark:hover:bg-black/[0.04] hover:text-white dark:hover:text-black transition">
-                    <svg class="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                        <path d="M4 5h16v14H4z"></path><path d="M8 9h8M8 13h5"></path>
-                    </svg>
+                <a href="{{ route('menu.show', ['menu' => 'penjualan']) }}" class="menu-link">
+                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4z"></path><path d="M8 9h8M8 13h5"></path></svg>
                     Penjualan
                 </a>
 
-                <a href="#" class="h-10 flex items-center gap-3 px-3 rounded-[11px] text-[13px] text-white/72 dark:text-black/68 hover:bg-white/[0.06] dark:hover:bg-black/[0.04] hover:text-white dark:hover:text-black transition">
-                    <svg class="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                        <path d="M4 5h16v14H4z"></path><path d="M8 9h8M8 13h6M8 17h4"></path>
-                    </svg>
+                <a href="{{ route('menu.show', ['menu' => 'pembelian']) }}" class="menu-link">
+                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4z"></path><path d="M8 9h8M8 13h6M8 17h4"></path></svg>
                     Pembelian
                 </a>
 
-                <a href="#" class="h-10 flex items-center gap-3 px-3 rounded-[11px] text-[13px] text-white/72 dark:text-black/68 hover:bg-white/[0.06] dark:hover:bg-black/[0.04] hover:text-white dark:hover:text-black transition">
-                    <svg class="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                        <circle cx="9" cy="9" r="3"></circle><path d="M3 20a6 6 0 0 1 12 0"></path><path d="M17 11h4M19 9v4"></path>
-                    </svg>
+                <a href="{{ route('menu.show', ['menu' => 'pesanan']) }}" class="menu-link">
+                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="9" r="3"></circle><path d="M3 20a6 6 0 0 1 12 0"></path><path d="M17 11h4M19 9v4"></path></svg>
                     Pesanan
                 </a>
 
-                <a href="#" class="h-10 flex items-center gap-3 px-3 rounded-[11px] text-[13px] text-white/72 dark:text-black/68 hover:bg-white/[0.06] dark:hover:bg-black/[0.04] hover:text-white dark:hover:text-black transition">
-                    <svg class="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                        <rect x="4" y="4" width="16" height="16" rx="1.5"></rect><path d="M8 8h8M8 12h8M8 16h5"></path>
-                    </svg>
+                <a href="{{ route('menu.show', ['menu' => 'produk']) }}" class="menu-link">
+                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="1.5"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg>
                     Produk
                 </a>
 
-                <a href="#" class="h-10 flex items-center gap-3 px-3 rounded-[11px] text-[13px] text-white/72 dark:text-black/68 hover:bg-white/[0.06] dark:hover:bg-black/[0.04] hover:text-white dark:hover:text-black transition">
-                    <svg class="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                        <path d="M3 8h18"></path><path d="M5 8v12h14V8"></path><path d="m8 5 1-2h6l1 2"></path>
-                    </svg>
+                <a href="{{ route('menu.show', ['menu' => 'distributor']) }}" class="menu-link">
+                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h18"></path><path d="M5 8v12h14V8"></path><path d="m8 5 1-2h6l1 2"></path></svg>
                     Distributor
                 </a>
 
-                <a href="#" class="h-10 flex items-center gap-3 px-3 rounded-[11px] text-[13px] text-white/72 dark:text-black/68 hover:bg-white/[0.06] dark:hover:bg-black/[0.04] hover:text-white dark:hover:text-black transition">
-                    <svg class="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                        <circle cx="12" cy="8" r="3"></circle><path d="M5 21a7 7 0 0 1 14 0"></path>
-                    </svg>
+                <a href="{{ route('menu.show', ['menu' => 'client']) }}" class="menu-link">
+                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3"></circle><path d="M5 21a7 7 0 0 1 14 0"></path></svg>
                     Client
                 </a>
 
-                <a href="#" class="h-10 flex items-center gap-3 px-3 rounded-[11px] text-[13px] text-white/72 dark:text-black/68 hover:bg-white/[0.06] dark:hover:bg-black/[0.04] hover:text-white dark:hover:text-black transition">
-                    <svg class="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                        <rect x="4" y="5" width="16" height="14" rx="2"></rect><path d="M8 9h8M8 13h5"></path>
-                    </svg>
+                <a href="{{ route('menu.show', ['menu' => 'kurir']) }}" class="menu-link">
+                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="5" width="16" height="14" rx="2"></rect><path d="M8 9h8M8 13h5"></path></svg>
                     Kurir
                 </a>
 
-                <a href="#" class="h-10 flex items-center gap-3 px-3 rounded-[11px] text-[13px] text-white/72 dark:text-black/68 hover:bg-white/[0.06] dark:hover:bg-black/[0.04] hover:text-white dark:hover:text-black transition">
-                    <svg class="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                        <path d="M4 19V5"></path><path d="M4 19h16"></path><path d="m7 15 3-4 3 2 4-6"></path>
-                    </svg>
+                <a href="{{ route('menu.show', ['menu' => 'laporan-penjualan']) }}" class="menu-link">
+                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5"></path><path d="M4 19h16"></path><path d="m7 15 3-4 3 2 4-6"></path></svg>
                     Laporan Penjualan
                 </a>
 
-                <a href="#" class="h-10 flex items-center gap-3 px-3 rounded-[11px] text-[13px] text-white/72 dark:text-black/68 hover:bg-white/[0.06] dark:hover:bg-black/[0.04] hover:text-white dark:hover:text-black transition">
-                    <svg class="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                        <rect x="4" y="4" width="16" height="16" rx="1.5"></rect><path d="M8 8h8M8 12h8M8 16h5"></path>
-                    </svg>
+                <a href="{{ route('menu.show', ['menu' => 'laporan-pembelian']) }}" class="menu-link">
+                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="1.5"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg>
                     Laporan Pembelian
                 </a>
 
-                <a href="#" class="h-10 flex items-center gap-3 px-3 rounded-[11px] text-[13px] text-white/72 dark:text-black/68 hover:bg-white/[0.06] dark:hover:bg-black/[0.04] hover:text-white dark:hover:text-black transition">
-                    <svg class="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                        <path d="M5 20V9"></path><path d="M10 20V5"></path><path d="M15 20v-7"></path><path d="M20 20V3"></path>
-                    </svg>
+                <a href="{{ route('menu.show', ['menu' => 'stok']) }}" class="menu-link">
+                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 20V9"></path><path d="M10 20V5"></path><path d="M15 20v-7"></path><path d="M20 20V3"></path></svg>
                     Stok
                 </a>
 
@@ -118,33 +98,33 @@
 
             <div class="mt-3 space-y-0.5">
 
-                <a href="#" class="h-10 flex items-center gap-3 px-3 rounded-[11px] text-[13px] text-white/72 dark:text-black/68 hover:bg-white/[0.06] dark:hover:bg-black/[0.04] hover:text-white dark:hover:text-black transition">
-                    <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 4h18v16H3z"></path><path d="M7 8h10M7 12h10M7 16h6"></path></svg>
+                <a href="{{ route('menu.show', ['menu' => 'transaksi-baru']) }}" class="menu-link">
+                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 4h18v16H3z"></path><path d="M7 8h10M7 12h10M7 16h6"></path></svg>
                     Transaksi Baru
                 </a>
 
-                <a href="#" class="h-10 flex items-center gap-3 px-3 rounded-[11px] text-[13px] text-white/72 dark:text-black/68 hover:bg-white/[0.06] dark:hover:bg-black/[0.04] hover:text-white dark:hover:text-black transition">
-                    <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h14v16H5z"></path><path d="M8 8h8M8 12h8M8 16h5"></path></svg>
+                <a href="{{ route('menu.show', ['menu' => 'riwayat-transaksi']) }}" class="menu-link">
+                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h14v16H5z"></path><path d="M8 8h8M8 12h8M8 16h5"></path></svg>
                     Riwayat Transaksi
                 </a>
 
-                <a href="#" class="h-10 flex items-center gap-3 px-3 rounded-[11px] text-[13px] text-white/72 dark:text-black/68 hover:bg-white/[0.06] dark:hover:bg-black/[0.04] hover:text-white dark:hover:text-black transition">
-                    <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4z"></path><path d="m8 9 8 6M16 9l-8 6"></path></svg>
+                <a href="{{ route('menu.show', ['menu' => 'retur']) }}" class="menu-link">
+                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4z"></path><path d="m8 9 8 6M16 9l-8 6"></path></svg>
                     Retur
                 </a>
 
-                <a href="#" class="h-10 flex items-center gap-3 px-3 rounded-[11px] text-[13px] text-white/72 dark:text-black/68 hover:bg-white/[0.06] dark:hover:bg-black/[0.04] hover:text-white dark:hover:text-black transition">
-                    <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"></circle><path d="M12 8v4l3 2"></path></svg>
+                <a href="{{ route('menu.show', ['menu' => 'buka-shift']) }}" class="menu-link">
+                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"></circle><path d="M12 8v4l3 2"></path></svg>
                     Buka Shift
                 </a>
 
-                <a href="#" class="h-10 flex items-center gap-3 px-3 rounded-[11px] text-[13px] text-white/72 dark:text-black/68 hover:bg-white/[0.06] dark:hover:bg-black/[0.04] hover:text-white dark:hover:text-black transition">
-                    <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"></circle><path d="M8 12h8"></path></svg>
+                <a href="{{ route('menu.show', ['menu' => 'tutup-shift']) }}" class="menu-link">
+                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"></circle><path d="M8 12h8"></path></svg>
                     Tutup Shift
                 </a>
 
-                <a href="#" class="h-10 flex items-center gap-3 px-3 rounded-[11px] text-[13px] text-white/72 dark:text-black/68 hover:bg-white/[0.06] dark:hover:bg-black/[0.04] hover:text-white dark:hover:text-black transition">
-                    <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"></circle><path d="M8 12h8M12 8v8"></path></svg>
+                <a href="{{ route('menu.show', ['menu' => 'riwayat-shift']) }}" class="menu-link">
+                    <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"></circle><path d="M8 12h8M12 8v8"></path></svg>
                     Riwayat Shift
                 </a>
 
@@ -184,3 +164,37 @@
     </div>
 
 </nav>
+
+<style>
+    .menu-link {
+        height: 40px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0 12px;
+        border-radius: 11px;
+        font-size: 13px;
+        color: rgb(255 255 255 / 0.72);
+        transition: 0.2s;
+    }
+
+    .dark .menu-link {
+        color: rgb(0 0 0 / 0.68);
+    }
+
+    .menu-link:hover {
+        background: rgb(255 255 255 / 0.06);
+        color: white;
+    }
+
+    .dark .menu-link:hover {
+        background: rgb(0 0 0 / 0.04);
+        color: black;
+    }
+
+    .menu-icon {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+    }
+</style>
