@@ -29,4 +29,34 @@ class DashboardTest extends TestCase
             ->assertOk()
             ->assertViewIs('admin.dashboard');
     }
+
+    public function test_kurir_users_see_the_kurir_dashboard(): void
+    {
+        $user = User::factory()->create(['role' => 'kurir']);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('kurir.dashboard');
+    }
+
+    public function test_customer_users_see_the_customer_dashboard(): void
+    {
+        $user = User::factory()->create(['role' => 'customer']);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('customer.dashboard');
+    }
+
+    public function test_super_admin_users_see_the_super_admin_dashboard(): void
+    {
+        $user = User::factory()->create(['role' => 'super-admin']);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('super-admin.dashboard');
+    }
 }
