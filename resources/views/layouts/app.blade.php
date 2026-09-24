@@ -79,7 +79,7 @@
             @endisset
 
             {{-- PAGE CONTENT --}}
-            <main class="flex-1 min-h-0 overflow-auto">
+            <main class="flex-1 min-h-0 overflow-hidden">
                 {{ $slot }}
             </main>
 
