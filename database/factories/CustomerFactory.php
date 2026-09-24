@@ -1,13 +1,11 @@
 <?php
 
-namespace DatabaseFactories;
+namespace Database\Factories;
 
-use AppModelsCustomer;
-use IlluminateDatabaseEloquentFactoriesFactory;
+use App\Models\Customer;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends Factory<Customer>
- */
+/** @extends Factory<Customer> */
 class CustomerFactory extends Factory
 {
     protected $model = Customer::class;
