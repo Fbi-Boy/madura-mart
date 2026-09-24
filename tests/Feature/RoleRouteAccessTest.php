@@ -1,0 +1,48 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class RoleRouteAccessTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_customer_cannot_access_admin_monitoring_routes(): void
+    {
+        $user = User::factory()->create(['role' => 'customer']);
+
+        $this->actingAs($user)
+            ->get('/admin/monitoring/penjualan')
+            ->assertForbidden();
+    }
+
+    public function test_customer_cannot_access_admin_report_routes(): void
+    {
+        $user = User::factory()->create(['role' => 'customer']);
+
+        $this->actingAs($user)
+            ->get('/admin/report/stok')
+            ->assertForbidden();
+    }
+
+    public function test_admin_cannot_access_cashier_routes(): void
+    {
+        $user = User::factory()->create(['role' => 'admin']);
+
+        $this->actingAs($user)
+            ->get('/kasir/transaksi-baru')
+            ->assertForbidden();
+    }
+
+    public function test_cashier_cannot_access_admin_monitoring_routes(): void
+    {
+        $user = User::factory()->create(['role' => 'kasir']);
+
+        $this->actingAs($user)
+            ->get('/admin/monitoring/produk')
+            ->assertForbidden();
+    }
+}
