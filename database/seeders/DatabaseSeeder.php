@@ -1,10 +1,10 @@
 <?php
 
-namespace Database\Seeders;
+namespace DatabaseSeeders;
 
-use App\Models\User;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
+use AppModelsUser;
+use IlluminateDatabaseSeeder;
+use IlluminateSupportFacadesHash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -50,9 +50,7 @@ class DatabaseSeeder extends Seeder
 
         foreach ($users as $user) {
             User::updateOrCreate(
-                [
-                    'email' => $user['email'],
-                ],
+                ['email' => $user['email']],
                 [
                     'name' => $user['name'],
                     'role' => $user['role'],
@@ -64,7 +62,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CategorySeeder::class,
             ProductSeeder::class,
-    SupplierSeeder::class,
+            SupplierSeeder::class,
+            CustomerSeeder::class,
         ]);
     }
 }
