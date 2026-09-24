@@ -107,3 +107,8 @@ php artisan route:list
 ## Route access
 
 Protected application routes are scoped by authenticated role. Administrative monitoring and reporting routes require `admin` or `super-admin`, while cashier routes require `kasir`. Authorization behavior is covered by feature tests in `tests/Feature/RoleRouteAccessTest.php`.
+
+## Master Data Produk
+- Kategori: CRUD admin.
+- Produk: CRUD admin dengan SKU, kategori, harga, stok, dan status aktif.
+- Dokumentasi: `docs/master-data/products.md`.

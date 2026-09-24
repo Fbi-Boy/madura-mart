@@ -46,7 +46,7 @@ class CategoryCrudTest extends TestCase
         $this->assertDatabaseHas('categories', [
             'id' => $category->id,
             'name' => 'Baru',
-            'slug' => 'lama',
+            'slug' => 'baru',
         ]);
     }
 
