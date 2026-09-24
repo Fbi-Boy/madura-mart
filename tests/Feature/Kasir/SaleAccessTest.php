@@ -3,6 +3,7 @@
 namespace Tests\Feature\Kasir;
 
 use App\Models\User;
+use App\Models\CashierShift;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -14,6 +15,7 @@ class SaleAccessTest extends TestCase
     {
         $kasir = User::factory()->create(['role' => 'kasir']);
         $admin = User::factory()->create(['role' => 'admin']);
+        CashierShift::create(['shift_number' => 'SHIFT-ACCESS', 'user_id' => $kasir->id, 'opened_at' => now(), 'opening_cash' => 0, 'status' => 'open']);
 
         $this->actingAs($kasir)
             ->get(route('kasir.transaksi-baru'))
