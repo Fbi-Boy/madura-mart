@@ -99,3 +99,7 @@ For route-related changes, also inspect the registered endpoints:
 ```bash
 php artisan route:list
 ```
+
+## Route access
+
+Protected application routes are scoped by authenticated role. Administrative monitoring and reporting routes require `admin` or `super-admin`, while cashier routes require `kasir`. Authorization behavior is covered by feature tests in `tests/Feature/RoleRouteAccessTest.php`.
