@@ -71,6 +71,10 @@ For frontend asset validation:
 npm run build
 ```
 
+## Master Data
+
+The admin master-data module currently includes category CRUD at `/admin/categories` for `admin` and `super-admin` roles.
+
 ## Documentation
 
 Project notes and development documentation live in the `docs/` directory:
