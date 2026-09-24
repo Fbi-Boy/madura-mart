@@ -31,7 +31,7 @@
                     flex flex-col overflow-hidden">
 
             {{-- HEADER --}}
-            <header class="h-[72px] shrink-0 flex items-start justify-between px-5 sm:px-7 pt-1">
+            <header class="h-[72px] shrink-0 flex items-start justify-between px-2 sm:px-3 pt-1">
 
                 <h1 class="text-xl sm:text-[24px] font-semibold tracking-[-0.03em]
                            leading-tight text-[#171719] dark:text-white"
@@ -67,7 +67,7 @@
             </header>
 
             {{-- PAGE CONTENT --}}
-            <main class="flex-1 min-h-0 overflow-hidden px-5 sm:px-7 pt-0">
+            <main class="flex-1 min-h-0 overflow-hidden px-2 sm:px-3 pt-0">
                 {{ $slot }}
             </main>
 
