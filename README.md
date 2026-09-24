@@ -83,3 +83,19 @@ Project notes and development documentation live in the `docs/` directory:
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the branch, commit, validation, and pull request workflow.
+
+
+## Validation workflow
+
+For routine development, validate backend and frontend changes separately:
+
+```bash
+php artisan test
+npm run build
+```
+
+For route-related changes, also inspect the registered endpoints:
+
+```bash
+php artisan route:list
+```
