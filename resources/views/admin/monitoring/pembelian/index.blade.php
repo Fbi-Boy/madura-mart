@@ -222,18 +222,18 @@
                     >
                         <span class="inline-flex items-center gap-1.5">
                             <svg
-                                class="w-3 h-3 shrink-0 text-[#A8F23A]"
+                                class="w-3.5 h-3.5 shrink-0 text-[#A8F23A]"
                                 viewBox="0 0 24 24"
                                 fill="none"
                                 stroke="currentColor"
-                                stroke-width="2"
+                                stroke-width="1.9"
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
                                 aria-hidden="true"
                             >
-                                <path d="M12 3v12"></path>
-                                <path d="m7 10 5 5 5-5"></path>
-                                <path d="M5 21h14"></path>
+                                <path d="M12 3v11"></path>
+                                <path d="m8 10 4 4 4-4"></path>
+                                <path d="M4 18v2a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2"></path>
                             </svg>
                             <span>Unduh Rekap Audit PO</span>
                         </span>
