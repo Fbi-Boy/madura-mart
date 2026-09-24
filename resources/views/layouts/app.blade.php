@@ -20,10 +20,12 @@
 
     <div class="h-screen flex gap-2 p-4 sm:gap-2.5 sm:p-5 lg:gap-3 lg:p-6 overflow-hidden">
 
+        {{-- SIDEBAR: TETAP, TIDAK IKUT SCROLL --}}
         @include('layouts.navigation')
 
         <div class="flex-1 min-w-0 h-[calc(100vh-2rem)] flex flex-col overflow-hidden">
 
+            {{-- HEADER: TETAP, TIDAK IKUT SCROLL --}}
             <header class="h-[72px] shrink-0 flex items-start justify-between px-2 sm:px-3 pt-1">
 
                 <h1 class="text-xl sm:text-[24px] font-semibold tracking-[-0.03em] leading-tight text-[#171719] dark:text-white"
@@ -83,7 +85,7 @@
                             <path d="m17.65 17.65 1.42 1.42"></path>
                             <path d="M2 12h2"></path>
                             <path d="M20 12h2"></path>
-                            <path d="m4.93 19.07 1.42-1.42"></path>
+                            <path d="m4.93 19.07-1.42 1.42"></path>
                             <path d="m17.65 6.35 1.42-1.42"></path>
                         </svg>
                     </button>
@@ -112,7 +114,13 @@
 
             </header>
 
-            <main class="flex-1 min-h-0 overflow-hidden px-2 sm:px-3 pt-0">
+            {{-- CONTENT SAJA YANG SCROLL --}}
+            <main class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-2 sm:px-3 pt-0 pb-6
+                         [&::-webkit-scrollbar]:w-1.5
+                         [&::-webkit-scrollbar-track]:bg-transparent
+                         [&::-webkit-scrollbar-thumb]:rounded-full
+                         [&::-webkit-scrollbar-thumb]:bg-black/15
+                         dark:[&::-webkit-scrollbar-thumb]:bg-white/15">
                 {{ $slot }}
             </main>
 
