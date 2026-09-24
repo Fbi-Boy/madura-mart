@@ -25,29 +25,33 @@
         <div class="flex-1 min-w-0 h-[calc(100vh-2rem)] flex flex-col overflow-hidden">
 
             {{-- =====================================================
-                GLOBAL HEADER — SAMA UNTUK SEMUA HALAMAN
+                GLOBAL HEADER
             ====================================================== --}}
-            <header class="h-[62px] shrink-0 flex items-center justify-between gap-5 px-1 sm:px-2">
+            <header class="h-[70px] shrink-0 flex items-center justify-between gap-4 px-1 sm:px-2">
 
                 {{-- LEFT --}}
-                <div class="min-w-0 flex items-center gap-5">
+                <div class="min-w-0 flex items-center gap-4">
 
                     <div class="hidden lg:block shrink-0 leading-none">
-                        <p class="text-[8px] font-semibold uppercase tracking-[0.04em] text-black/45 dark:text-white/45">
+
+                        <p class="text-[7px] font-semibold uppercase tracking-[0.035em] text-black/40 dark:text-white/40">
                             Selamat Datang Kembali
                         </p>
 
-                        <p class="mt-1 text-[12px] font-bold text-[#171719] dark:text-white">
-                            Store Manager
+                        <p class="mt-1 text-[14px] font-bold text-[#171719] dark:text-white">
+                            Admin Stores
                         </p>
+
                     </div>
 
-                    <div class="hidden md:flex items-center w-[300px] xl:w-[390px] h-[34px]
+
+                    {{-- SEARCH --}}
+                    <div class="hidden md:flex items-center w-[250px] xl:w-[310px] h-[38px]
                                 rounded-full bg-[#EFF0F7] dark:bg-white/[0.06]
                                 px-3.5 gap-2">
 
                         <svg
-                            class="w-[14px] h-[14px] shrink-0 text-black/35 dark:text-white/35"
+                            class="w-[15px] h-[15px] shrink-0 text-black/35 dark:text-white/35"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
@@ -61,28 +65,95 @@
 
                         <input
                             type="text"
-                            placeholder="Cari menu, SKU produk, invoice, transaksi..."
+                            placeholder="Cari menu, SKU, invoice..."
                             class="w-full bg-transparent border-0 outline-none
-                                   text-[9px] text-[#171719] dark:text-white
+                                   text-[10px] text-[#171719] dark:text-white
                                    placeholder:text-black/35 dark:placeholder:text-white/35
                                    focus:ring-0"
                         >
+
                     </div>
 
                 </div>
 
+
                 {{-- RIGHT --}}
                 <div class="flex items-center gap-2 shrink-0">
 
+                    {{-- SETTINGS --}}
                     <button
                         type="button"
-                        class="hidden sm:flex h-[34px] items-center gap-2 rounded-full
+                        class="w-[38px] h-[38px] flex items-center justify-center
+                               rounded-full bg-[#EFF0F7] dark:bg-white/[0.06]
+                               text-black/55 dark:text-white/55
+                               hover:bg-black/[0.06] dark:hover:bg-white/[0.1] transition"
+                        aria-label="Pengaturan"
+                    >
+                        <svg
+                            class="w-[16px] h-[16px]"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path d="M4 7h10"></path>
+                            <path d="M18 7h2"></path>
+                            <circle cx="16" cy="7" r="2"></circle>
+                            <path d="M4 12h2"></path>
+                            <path d="M10 12h10"></path>
+                            <circle cx="8" cy="12" r="2"></circle>
+                            <path d="M4 17h10"></path>
+                            <path d="M18 17h2"></path>
+                            <circle cx="16" cy="17" r="2"></circle>
+                        </svg>
+                    </button>
+
+
+                    {{-- THEME --}}
+                    <button
+                        id="themeToggle"
+                        type="button"
+                        class="w-[38px] h-[38px] flex items-center justify-center
+                               rounded-full bg-[#EFF0F7] dark:bg-white/[0.06]
+                               text-black/55 dark:text-white/55
+                               hover:bg-black/[0.06] dark:hover:bg-white/[0.1] transition"
+                        aria-label="Gunakan Dark Mode"
+                    >
+                        <svg
+                            class="w-[16px] h-[16px]"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.9"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <circle cx="12" cy="12" r="4"></circle>
+                            <path d="M12 2v2"></path>
+                            <path d="M12 20v2"></path>
+                            <path d="m4.93 4.93 1.42 1.42"></path>
+                            <path d="m17.65 17.65 1.42 1.42"></path>
+                            <path d="M2 12h2"></path>
+                            <path d="M20 12h2"></path>
+                            <path d="m4.93 19.07-1.42-1.42"></path>
+                            <path d="m17.65 6.35 1.42-1.42"></path>
+                        </svg>
+                    </button>
+
+
+                    {{-- CABANG --}}
+                    <button
+                        type="button"
+                        class="hidden sm:flex h-[38px] items-center gap-2 rounded-full
                                bg-[#EFF0F7] dark:bg-white/[0.06]
                                px-3.5 text-[9px] font-medium
                                text-[#171719] dark:text-white"
                     >
+
                         <svg
-                            class="w-[12px] h-[12px] text-[#52623C]"
+                            class="w-[13px] h-[13px] text-[#52623C]"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
@@ -98,17 +169,21 @@
                         </svg>
 
                         Cabang Utama - Jakarta Selatan
+
                     </button>
 
+
+                    {{-- NOTIFICATION --}}
                     <button
                         type="button"
-                        class="relative w-[34px] h-[34px] flex items-center justify-center
+                        class="relative w-[38px] h-[38px] flex items-center justify-center
                                rounded-full bg-[#EFF0F7] dark:bg-white/[0.06]
                                text-black/55 dark:text-white/55"
                         aria-label="Notifikasi"
                     >
+
                         <svg
-                            class="w-[15px] h-[15px]"
+                            class="w-[16px] h-[16px]"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
@@ -121,23 +196,26 @@
                         </svg>
 
                         <span class="absolute top-[7px] right-[7px] w-[5px] h-[5px] rounded-full bg-[#A8F23A]"></span>
+
                     </button>
 
+
+                    {{-- USER --}}
                     <div class="flex items-center gap-2.5 pl-1">
 
                         <div class="hidden sm:block text-right leading-none">
-                            <p class="text-[10px] font-semibold text-[#171719] dark:text-white">
+
+                            <p class="text-[12px] font-semibold text-[#171719] dark:text-white">
                                 {{ auth()->user()->name }}
                             </p>
 
-                            <p class="mt-1 text-[8px] text-black/40 dark:text-white/40">
-                                {{ str_replace('_', ' ', ucfirst(auth()->user()->role)) }}
-                            </p>
                         </div>
 
-                        <div class="w-[32px] h-[32px] rounded-full bg-[#D9C5A7]
-                                    flex items-center justify-center
-                                    text-[11px] font-bold text-[#3B3025]">
+                        <div
+                            class="w-[36px] h-[36px] rounded-full bg-[#D9C5A7]
+                                   flex items-center justify-center
+                                   text-[12px] font-bold text-[#3B3025]"
+                        >
                             {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                         </div>
 
@@ -146,6 +224,7 @@
                 </div>
 
             </header>
+
 
             {{-- CONTENT SAJA YANG SCROLL --}}
             <main
