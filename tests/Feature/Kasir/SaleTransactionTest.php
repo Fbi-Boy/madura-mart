@@ -3,6 +3,7 @@
 namespace Tests\Feature\Kasir;
 
 use App\Models\Customer;
+use App\Models\CashierShift;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -15,6 +16,9 @@ class SaleTransactionTest extends TestCase
     public function test_sale_decreases_stock_and_creates_items(): void
     {
         $kasir = User::factory()->create(['role' => 'kasir']);
+        CashierShift::create(['shift_number' => 'SHIFT-TEST-1', 'user_id' => $kasir->id, 'opened_at' => now(), 'opening_cash' => 100000, 'status' => 'open']);
+        CashierShift::create(['shift_number' => 'SHIFT-TEST-2', 'user_id' => $kasir->id, 'opened_at' => now(), 'opening_cash' => 100000, 'status' => 'open']);
+        CashierShift::create(['shift_number' => 'SHIFT-TEST-3', 'user_id' => $kasir->id, 'opened_at' => now(), 'opening_cash' => 100000, 'status' => 'open']);
         $product = Product::factory()->create([
             'stock' => 10,
             'price' => 12500,

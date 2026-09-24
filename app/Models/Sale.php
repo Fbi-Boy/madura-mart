@@ -15,6 +15,7 @@ class Sale extends Model
         'invoice',
         'customer_id',
         'user_id',
+        'shift_id',
         'sale_date',
         'total',
         'payment_method',
@@ -38,6 +39,11 @@ class Sale extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function shift(): BelongsTo
+    {
+        return $this->belongsTo(CashierShift::class);
     }
 
     public function items(): HasMany
