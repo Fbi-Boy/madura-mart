@@ -42,6 +42,20 @@ class PurchaseTransactionTest extends TestCase
         $this->assertDatabaseHas('products', ['id' => $product->id, 'stock' => 15]);
     }
 
+    public function test_purchase_rejects_inactive_supplier(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $supplier = Supplier::factory()->create(['is_active' => false]);
+        $product = Product::factory()->create();
+
+        $this->actingAs($admin)->post(route('admin.purchases.store'), [
+            'invoice' => 'PO-TEST-003',
+            'supplier_id' => $supplier->id,
+            'purchase_date' => '2026-09-24',
+            'items' => [['product_id' => $product->id, 'quantity' => 1, 'unit_price' => 1000]],
+        ])->assertSessionHasErrors('supplier_id');
+    }
+
     public function test_purchase_requires_at_least_one_item(): void
     {
         $admin = User::factory()->create(['role' => 'admin']);
