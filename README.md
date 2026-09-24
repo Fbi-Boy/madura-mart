@@ -73,7 +73,7 @@ npm run build
 
 ## Master Data
 
-The admin master-data module currently includes category CRUD at `/admin/categories` for `admin` and `super-admin` roles.
+The admin master-data module includes category, product, supplier, and customer CRUD for `admin` and `super-admin` roles.
 
 ## Documentation
 
@@ -112,3 +112,6 @@ Protected application routes are scoped by authenticated role. Administrative mo
 - Kategori: CRUD admin.
 - Produk: CRUD admin dengan SKU, kategori, harga, stok, dan status aktif.
 - Dokumentasi: `docs/master-data/products.md`.
+- Supplier: CRUD admin untuk data pemasok.
+- Customer: CRUD admin untuk data pelanggan.
+- Dokumentasi: `docs/master-data/suppliers.md` dan `docs/master-data/customers.md`.

@@ -53,6 +53,7 @@
                 <a href="{{ route('admin.categories.index') }}" class="menu-link">Kategori</a>
                 <a href="{{ route('admin.products.index') }}" class="menu-link">Produk Master</a>
                 <a href="{{ route('admin.suppliers.index') }}" class="menu-link">Supplier</a>
+                <a href="{{ route('admin.customers.index') }}" class="menu-link">Customer</a>
             </div>
 
         @elseif(auth()->user()->role === 'kasir')

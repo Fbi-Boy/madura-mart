@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\Monitoring\ClientController;
 use App\Http\Controllers\Admin\Monitoring\DistributorController;
 use App\Http\Controllers\Admin\Monitoring\KurirController;
@@ -65,6 +67,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('categories', CategoryController::class)->except(['show']);
         Route::resource('products', ProductController::class)->except(['show']);
         Route::resource('suppliers', SupplierController::class)->except(['show']);
+        Route::resource('customers', CustomerController::class)->except(['show']);
     });
 
     /*
