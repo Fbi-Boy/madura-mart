@@ -82,4 +82,4 @@ Project notes and development documentation live in the `docs/` directory:
 
 ## Contributing
 
-Create a focused branch for each change, keep commits meaningful, and run the relevant test/build commands before opening a pull request.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the branch, commit, validation, and pull request workflow.
