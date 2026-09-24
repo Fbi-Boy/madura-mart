@@ -9,6 +9,7 @@ use App\Models\Supplier;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class PurchaseController extends Controller
@@ -31,11 +32,11 @@ class PurchaseController extends Controller
     {
         $data = $request->validate([
             'invoice' => ['required','string','max:50','unique:purchases,invoice'],
-            'supplier_id' => ['required','exists:suppliers,id'],
+            'supplier_id' => ['required', Rule::exists('suppliers', 'id')->where(fn ($query) => $query->where('is_active', true))],
             'purchase_date' => ['required','date'],
             'notes' => ['nullable','string'],
             'items' => ['required','array','min:1'],
-            'items.*.product_id' => ['required','exists:products,id'],
+            'items.*.product_id' => ['required','distinct', Rule::exists('products', 'id')->where(fn ($query) => $query->where('is_active', true))],
             'items.*.quantity' => ['required','integer','min:1'],
             'items.*.unit_price' => ['required','numeric','min:0'],
         ]);
