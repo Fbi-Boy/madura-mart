@@ -114,4 +114,6 @@ Protected application routes are scoped by authenticated role. Administrative mo
 - Dokumentasi: `docs/master-data/products.md`.
 - Supplier: CRUD admin untuk data pemasok.
 - Customer: CRUD admin untuk data pelanggan.
+- Distributor: CRUD admin untuk data distributor.
+- Dokumentasi: `docs/master-data/distributors.md`.
 - Dokumentasi: `docs/master-data/suppliers.md` dan `docs/master-data/customers.md`.
