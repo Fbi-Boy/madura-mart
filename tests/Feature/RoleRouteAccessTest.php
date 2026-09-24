@@ -117,4 +117,13 @@ class RoleRouteAccessTest extends TestCase
             .assertForbidden();
     }
 
+    public function test_customer_cannot_access_admin_report_stok(): void
+    {
+        $user = User::factory()->create(['role' => 'customer']);
+
+        $this->actingAs($user)
+            ->get('/admin/report/stok')
+            .assertForbidden();
+    }
+
 }
