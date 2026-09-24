@@ -41,9 +41,22 @@
                                    text-black dark:text-white
                                    hover:bg-black/5 dark:hover:bg-white/10 transition"
                             aria-label="Pengaturan">
-                        <svg class="w-[19px] h-[19px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"></path>
-                            <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.75 1.75-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V20h-2.47v-.15a1.7 1.7 0 0 0-1.03-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.75-1.75.06-.06A1.7 1.7 0 0 0 8.28 15a1.7 1.7 0 0 0-1.56-1.03H6.5v-2.47h.22A1.7 1.7 0 0 0 8.28 10a1.7 1.7 0 0 0-.34-1.88l-.06-.06 1.75-1.75.06.06a1.7 1.7 0 0 0 1.88.34 1.7 1.7 0 0 0 1.03-1.56V5h2.47v.15a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.88-.34l.06-.06 1.75 1.75-.06.06A1.7 1.7 0 0 0 19.4 10a1.7 1.7 0 0 0 1.56 1.03h.15v2.47h-.15A1.7 1.7 0 0 0 19.4 15Z"></path>
+                        <svg class="w-[18px] h-[18px]"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.9"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+                            <path d="M4 7h10"></path>
+                            <path d="M18 7h2"></path>
+                            <circle cx="16" cy="7" r="2"></circle>
+                            <path d="M4 12h2"></path>
+                            <path d="M10 12h10"></path>
+                            <circle cx="8" cy="12" r="2"></circle>
+                            <path d="M4 17h10"></path>
+                            <path d="M18 17h2"></path>
+                            <circle cx="16" cy="17" r="2"></circle>
                         </svg>
                     </button>
 
@@ -56,8 +69,16 @@
                                    text-black dark:text-white
                                    hover:bg-black/5 dark:hover:bg-white/10 transition"
                             aria-label="Gunakan Dark Mode">
-                        <svg class="w-[19px] h-[19px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.5 8.5 0 1 0 20.5 15.2Z"></path>
+                        <svg class="w-[18px] h-[18px]"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.9"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+                            <rect x="4" y="4" width="16" height="16" rx="4"></rect>
+                            <path d="M8 12h8"></path>
+                            <path d="M12 8v8"></path>
                         </svg>
                     </button>
 
