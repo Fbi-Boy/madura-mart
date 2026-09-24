@@ -162,4 +162,13 @@ class RoleRouteAccessTest extends TestCase
             .assertForbidden();
     }
 
+    public function test_admin_cannot_access_cashier_shift_history(): void
+    {
+        $user = User::factory()->create(['role' => 'admin']);
+
+        $this->actingAs($user)
+            ->get('/kasir/riwayat-shift')
+            .assertForbidden();
+    }
+
 }
