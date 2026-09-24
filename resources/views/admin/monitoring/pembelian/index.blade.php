@@ -73,6 +73,120 @@
     >
 
         {{-- =====================================================
+            HEADER MONITORING PEMBELIAN
+        ====================================================== --}}
+        <section class="mb-4">
+
+            {{-- TOP LABEL --}}
+            <div class="flex flex-wrap items-center gap-2 mb-2">
+
+                <span
+                    class="inline-flex h-6 items-center gap-1.5 rounded-md
+                           border border-[#A8F23A]/40
+                           bg-[#A8F23A]/[0.12]
+                           px-2.5 text-[8px] font-semibold
+                           text-[#58752B]"
+                >
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#A8F23A]"></span>
+                    Audit Pengadaan &amp; PO
+                </span>
+
+                <span
+                    class="inline-flex h-6 items-center gap-1.5 rounded-md
+                           bg-[#E8F5C9]
+                           px-2.5 text-[7px] font-semibold
+                           uppercase tracking-[0.04em]
+                           text-[#58752B]"
+                >
+                    <span>↔</span>
+                    REAL-TIME SUPPLIER INFLOW
+                </span>
+
+                <span class="text-[8px] text-black/30 dark:text-white/30">
+                    Sinkronisasi: 2 Menit Lalu (Hub Gudang Pusat)
+                </span>
+
+            </div>
+
+
+            {{-- TITLE + ACTION --}}
+            <div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-4">
+
+                <div class="min-w-0">
+
+                    <h1
+                        class="text-[24px] sm:text-[27px] leading-none
+                               font-bold tracking-[-0.035em]
+                               text-[#171719] dark:text-white"
+                    >
+                        Monitoring Pembelian &amp; Suplai Barang
+                    </h1>
+
+                    <p
+                        class="mt-2 max-w-[650px]
+                               text-[9px] sm:text-[10px]
+                               leading-[1.5]
+                               text-black/45 dark:text-white/45"
+                    >
+                        Pengawasan menyeluruh arus pengadaan internal, verifikasi berkas PO multi-vendor,
+                        deteksi deviasi harga beli kontrak distributor, dan kendali jatuh tempo faktur AP.
+                    </p>
+
+                </div>
+
+
+                {{-- FILTER ACTION --}}
+                <div class="flex flex-wrap items-center gap-2 shrink-0">
+
+                    <button
+                        type="button"
+                        class="h-9 rounded-full
+                               bg-white dark:bg-white/[0.06]
+                               border border-black/[0.05] dark:border-white/[0.08]
+                               px-3.5
+                               text-[8px] font-medium
+                               text-black/60 dark:text-white/60
+                               shadow-[0_3px_12px_rgba(0,0,0,0.025)]"
+                    >
+                        Bulan Ini (Jan 2025)
+                        <span class="ml-1 text-black/30 dark:text-white/30">▣</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="h-9 rounded-full
+                               bg-white dark:bg-white/[0.06]
+                               border border-black/[0.05] dark:border-white/[0.08]
+                               px-3.5
+                               text-[8px] font-medium
+                               text-black/60 dark:text-white/60
+                               shadow-[0_3px_12px_rgba(0,0,0,0.025)]"
+                    >
+                        <span class="mr-1.5">☷</span>
+                        Filter Status
+                    </button>
+
+                    <button
+                        type="button"
+                        class="h-9 rounded-full
+                               bg-[#273142]
+                               px-4
+                               text-[8px] font-semibold
+                               text-white
+                               shadow-[0_4px_14px_rgba(39,49,66,0.12)]"
+                    >
+                        <span class="mr-1.5 text-[#A8F23A]">↓</span>
+                        Unduh Rekap Audit PO
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        {{-- =====================================================
             PURCHASE ORDER AKTIF
         ====================================================== --}}
         <section
