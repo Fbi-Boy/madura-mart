@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\Report\PenjualanController as ReportPenjualanCont
 use App\Http\Controllers\Admin\Report\StokController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Kasir\SaleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -90,8 +91,9 @@ Route::middleware('auth')->group(function () {
         ->name('kasir.')
         ->middleware('role:kasir')
         ->group(function () {
-            Route::view('/transaksi-baru', 'kasir.transaksi-baru.index')->name('transaksi-baru');
-            Route::view('/riwayat-transaksi', 'kasir.riwayat-transaksi.index')->name('riwayat-transaksi');
+            Route::get('/transaksi-baru', [SaleController::class, 'create'])->name('transaksi-baru');
+            Route::post('/transaksi-baru', [SaleController::class, 'store'])->name('transaksi-baru.store');
+            Route::get('/riwayat-transaksi', [SaleController::class, 'index'])->name('riwayat-transaksi');
             Route::view('/retur', 'kasir.retur.index')->name('retur');
             Route::view('/buka-shift', 'kasir.buka-shift.index')->name('buka-shift');
             Route::view('/tutup-shift', 'kasir.tutup-shift.index')->name('tutup-shift');
