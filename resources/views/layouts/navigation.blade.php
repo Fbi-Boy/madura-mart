@@ -1,5 +1,5 @@
 @php
-    $isAdmin = auth()->user()->role === 'admin';
+    $isAdmin = in_array(auth()->user()->role, ['admin', 'super-admin'], true);
 @endphp
 
 <nav class="w-[228px] h-[calc(100vh-2rem)] shrink-0 self-start rounded-[22px]
@@ -50,6 +50,7 @@
                 <a href="{{ route('admin.report.penjualan') }}" class="menu-link">Laporan Penjualan</a>
                 <a href="{{ route('admin.report.pembelian') }}" class="menu-link">Laporan Pembelian</a>
                 <a href="{{ route('admin.report.stok') }}" class="menu-link">Stok</a>
+                <a href="{{ route('admin.categories.index') }}" class="menu-link">Kategori</a>
             </div>
 
         @elseif(auth()->user()->role === 'kasir')
