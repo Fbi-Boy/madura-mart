@@ -26,8 +26,10 @@ class Category extends Model
 
     protected static function booted(): void
     {
-        static::creating(function (Category $category) {
-            $category->slug ??= Str::slug($category->name);
+        static::saving(function (Category $category) {
+            if ($category->isDirty('name') || blank($category->slug)) {
+                $category->slug = Str::slug($category->name);
+            }
         });
     }
 }
