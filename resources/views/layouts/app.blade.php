@@ -33,8 +33,9 @@
             {{-- HEADER --}}
             <header class="h-[72px] shrink-0 flex items-start justify-between px-5 sm:px-7 pt-1">
 
-                <h1 class="text-2xl sm:text-[28px] font-black tracking-[-0.04em]
-                           leading-tight text-[#171719] dark:text-white">
+                <h1 class="text-xl sm:text-[24px] font-semibold tracking-[-0.03em]
+                           leading-tight text-[#171719] dark:text-white"
+                    style="font-family: 'Poppins', sans-serif;">
                     Selamat datang, {{ auth()->user()->name }} 👋
                 </h1>
 
@@ -52,7 +53,7 @@
                     </button>
 
                     <div class="hidden sm:block text-right">
-                        <p class="text-sm font-semibold text-black/75 dark:text-white/85">
+                        <p class="text-sm font-normal text-black/75 dark:text-white/85">
                             {{ auth()->user()->name }}
                         </p>
 
