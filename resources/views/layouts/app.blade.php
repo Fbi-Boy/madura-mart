@@ -33,8 +33,13 @@
 
                 <div class="flex items-center gap-2.5 sm:gap-3">
 
+                    {{-- SETTINGS --}}
                     <button type="button"
-                            class="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl border border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/5 text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition"
+                            class="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl
+                                   border border-black/10 dark:border-white/10
+                                   bg-white/70 dark:bg-white/5
+                                   text-black dark:text-white
+                                   hover:bg-black/5 dark:hover:bg-white/10 transition"
                             aria-label="Pengaturan">
                         <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                             <circle cx="12" cy="12" r="3"></circle>
@@ -42,15 +47,26 @@
                         </svg>
                     </button>
 
+                    {{-- THEME --}}
                     <button id="themeToggle"
                             type="button"
-                            class="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl border border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/5 text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition"
+                            class="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl
+                                   border border-black/10 dark:border-white/10
+                                   bg-white/70 dark:bg-white/5
+                                   text-black dark:text-white
+                                   hover:bg-black/5 dark:hover:bg-white/10 transition"
                             aria-label="Gunakan Dark Mode">
-                        ☾
+                        <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                            <circle cx="12" cy="12" r="4"></circle>
+                            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+                        </svg>
                     </button>
 
+                    {{-- ACCOUNT --}}
                     <div class="hidden sm:flex items-center gap-2.5 pl-1.5">
-                        <div class="w-9 h-9 rounded-full bg-[#A8F23A] text-[#171719] flex items-center justify-center text-[13px] font-semibold">
+
+                        <div class="w-9 h-9 rounded-full bg-[#A8F23A] text-[#171719]
+                                    flex items-center justify-center text-[13px] font-semibold">
                             {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                         </div>
 
@@ -63,6 +79,7 @@
                                 {{ str_replace('_', ' ', ucfirst(auth()->user()->role)) }}
                             </p>
                         </div>
+
                     </div>
 
                 </div>
