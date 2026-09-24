@@ -41,9 +41,9 @@
                                    text-black dark:text-white
                                    hover:bg-black/5 dark:hover:bg-white/10 transition"
                             aria-label="Pengaturan">
-                        <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                            <circle cx="12" cy="12" r="3"></circle>
-                            <path d="M19 15.5a2 2 0 0 0 .4 2.2l-1.7 1.7a2 2 0 0 0-2.2-.4 2 2 0 0 0-1.2 1.8h-2.4a2 2 0 0 0-1.2-1.8 2 2 0 0 0-2.2.4l-1.7-1.7a2 2 0 0 0 .4-2.2 2 2 0 0 0 .4-2.2A2 2 0 0 0 5 12a2 2 0 0 0-1.8-1.2V8.5a2 2 0 0 0 1.8-1.2 2 2 0 0 0-.4-2.2l1.7-1.7a2 2 0 0 0 2.2.4A2 2 0 0 0 9.5 2h2.4a2 2 0 0 0 1.2 1.8 2 2 0 0 0 2.2-.4L17 5.1a2 2 0 0 0-.4 2.2A2 2 0 0 0 18.5 8.5V12a2 2 0 0 0 1.8 1.2v2.3a2 2 0 0 0-1.3 0z"></path>
+                        <svg class="w-[19px] h-[19px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"></path>
+                            <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.75 1.75-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V20h-2.47v-.15a1.7 1.7 0 0 0-1.03-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.75-1.75.06-.06A1.7 1.7 0 0 0 8.28 15a1.7 1.7 0 0 0-1.56-1.03H6.5v-2.47h.22A1.7 1.7 0 0 0 8.28 10a1.7 1.7 0 0 0-.34-1.88l-.06-.06 1.75-1.75.06.06a1.7 1.7 0 0 0 1.88.34 1.7 1.7 0 0 0 1.03-1.56V5h2.47v.15a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.88-.34l.06-.06 1.75 1.75-.06.06A1.7 1.7 0 0 0 19.4 10a1.7 1.7 0 0 0 1.56 1.03h.15v2.47h-.15A1.7 1.7 0 0 0 19.4 15Z"></path>
                         </svg>
                     </button>
 
@@ -56,19 +56,13 @@
                                    text-black dark:text-white
                                    hover:bg-black/5 dark:hover:bg-white/10 transition"
                             aria-label="Gunakan Dark Mode">
-                        <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                            <circle cx="12" cy="12" r="4"></circle>
-                            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+                        <svg class="w-[19px] h-[19px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.5 8.5 0 1 0 20.5 15.2Z"></path>
                         </svg>
                     </button>
 
                     {{-- ACCOUNT --}}
                     <div class="hidden sm:flex items-center gap-2.5 pl-1.5">
-
-                        <div class="w-9 h-9 rounded-full bg-[#A8F23A] text-[#171719]
-                                    flex items-center justify-center text-[13px] font-semibold">
-                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                        </div>
 
                         <div class="text-right">
                             <p class="text-sm font-normal text-black/75 dark:text-white/85">
@@ -78,6 +72,11 @@
                             <p class="text-[11px] text-black/40 dark:text-white/40">
                                 {{ str_replace('_', ' ', ucfirst(auth()->user()->role)) }}
                             </p>
+                        </div>
+
+                        <div class="w-9 h-9 rounded-full bg-[#A8F23A] text-[#171719]
+                                    flex items-center justify-center text-[13px] font-semibold">
+                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                         </div>
 
                     </div>
