@@ -21,7 +21,7 @@
              text-[#171719] dark:text-white
              transition-colors duration-200">
 
-    <div class="h-screen flex gap-4 p-4 sm:gap-5 sm:p-5 lg:gap-6 lg:p-6 overflow-hidden">
+    <div class="h-screen flex gap-2 p-4 sm:gap-2.5 sm:p-5 lg:gap-3 lg:p-6 overflow-hidden">
 
         {{-- SIDEBAR --}}
         @include('layouts.navigation')
