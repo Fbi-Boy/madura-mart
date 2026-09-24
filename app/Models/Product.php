@@ -5,37 +5,43 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Category extends Model
+class Product extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'category_id',
+        'sku',
         'name',
         'slug',
         'description',
+        'price',
+        'stock',
+        'unit',
         'is_active',
     ];
 
     protected function casts(): array
     {
         return [
+            'price' => 'decimal:2',
+            'stock' => 'integer',
             'is_active' => 'boolean',
         ];
     }
 
-    public function products(): HasMany
-    {
-        return $this->hasMany(Product::class);
-    }
-
     protected static function booted(): void
     {
-        static::saving(function (Category $category) {
-            if ($category->isDirty('name') || blank($category->slug)) {
-                $category->slug = Str::slug($category->name);
+        static::saving(function (Product $product) {
+            if ($product->isDirty('name') || blank($product->slug)) {
+                $product->slug = Str::slug($product->name);
             }
         });
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 }

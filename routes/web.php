@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\Monitoring\ClientController;
 use App\Http\Controllers\Admin\Monitoring\DistributorController;
 use App\Http\Controllers\Admin\Monitoring\KurirController;
@@ -62,6 +63,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('admin')->name('admin.')->middleware('role:admin,super-admin')->group(function () {
         Route::resource('categories', CategoryController::class)->except(['show']);
+        Route::resource('products', ProductController::class)->except(['show']);
     });
 
     /*
