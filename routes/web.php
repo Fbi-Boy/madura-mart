@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\Report\StokController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Kasir\SaleController;
+use App\Http\Controllers\Kasir\SaleReturnController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -94,7 +95,9 @@ Route::middleware('auth')->group(function () {
             Route::get('/transaksi-baru', [SaleController::class, 'create'])->name('transaksi-baru');
             Route::post('/transaksi-baru', [SaleController::class, 'store'])->name('transaksi-baru.store');
             Route::get('/riwayat-transaksi', [SaleController::class, 'index'])->name('riwayat-transaksi');
-            Route::view('/retur', 'kasir.retur.index')->name('retur');
+            Route::get('/retur', [SaleReturnController::class, 'index'])->name('retur');
+            Route::get('/retur/baru', [SaleReturnController::class, 'create'])->name('retur.create');
+            Route::post('/retur', [SaleReturnController::class, 'store'])->name('retur.store');
             Route::view('/buka-shift', 'kasir.buka-shift.index')->name('buka-shift');
             Route::view('/tutup-shift', 'kasir.tutup-shift.index')->name('tutup-shift');
             Route::view('/riwayat-shift', 'kasir.riwayat-shift.index')->name('riwayat-shift');
