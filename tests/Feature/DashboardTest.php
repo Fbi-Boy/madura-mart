@@ -66,6 +66,47 @@ class DashboardTest extends TestCase
             ->assertViewHas('pendingPurchases', 1);
     }
 
+    public function test_kasir_dashboard_uses_today_sales_and_open_shift_metrics(): void
+    {
+        $user = User::factory()->create(['role' => 'kasir']);
+
+        $shift = \App\Models\CashierShift::factory()->create([
+            'user_id' => $user->id,
+            'status' => 'open',
+            'opening_cash' => 100000,
+        ]);
+
+        Sale::factory()->create([
+            'user_id' => $user->id,
+            'shift_id' => $shift->id,
+            'status' => 'paid',
+            'payment_method' => 'cash',
+            'total' => 150000,
+            'sale_date' => now(),
+        ]);
+
+        Sale::factory()->create([
+            'user_id' => $user->id,
+            'shift_id' => $shift->id,
+            'status' => 'cancelled',
+            'payment_method' => 'cash',
+            'total' => 50000,
+            'sale_date' => now(),
+        ]);
+
+        Product::factory()->create(['stock' => 3, 'is_active' => true]);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('kasir.dashboard')
+            ->assertViewHas('todayRevenue', 150000.0)
+            ->assertViewHas('todayTransactions', 1)
+            ->assertViewHas('paymentSummary', fn ($summary) => $summary['cash'] === 150000.0)
+            ->assertViewHas('expectedCash', 250000.0)
+            ->assertViewHas('lowStockProducts', fn ($products) => $products->count() === 1);
+    }
+
     public function test_kurir_users_see_the_kurir_dashboard(): void
     {
         $this->assertDashboardForRole('kurir', 'kurir.dashboard');
