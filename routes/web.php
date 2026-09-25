@@ -27,6 +27,7 @@ use App\Http\Controllers\Kasir\SaleController;
 use App\Http\Controllers\Kasir\SaleReturnController;
 use App\Http\Controllers\Kasir\CashierShiftController;
 use App\Http\Controllers\Kurir\DeliveryStatusController;
+use App\Http\Controllers\Customer\CatalogController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -96,7 +97,21 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    /*\n    |--------------------------------------------------------------------------\n    | CUSTOMER - CATALOG\n    |--------------------------------------------------------------------------\n    */\n\n    Route::prefix('customer/catalog')\n        ->name('customer.catalog.')\n        ->middleware('role:customer')\n        ->group(function () {\n            Route::get('/', [CatalogController::class, 'index'])->name('index');\n            Route::get('/{slug}', [CatalogController::class, 'show'])->name('show');\n        });\n\n    Route::prefix('gudang')
+    /*
+    |--------------------------------------------------------------------------
+    | CUSTOMER - CATALOG
+    |--------------------------------------------------------------------------
+    */
+
+    Route::prefix('customer/catalog')
+        ->name('customer.catalog.')
+        ->middleware('role:customer')
+        ->group(function () {
+            Route::get('/', [CatalogController::class, 'index'])->name('index');
+            Route::get('/{slug}', [CatalogController::class, 'show'])->name('show');
+        });
+
+    Route::prefix('gudang')
         ->name('gudang.')
         ->middleware('role:gudang')
         ->group(function () {
