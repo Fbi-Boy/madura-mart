@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -52,7 +53,7 @@ class CheckoutController extends Controller
             $lockedProducts = [];
 
             foreach ($items as $productId => $quantity) {
-                $product = \App\Models\Product::query()
+                $product = Product::query()
                     ->whereKey($productId)
                     ->where('is_active', true)
                     ->lockForUpdate()
@@ -103,7 +104,7 @@ class CheckoutController extends Controller
     {
         $order->load(['items.product:id,name,unit', 'customer:id,name,email,address,city']);
 
-        abort_unless($order->customer_id === $this->customer(request())->id, 403);
+        abort_unless($order->customer_id === optional($this->customer(request()))->id, 403);
 
         return view('customer.checkout.success', compact('order'));
     }
