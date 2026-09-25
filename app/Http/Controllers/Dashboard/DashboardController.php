@@ -12,6 +12,7 @@ use App\Models\PurchaseItem;
 use App\Models\Purchase;
 use App\Models\Sale;
 use App\Models\SaleItem;
+use App\Models\Supplier;
 use Illuminate\Support\Carbon;
 use Illuminate\View\View;
 
@@ -27,7 +28,7 @@ class DashboardController extends Controller
                 'gudang' => $this->warehouseDashboard(),
                 'kurir' => view('kurir.dashboard'),
                 'customer' => view('customer.dashboard'),
-                'purchasing' => view('purchasing.dashboard'),
+                'purchasing' => $this->purchasingDashboard(),
                 'super-admin' => view('super-admin.dashboard'),
                 default => view('dashboard.index'),
             };
@@ -36,6 +37,72 @@ class DashboardController extends Controller
         return $this->adminDashboard();
     }
 
+
+
+    private function purchasingDashboard(): View
+    {
+        $today = Carbon::today();
+
+        $activeSuppliers = Supplier::query()
+            ->where('is_active', true)
+            ->count();
+
+        $todayPurchases = (float) Purchase::query()
+            ->whereDate('purchase_date', $today)
+            ->sum('total');
+
+        $todayTransactions = Purchase::query()
+            ->whereDate('purchase_date', $today)
+            ->count();
+
+        $draftPurchases = Purchase::query()
+            ->where('status', 'draft')
+            ->count();
+
+        $receivedToday = Purchase::query()
+            ->where('status', 'received')
+            ->whereDate('purchase_date', $today)
+            ->count();
+
+        $statusSummary = [
+            'draft' => Purchase::query()->where('status', 'draft')->count(),
+            'received' => Purchase::query()->where('status', 'received')->count(),
+            'cancelled' => Purchase::query()->where('status', 'cancelled')->count(),
+        ];
+
+        $recentPurchases = Purchase::query()
+            ->with('supplier:id,name')
+            ->withCount('items')
+            ->latest('purchase_date')
+            ->limit(7)
+            ->get([
+                'id',
+                'invoice',
+                'supplier_id',
+                'purchase_date',
+                'total',
+                'status',
+            ]);
+
+        $supplierPurchases = Purchase::query()
+            ->with('supplier:id,name')
+            ->selectRaw('supplier_id, COUNT(*) as transaction_count, SUM(total) as total_value')
+            ->groupBy('supplier_id')
+            ->orderByDesc('total_value')
+            ->limit(5)
+            ->get();
+
+        return view('purchasing.dashboard', compact(
+            'activeSuppliers',
+            'todayPurchases',
+            'todayTransactions',
+            'draftPurchases',
+            'receivedToday',
+            'statusSummary',
+            'recentPurchases',
+            'supplierPurchases',
+        ));
+    }
 
     private function cashierDashboard(): View
     {
