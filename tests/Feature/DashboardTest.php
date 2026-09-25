@@ -181,7 +181,8 @@ class DashboardTest extends TestCase
                 'draft' => 1,
                 'received' => 1,
                 'cancelled' => 1,
-            ]);
+            ])
+            ->assertViewHas('procurementTrend', fn ($trend) => $trend->count() === 6 && (float) $trend->last()['value'] === 200000.0);
     }
 
     public function test_admin_dashboard_uses_operational_database_metrics(): void

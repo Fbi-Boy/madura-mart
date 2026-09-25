@@ -149,6 +149,54 @@
                 </section>
             </div>
 
+            <div class="grid gap-4 lg:grid-cols-2">
+                <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <h3 class="font-semibold text-gray-900 dark:text-white">Tren Procurement</h3>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Nilai pembelian berstatus received dalam 6 bulan terakhir.</p>
+                        </div>
+                        <span class="text-xs font-medium text-gray-400 dark:text-gray-500">6 bulan</span>
+                    </div>
+                    <div class="mt-6 flex h-40 items-end gap-3">
+                        @php($maxTrend = max((float) $procurementTrend->max('value'), 1))
+                        @foreach ($procurementTrend as $point)
+                            @php($height = max(8, (int) (($point['value'] / $maxTrend) * 100)))
+                            <div class="flex min-w-0 flex-1 flex-col items-center justify-end gap-2">
+                                <span class="text-[10px] font-medium text-gray-400 dark:text-gray-500">Rp {{ number_format($point['value'] / 1000, 0, ',', '.') }}k</span>
+                                <div class="w-full rounded-t-lg bg-[#A8F23A]/25 dark:bg-[#A8F23A]/15" style="height: {{ $height }}%"></div>
+                                <span class="text-[10px] font-semibold text-gray-500 dark:text-gray-400">{{ $point['label'] }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                </section>
+
+                <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                    <div>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Akses Cepat</h3>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Jalur kerja utama purchasing.</p>
+                    </div>
+                    <div class="mt-5 grid gap-3 sm:grid-cols-2">
+                        <a href="{{ route('purchasing.purchases.create') }}" class="rounded-xl border border-gray-200 p-4 transition hover:border-[#A8F23A] hover:bg-[#A8F23A]/10 dark:border-gray-700">
+                            <p class="font-semibold text-gray-900 dark:text-white">Buat PO</p>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Buat purchase order sebagai draft.</p>
+                        </a>
+                        <a href="{{ route('purchasing.purchases.index') }}" class="rounded-xl border border-gray-200 p-4 transition hover:border-[#A8F23A] hover:bg-[#A8F23A]/10 dark:border-gray-700">
+                            <p class="font-semibold text-gray-900 dark:text-white">Kelola PO</p>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Cari dan pantau transaksi pembelian.</p>
+                        </a>
+                        <a href="{{ route('admin.monitoring.pembelian') }}" class="rounded-xl border border-gray-200 p-4 transition hover:border-[#A8F23A] hover:bg-[#A8F23A]/10 dark:border-gray-700">
+                            <p class="font-semibold text-gray-900 dark:text-white">Monitoring</p>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Lihat status dan nilai pembelian.</p>
+                        </a>
+                        <a href="{{ route('purchasing.purchases.index') }}" class="rounded-xl border border-gray-200 p-4 transition hover:border-[#A8F23A] hover:bg-[#A8F23A]/10 dark:border-gray-700">
+                            <p class="font-semibold text-gray-900 dark:text-white">Daftar PO</p>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Kembali ke workspace pembelian.</p>
+                        </a>
+                    </div>
+                </section>
+            </div>
+
             <div class="rounded-2xl border border-[#A8F23A]/40 bg-[#A8F23A]/10 p-5 dark:bg-[#A8F23A]/5">
                 <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div>
