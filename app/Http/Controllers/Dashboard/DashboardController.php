@@ -269,6 +269,16 @@ class DashboardController extends Controller
             ->whereIn('status', ['processing', 'shipped'])
             ->count();
 
+        $deliveryBase = (clone $baseOrders)
+            ->whereIn('status', ['pending', 'processing', 'shipped', 'delivered'])
+            ->count();
+
+        $deliveredOrders = (clone $baseOrders)->where('status', 'delivered')->count();
+
+        $deliveryRate = $deliveryBase > 0
+            ? round($deliveredOrders / $deliveryBase * 100, 1)
+            : 0;
+
         $priorityOrders = (clone $baseOrders)
             ->with('customer:id,name')
             ->where('status', 'shipped')
@@ -311,6 +321,7 @@ class DashboardController extends Controller
             'shippingOrders',
             'deliveredToday',
             'activeDeliveryOrders',
+            'deliveryRate',
             'priorityOrders',
             'statusSummary',
             'recentOrders',

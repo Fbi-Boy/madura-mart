@@ -73,6 +73,7 @@ class DashboardTest extends TestCase
             ->assertViewHas('pendingOrders', 0)
             ->assertViewHas('shippingOrders', 1)
             ->assertViewHas('activeDeliveryOrders', 1)
+            ->assertViewHas('deliveryRate', 50.0)
             ->assertViewHas('priorityOrders', fn ($orders) => $orders->count() === 1)
             ->assertViewHas('deliveredToday', 1)
             ->assertViewHas('statusSummary', [
