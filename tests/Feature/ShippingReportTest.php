@@ -74,6 +74,10 @@ class ShippingReportTest extends TestCase
                 ->assertForbidden();
         }
 
+    }
+
+    public function test_guest_cannot_access_shipping_report(): void
+    {
         $this->get('/admin/report/pengiriman')->assertRedirect('/login');
     }
 }
