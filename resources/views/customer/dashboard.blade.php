@@ -30,6 +30,29 @@
                 </div>
             </div>
 
+            <section class="grid gap-3 sm:grid-cols-3">
+                <a href="{{ route('customer.catalog.index') }}" class="group rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-[#A8F23A] dark:border-gray-700 dark:bg-gray-800">
+                    <p class="text-xs font-semibold uppercase tracking-[0.12em] text-gray-400">Belanja</p>
+                    <p class="mt-1 font-semibold text-gray-900 group-hover:text-gray-700 dark:text-white dark:group-hover:text-[#A8F23A]">Jelajahi Produk →</p>
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Cari produk dan lihat stok yang tersedia.</p>
+                </a>
+                <a href="{{ route('customer.cart.index') }}" class="group rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-[#A8F23A] dark:border-gray-700 dark:bg-gray-800">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-[0.12em] text-gray-400">Keranjang</p>
+                            <p class="mt-1 font-semibold text-gray-900 group-hover:text-gray-700 dark:text-white dark:group-hover:text-[#A8F23A]">Lanjut Checkout →</p>
+                        </div>
+                        <span class="rounded-full bg-[#A8F23A]/20 px-2.5 py-1 text-xs font-semibold text-gray-900 dark:text-[#A8F23A]">{{ number_format($cartItemCount, 0, ',', '.') }}</span>
+                    </div>
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Total item yang tersimpan di sesi keranjang.</p>
+                </a>
+                <a href="{{ route('customer.orders.index') }}" class="group rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-[#A8F23A] dark:border-gray-700 dark:bg-gray-800">
+                    <p class="text-xs font-semibold uppercase tracking-[0.12em] text-gray-400">Riwayat</p>
+                    <p class="mt-1 font-semibold text-gray-900 group-hover:text-gray-700 dark:text-white dark:group-hover:text-[#A8F23A]">Lihat Semua Order →</p>
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Buka daftar pesanan dan detail transaksi.</p>
+                </a>
+            </section>
+
             <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 @php
                     $kpis = [
@@ -77,7 +100,9 @@
                             <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
                                 @forelse ($recentOrders as $order)
                                     <tr class="transition hover:bg-gray-50 dark:hover:bg-gray-700/40">
-                                        <td class="px-5 py-4 font-medium text-gray-900 dark:text-white">{{ $order->order_number }}</td>
+                                        <td class="px-5 py-4">
+    <a href="{{ route('customer.orders.show', $order) }}" class="font-medium text-gray-900 transition hover:text-gray-700 dark:text-white dark:hover:text-[#A8F23A]">{{ $order->order_number }}</a>
+</td>
                                         <td class="px-5 py-4 text-gray-500 dark:text-gray-400">{{ $order->order_date?->format('d/m/Y H:i') }}</td>
                                         <td class="px-5 py-4 text-gray-600 dark:text-gray-300">{{ $order->courier?->name ?? 'Belum ditugaskan' }}</td>
                                         <td class="px-5 py-4">
