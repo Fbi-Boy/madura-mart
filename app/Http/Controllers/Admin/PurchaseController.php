@@ -23,6 +23,7 @@ class PurchaseController extends Controller
     public function create(): View
     {
         return view('admin.purchases.create', [
+            'purchaseRoutePrefix' => auth()->user()->role === 'purchasing' ? 'purchasing.purchases' : 'admin.purchases',
             'suppliers' => Supplier::query()->where('is_active', true)->orderBy('name')->get(),
             'products' => Product::query()->where('is_active', true)->orderBy('name')->get(),
         ]);
@@ -47,7 +48,7 @@ class PurchaseController extends Controller
                 'supplier_id' => $data['supplier_id'],
                 'user_id' => $request->user()->id,
                 'purchase_date' => $data['purchase_date'],
-                'status' => 'received',
+                'status' => $request->user()->role === 'purchasing' ? 'draft' : 'received',
                 'notes' => $data['notes'] ?? null,
                 'total' => 0,
             ]);
@@ -64,13 +65,20 @@ class PurchaseController extends Controller
                     'subtotal' => $subtotal,
                 ]);
 
-                $product->increment('stock', $item['quantity']);
+                if ($request->user()->role !== 'purchasing') {
+                    $product->increment('stock', $item['quantity']);
+                }
                 $total += $subtotal;
             }
 
             $purchase->update(['total' => $total]);
         });
 
-        return to_route('admin.purchases.index')->with('success', 'Pembelian berhasil dicatat dan stok diperbarui.');
+        $route = $request->user()->role === 'purchasing' ? 'purchasing.purchases.index' : 'admin.purchases.index';
+        $message = $request->user()->role === 'purchasing'
+            ? 'Purchase order berhasil dibuat sebagai draft dan belum mengubah stok.'
+            : 'Pembelian berhasil dicatat dan stok diperbarui.';
+
+        return to_route($route)->with('success', $message);
     }
 }
