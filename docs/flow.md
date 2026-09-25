@@ -20,8 +20,7 @@ Unknown roles use the default dashboard view.
 
 ## Operational Areas
 
-After authentication, users can access role-specific screens plus the shared profile area. Admin monitoring and reporting routes are grouped under the `admin` prefix.
-
+After authentication, users can access role-specific screens plus the shared profile area. Each operational route group is protected by the role middleware appropriate to that domain.
 
 ## Route groups
 
@@ -30,7 +29,24 @@ The authenticated application routes are grouped by responsibility:
 - Dashboard: `/dashboard`
 - Admin monitoring: `/admin/monitoring/*`
 - Admin reports: `/admin/report/*`
-- Cashier operations: `/kasir/*`
+- Admin/master data: `/admin/*`
+- Purchasing: `/purchasing/*`
+- Warehouse: `/gudang/*`
+- Cashier: `/kasir/*`
+- Courier: `/kurir/*`
+- Customer catalog/cart/checkout/orders: `/customer/*`
 - Profile management: `/profile`
+
+### Role boundaries
+
+| Role | Primary route groups |
+| --- | --- |
+| Admin | `/dashboard`, `/admin/*` |
+| Super Admin | `/dashboard`, `/admin/*` |
+| Purchasing | `/dashboard`, `/purchasing/*`, purchase monitoring |
+| Gudang | `/dashboard`, `/gudang/*` |
+| Kasir | `/dashboard`, `/kasir/*` |
+| Kurir | `/dashboard`, `/kurir/*` |
+| Customer | `/dashboard`, `/customer/*` |
 
 Keeping route prefixes and names grouped makes the HTTP surface easier to review as new modules are added.
