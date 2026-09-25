@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\CashierShift;
 use App\Models\Courier;
 use App\Models\Customer;
 use App\Models\Order;
@@ -21,7 +22,7 @@ class DashboardController extends Controller
 
         if ($role !== 'admin') {
             return match ($role) {
-                'kasir' => view('kasir.dashboard'),
+                'kasir' => $this->cashierDashboard(),
                 'kurir' => view('kurir.dashboard'),
                 'customer' => view('customer.dashboard'),
                 'purchasing' => view('purchasing.dashboard'),
@@ -31,6 +32,65 @@ class DashboardController extends Controller
         }
 
         return $this->adminDashboard();
+    }
+
+
+    private function cashierDashboard(): View
+    {
+        $today = Carbon::today();
+        $userId = auth()->id();
+
+        $openShift = CashierShift::query()
+            ->where('user_id', $userId)
+            ->where('status', 'open')
+            ->first();
+
+        $todaySales = Sale::query()
+            ->where('user_id', $userId)
+            ->where('status', 'paid')
+            ->whereDate('sale_date', $today);
+
+        $todayRevenue = (clone $todaySales)->sum('total');
+        $todayTransactions = (clone $todaySales)->count();
+
+        $paymentSummary = [
+            'cash' => (clone $todaySales)->where('payment_method', 'cash')->sum('total'),
+            'transfer' => (clone $todaySales)->where('payment_method', 'transfer')->sum('total'),
+            'qris' => (clone $todaySales)->where('payment_method', 'qris')->sum('total'),
+        ];
+
+        $shiftCashSales = $openShift
+            ? $openShift->sales()->where('status', 'paid')->where('payment_method', 'cash')->sum('total')
+            : 0;
+
+        $expectedCash = $openShift
+            ? (float) $openShift->opening_cash + (float) $shiftCashSales
+            : 0;
+
+        $recentSales = Sale::query()
+            ->with('customer:id,name')
+            ->where('user_id', $userId)
+            ->latest('sale_date')
+            ->limit(6)
+            ->get(['id', 'invoice', 'customer_id', 'sale_date', 'total', 'payment_method', 'status']);
+
+        $lowStockProducts = Product::query()
+            ->where('is_active', true)
+            ->where('stock', '<=', 5)
+            ->orderBy('stock')
+            ->limit(5)
+            ->get(['id', 'name', 'sku', 'stock', 'unit']);
+
+        return view('kasir.dashboard', compact(
+            'openShift',
+            'todayRevenue',
+            'todayTransactions',
+            'paymentSummary',
+            'shiftCashSales',
+            'expectedCash',
+            'recentSales',
+            'lowStockProducts',
+        ));
     }
 
     private function adminDashboard(): View
