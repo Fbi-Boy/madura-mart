@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Gudang;
 
 use App\Http\Controllers\Controller;
 use App\Models\Purchase;
+use App\Services\StockMovementService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -40,7 +41,9 @@ class PurchaseReceivingController extends Controller
             }
 
             foreach ($lockedPurchase->items as $item) {
-                $item->product()->lockForUpdate()->firstOrFail()->increment('stock', $item->quantity);
+                $product = $item->product()->lockForUpdate()->firstOrFail();
+                $product->increment('stock', $item->quantity);
+                StockMovementService::record($product, $item->quantity, 'purchase_receipt', auth()->user(), 'purchase', $lockedPurchase->id, "Penerimaan {$lockedPurchase->invoice}");
             }
 
             $lockedPurchase->update(['status' => 'received']);
