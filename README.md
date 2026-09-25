@@ -18,12 +18,13 @@ The dashboard is selected from the authenticated user's `role`:
 
 | Role | Dashboard |
 | --- | --- |
-| Admin | Administration |
-| Kasir | Cashier |
-| Kurir | Delivery |
-| Customer | Customer |
-| Purchasing | Purchasing |
-| Super Admin | Super administration |
+| Admin | Business Management |
+| Gudang | Inventory Operations |
+| Kasir | Cashier / POS |
+| Kurir | Delivery Operations |
+| Customer | Personal Shopping |
+| Purchasing | Procurement Operations |
+| Super Admin | Management + Analytics |
 
 ## Main Modules
 
@@ -83,6 +84,7 @@ Project notes and development documentation live in the `docs/` directory:
 - [Database notes](docs/database.md)
 - [Project sitemap](docs/sidemap.md)
 - [Development roadmap](docs/to-do.md)
+- [Dashboard design system](docs/dashboard-design.md)
 
 ## Contributing
 
