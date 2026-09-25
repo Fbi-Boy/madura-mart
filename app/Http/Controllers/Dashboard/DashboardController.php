@@ -27,7 +27,7 @@ class DashboardController extends Controller
                 'kasir' => $this->cashierDashboard(),
                 'gudang' => $this->warehouseDashboard(),
                 'kurir' => $this->courierDashboard(),
-                'customer' => view('customer.dashboard'),
+                'customer' => $this->customerDashboard(),
                 'purchasing' => $this->purchasingDashboard(),
                 'super-admin' => view('super-admin.dashboard'),
                 default => view('dashboard.index'),
@@ -101,6 +101,67 @@ class DashboardController extends Controller
             'statusSummary',
             'recentPurchases',
             'supplierPurchases',
+        ));
+    }
+
+    private function customerDashboard(): View
+    {
+        $user = auth()->user();
+
+        $customer = Customer::query()
+            ->where('email', $user->email)
+            ->first();
+
+        $baseOrders = $customer
+            ? Order::query()->where('customer_id', $customer->id)
+            : Order::query()->whereRaw('1 = 0');
+
+        $totalOrders = (clone $baseOrders)->count();
+        $activeOrders = (clone $baseOrders)
+            ->whereIn('status', ['pending', 'processing', 'shipped'])
+            ->count();
+        $completedOrders = (clone $baseOrders)
+            ->where('status', 'delivered')
+            ->count();
+        $cancelledOrders = (clone $baseOrders)
+            ->where('status', 'cancelled')
+            ->count();
+
+        $totalSpent = (float) (clone $baseOrders)
+            ->whereIn('status', ['pending', 'processing', 'shipped', 'delivered'])
+            ->sum('total');
+
+        $statusSummary = [
+            'pending' => (clone $baseOrders)->where('status', 'pending')->count(),
+            'processing' => (clone $baseOrders)->where('status', 'processing')->count(),
+            'shipped' => (clone $baseOrders)->where('status', 'shipped')->count(),
+            'delivered' => $completedOrders,
+            'cancelled' => $cancelledOrders,
+        ];
+
+        $recentOrders = (clone $baseOrders)
+            ->with('courier:id,name')
+            ->latest('order_date')
+            ->limit(6)
+            ->get([
+                'id',
+                'order_number',
+                'courier_id',
+                'order_date',
+                'total',
+                'status',
+                'delivery_address',
+            ]);
+
+        return view('customer.dashboard', compact(
+            'customer',
+            'totalOrders',
+            'activeOrders',
+            'completedOrders',
+            'cancelledOrders',
+            'totalSpent',
+            'statusSummary',
+            'recentOrders',
         ));
     }
 
