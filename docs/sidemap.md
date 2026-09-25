@@ -488,7 +488,7 @@ Pengembangan Madura Mart dilakukan secara bertahap.
 - [x] Dashboard Inventory
 - [x] Stok Monitoring
 - [x] Barang Masuk
-- [ ] Barang Keluar
+- [x] Barang Keluar
 - [x] Stock Opname
 - [ ] Riwayat Stok
 

@@ -122,5 +122,9 @@
             </section>
         </div>
 
+        <div class="flex justify-end">
+            <a href="{{ route('gudang.barang-keluar.index') }}" class="rounded-xl bg-[#A8F23A] px-4 py-2.5 text-xs font-semibold text-gray-900 hover:opacity-85">Lihat Riwayat Barang Keluar</a>
+        </div>
+
     </div>
 </x-app-layout>
