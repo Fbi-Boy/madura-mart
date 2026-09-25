@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\Monitoring\SupplierController as MonitoringSuppli
 use App\Http\Controllers\Admin\Report\PembelianController as ReportPembelianController;
 use App\Http\Controllers\Admin\Report\PenjualanController as ReportPenjualanController;
 use App\Http\Controllers\Admin\Report\StokController;
+use App\Http\Controllers\Admin\Report\PengirimanController as ReportPengirimanController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Purchasing\SupplierController as PurchasingSupplierController;
@@ -85,6 +86,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/penjualan', [ReportPenjualanController::class, 'index'])->name('penjualan');
             Route::get('/pembelian', [ReportPembelianController::class, 'index'])->name('pembelian');
             Route::get('/stok', [StokController::class, 'index'])->name('stok');
+            Route::get('/pengiriman', [ReportPengirimanController::class, 'index'])->name('pengiriman');
         });
 
     Route::prefix('admin')->name('admin.')->middleware('role:admin,super-admin')->group(function () {
