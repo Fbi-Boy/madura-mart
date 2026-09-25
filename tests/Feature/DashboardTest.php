@@ -174,6 +174,8 @@ class DashboardTest extends TestCase
             ->assertViewHas('todayTransactions', 2)
             ->assertViewHas('draftPurchases', 1)
             ->assertViewHas('receivedToday', 1)
+            ->assertViewHas('receivedValueToday', 200000.0)
+            ->assertViewHas('draftPurchaseValue', 150000.0)
             ->assertViewHas('statusSummary', [
                 'draft' => 1,
                 'received' => 1,

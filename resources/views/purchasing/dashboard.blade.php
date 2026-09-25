@@ -106,6 +106,49 @@
                 </section>
             </div>
 
+            <div class="grid gap-4 lg:grid-cols-2">
+                <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <h3 class="font-semibold text-gray-900 dark:text-white">Nilai Procurement</h3>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Pisahkan nilai barang yang sudah diterima dan draft yang masih tertunda.</p>
+                        </div>
+                        <span class="rounded-full bg-[#A8F23A]/20 px-2.5 py-1 text-[10px] font-bold text-gray-800 dark:text-[#A8F23A]">LIVE</span>
+                    </div>
+
+                    <div class="mt-5 grid gap-3 sm:grid-cols-2">
+                        <div class="rounded-xl bg-[#A8F23A]/10 p-4">
+                            <p class="text-[10px] font-semibold uppercase tracking-[0.08em] text-[#4d6800] dark:text-[#A8F23A]">Received hari ini</p>
+                            <p class="mt-2 text-xl font-semibold text-gray-900 dark:text-white">Rp {{ number_format($receivedValueToday, 0, ',', '.') }}</p>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ $receivedToday }} transaksi</p>
+                        </div>
+                        <div class="rounded-xl bg-gray-50 p-4 dark:bg-gray-700/50">
+                            <p class="text-[10px] font-semibold uppercase tracking-[0.08em] text-gray-500 dark:text-gray-400">Nilai draft</p>
+                            <p class="mt-2 text-xl font-semibold text-gray-900 dark:text-white">Rp {{ number_format($draftPurchaseValue, 0, ',', '.') }}</p>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ $draftPurchases }} transaksi menunggu proses</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                    <h3 class="font-semibold text-gray-900 dark:text-white">Alur Procurement</h3>
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Prioritas kerja berdasarkan status transaksi saat ini.</p>
+
+                    <div class="mt-5 space-y-3">
+                        @foreach ([
+                            ['label' => 'Draft', 'value' => $statusSummary['draft'], 'tone' => 'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-300'],
+                            ['label' => 'Received', 'value' => $statusSummary['received'], 'tone' => 'bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-300'],
+                            ['label' => 'Cancelled', 'value' => $statusSummary['cancelled'], 'tone' => 'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-300'],
+                        ] as $step)
+                            <div class="flex items-center justify-between rounded-xl border border-gray-100 px-4 py-3 dark:border-gray-700">
+                                <span class="text-sm text-gray-600 dark:text-gray-300">{{ $step['label'] }}</span>
+                                <span class="rounded-full px-2.5 py-1 text-xs font-semibold {{ $step['tone'] }}">{{ number_format($step['value'], 0, ',', '.') }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                </section>
+            </div>
+
             <div class="rounded-2xl border border-[#A8F23A]/40 bg-[#A8F23A]/10 p-5 dark:bg-[#A8F23A]/5">
                 <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div>
