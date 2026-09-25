@@ -56,8 +56,9 @@ class DashboardController extends Controller
             ->sum('total');
 
         $monthlyPurchases = (float) Purchase::query()
-            ->whereBetween('purchase_date', [$monthStart->toDateString(), $now->toDateString()])
             ->where('status', 'received')
+            ->whereDate('purchase_date', '>=', $monthStart->toDateString())
+            ->whereDate('purchase_date', '<=', $now->toDateString())
             ->sum('total');
 
         $pendingOrders = Order::query()
