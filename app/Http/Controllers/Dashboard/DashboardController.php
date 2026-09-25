@@ -117,7 +117,7 @@ class DashboardController extends Controller
             ->where('stock', 0)
             ->count();
 
-        $inboundToday = AppModelsPurchaseItem::query()
+        $inboundToday = PurchaseItem::query()
             ->whereHas('purchase', function ($query) use ($today) {
                 $query->where('status', 'received')
                     ->whereDate('purchase_date', $today);
@@ -139,7 +139,7 @@ class DashboardController extends Controller
             ->limit(8)
             ->get(['id', 'name', 'sku', 'stock', 'unit']);
 
-        $recentInbound = AppModelsPurchaseItem::query()
+        $recentInbound = PurchaseItem::query()
             ->with(['product:id,name,sku,unit', 'purchase:id,invoice,supplier_id,purchase_date'])
             ->whereHas('purchase', fn ($query) => $query->where('status', 'received'))
             ->latest('created_at')
