@@ -243,6 +243,7 @@ class DashboardController extends Controller
             'totalSpent',
             'statusSummary',
             'recentOrders',
+            'cartItemCount',
         ));
     }
 
