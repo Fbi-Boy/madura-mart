@@ -48,3 +48,17 @@ Referensi:
 - https://dribbble.com/tags/inventory-management-dashboard
 - https://dribbble.com/tags/admin-dashboard-design
 - https://id.pinterest.com/pin/302444931243019093/
+
+## Implementation Status
+
+Role-specific dashboards currently covered by the dashboard routing and feature-test suite:
+
+- [x] Super Admin — Management + Analytics
+- [x] Admin — Business Management + Analytics
+- [x] Gudang — Inventory Operations
+- [x] Purchasing — Procurement Operations
+- [x] Kasir — POS / Transaction Workspace
+- [x] Kurir — Logistics / Delivery Operations
+- [x] Customer — E-commerce / Personal Dashboard
+
+Access behavior is also protected by the authenticated dashboard route and a safe fallback for unsupported roles.
