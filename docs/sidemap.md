@@ -534,7 +534,7 @@ Pengembangan Madura Mart dilakukan secara bertahap.
 - [x] Laporan Penjualan
 - [x] Laporan Pembelian
 - [x] Laporan Stok
-- [ ] Laporan Pengiriman
+- [x] Laporan Pengiriman
 
 ## PHASE 9 — SUPER ADMIN
 - [x] Dashboard Management & Analytics
