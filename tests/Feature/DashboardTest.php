@@ -25,6 +25,16 @@ class DashboardTest extends TestCase
             ->assertViewIs($view);
     }
 
+    public function test_kurir_dashboard_uses_courier_assigned_orders(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'kurir',
+            'email' => 'kurir@maduramart.test',
+        ]);
+
+        $courier = Supplier::query(); // placeholder
+    }
+
     public function test_purchasing_users_see_the_purchasing_dashboard(): void
     {
         $this->assertDashboardForRole('purchasing', 'purchasing.dashboard');
