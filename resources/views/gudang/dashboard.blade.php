@@ -123,7 +123,7 @@
         </div>
 
         <div class="flex justify-end">
-            <a href="{{ route('gudang.barang-keluar.index') }}" class="rounded-xl bg-[#A8F23A] px-4 py-2.5 text-xs font-semibold text-gray-900 hover:opacity-85">Lihat Riwayat Barang Keluar</a>
+            <div class="flex flex-wrap justify-end gap-2">\n            <a href="{{ route('gudang.riwayat-stok.index') }}" class="rounded-xl border border-black/[0.06] bg-white px-4 py-2.5 text-xs font-semibold text-gray-800 hover:border-[#A8F23A] dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white">Riwayat Stok</a>\n            <a href="{{ route('gudang.barang-keluar.index') }}" class="rounded-xl bg-[#A8F23A] px-4 py-2.5 text-xs font-semibold text-gray-900 hover:opacity-85">Riwayat Barang Keluar</a>\n        </div>
         </div>
 
     </div>

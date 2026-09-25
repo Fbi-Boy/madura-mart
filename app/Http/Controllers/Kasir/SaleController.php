@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Sale;
+use App\Services\StockMovementService;
 use App\Models\CashierShift;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -91,6 +92,7 @@ class SaleController extends Controller
                 ]);
 
                 $product->decrement('stock', $item['quantity']);
+                StockMovementService::record($product, -$item['quantity'], 'sale', auth()->user(), 'sale', $sale->id, "Penjualan {$sale->invoice}");
                 $total += $subtotal;
             }
 

@@ -18,3 +18,7 @@ Before committing database changes, verify that migrations run cleanly on a fres
 ## Model Conventions
 
 Application models live under `app/Models` and use Laravel's Eloquent ORM. Factories under `database/factories` should stay aligned with attributes used by feature tests.
+
+## Stock Movement Ledger
+
+Table `stock_movements` records signed stock changes so warehouse users can inspect inbound, outbound, returns, and stock-opname adjustments. Positive quantities add stock; negative quantities reduce stock. Each entry may reference its source transaction through `reference_type` and `reference_id`.

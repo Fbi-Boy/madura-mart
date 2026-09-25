@@ -7,6 +7,7 @@ use App\Models\Sale;
 use App\Models\SaleItem;
 use App\Models\SaleReturn;
 use App\Models\SaleReturnItem;
+use App\Services\StockMovementService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -79,7 +80,9 @@ class SaleReturnController extends Controller
                     'subtotal' => $subtotal,
                 ]);
 
-                $saleItem->product()->lockForUpdate()->increment('stock', $input['quantity']);
+                $product = $saleItem->product()->lockForUpdate()->firstOrFail();
+                $product->increment('stock', $input['quantity']);
+                StockMovementService::record($product, $input['quantity'], 'return', auth()->user(), 'sale_return', $return->id, "Retur {$return->return_number}");
                 $total += $subtotal;
             }
 
