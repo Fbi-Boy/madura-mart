@@ -19,7 +19,7 @@
                             <td class="px-5 py-4 text-black/60 dark:text-white/60">{{ $sale->customer?->name ?? 'Umum' }}</td>
                             <td class="px-5 py-4 text-black/60 dark:text-white/60">{{ $sale->user->name }}</td>
                             <td class="px-5 py-4 uppercase text-black/60 dark:text-white/60">{{ $sale->payment_method }}</td>
-                            <td class="px-5 py-4 text-right font-semibold text-[#171719] dark:text-white">Rp {{ number_format((float) $sale->total, 0, ',', '.') }}</td>
+                            <td class="px-5 py-4 text-right"><div class="flex items-center justify-end gap-3"><span class="font-semibold text-[#171719] dark:text-white">Rp {{ number_format((float) $sale->total, 0, ',', '.') }}</span><a href="{{ route('kasir.transaksi-struk', $sale) }}" class="text-xs font-semibold text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">Struk</a></div></td>
                         </tr>
                     @empty
                         <tr><td colspan="6" class="px-5 py-12 text-center text-sm text-black/40 dark:text-white/40">Belum ada transaksi penjualan.</td></tr>

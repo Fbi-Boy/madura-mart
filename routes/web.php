@@ -214,6 +214,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/transaksi-baru', [SaleController::class, 'create'])->name('transaksi-baru');
             Route::post('/transaksi-baru', [SaleController::class, 'store'])->name('transaksi-baru.store');
             Route::get('/riwayat-transaksi', [SaleController::class, 'index'])->name('riwayat-transaksi');
+            Route::get('/transaksi/{sale}/struk', [SaleController::class, 'receipt'])->name('transaksi-struk');
             Route::get('/retur', [SaleReturnController::class, 'index'])->name('retur');
             Route::get('/retur/baru', [SaleReturnController::class, 'create'])->name('retur.create');
             Route::post('/retur', [SaleReturnController::class, 'store'])->name('retur.store');
