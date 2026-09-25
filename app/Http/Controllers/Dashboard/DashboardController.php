@@ -62,7 +62,7 @@ class DashboardController extends Controller
             ->count();
 
         $pendingPurchases = Purchase::query()
-            ->whereIn('status', ['pending', 'ordered'])
+            ->where('status', 'draft')
             ->count();
 
         $activeCustomers = Customer::query()
