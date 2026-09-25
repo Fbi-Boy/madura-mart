@@ -344,6 +344,13 @@ Fokus: Belanja dan mengelola pesanan.
 - Lihat Status Pembayaran
 - Upload Bukti Pembayaran
 
+
+### 8.6 Pembayaran
+- Pilih metode Transfer Bank atau QRIS saat checkout
+- Upload bukti pembayaran JPG, PNG, atau PDF
+- Status pembayaran: pending, paid, rejected
+- Bukti pembayaran terikat pada pesanan milik customer
+
 ## 8.7 Profil
 - Edit Nama
 - Edit Email
@@ -510,7 +517,7 @@ Pengembangan Madura Mart dilakukan secara bertahap.
 - [ ] Produk
 - [ ] Keranjang
 - [ ] Checkout
-- [ ] Pembayaran
+- [x] Pembayaran
 - [x] Pesanan Monitoring
 - [x] Profil
 
