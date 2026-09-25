@@ -240,4 +240,56 @@ class DashboardTest extends TestCase
     {
         $this->assertDashboardForRole('super-admin', 'super-admin.dashboard');
     }
+
+
+    public function test_customer_dashboard_is_scoped_to_authenticated_customer(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'customer',
+            'email' => 'buyer@maduramart.test',
+            'name' => 'Buyer Madura',
+        ]);
+
+        $customer = Customer::factory()->create([
+            'email' => 'buyer@maduramart.test',
+            'name' => 'Buyer Madura',
+        ]);
+
+        Order::factory()->create([
+            'customer_id' => $customer->id,
+            'status' => 'delivered',
+            'total' => 125000,
+            'order_date' => now(),
+        ]);
+
+        Order::factory()->create([
+            'customer_id' => $customer->id,
+            'status' => 'shipped',
+            'total' => 75000,
+            'order_date' => now(),
+        ]);
+
+        Order::factory()->create([
+            'status' => 'delivered',
+            'total' => 999999,
+            'order_date' => now(),
+        ]);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('customer.dashboard')
+            ->assertViewHas('totalOrders', 2)
+            ->assertViewHas('activeOrders', 1)
+            ->assertViewHas('completedOrders', 1)
+            ->assertViewHas('cancelledOrders', 0)
+            ->assertViewHas('totalSpent', 200000.0)
+            ->assertViewHas('statusSummary', [
+                'pending' => 0,
+                'processing' => 0,
+                'shipped' => 1,
+                'delivered' => 1,
+                'cancelled' => 0,
+            ]);
+    }
 }
