@@ -189,9 +189,9 @@
                             <p class="font-semibold text-gray-900 dark:text-white">Monitoring</p>
                             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Lihat status dan nilai pembelian.</p>
                         </a>
-                        <a href="{{ route('admin.report.pembelian') }}" class="rounded-xl border border-gray-200 p-4 transition hover:border-[#A8F23A] hover:bg-[#A8F23A]/10 dark:border-gray-700">
-                            <p class="font-semibold text-gray-900 dark:text-white">Laporan</p>
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Analisis laporan pembelian.</p>
+                        <a href="{{ route('purchasing.purchases.index') }}" class="rounded-xl border border-gray-200 p-4 transition hover:border-[#A8F23A] hover:bg-[#A8F23A]/10 dark:border-gray-700">
+                            <p class="font-semibold text-gray-900 dark:text-white">Daftar PO</p>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Kembali ke workspace pembelian.</p>
                         </a>
                     </div>
                 </section>
