@@ -1,159 +1,208 @@
 <x-app-layout>
+    <div class="space-y-6">
 
-    <div class="pt-0">
-
-        <h2 class="text-[22px] font-bold tracking-[-0.02em] leading-none
-                   text-[#171719] dark:text-white mb-5">
-            Dashboard
-        </h2>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
-
-            {{-- OMZET --}}
-            <div class="min-h-[156px] rounded-[14px] border border-black/[0.05] dark:border-white/[0.08]
-                        bg-white dark:bg-white/[0.04] p-4 shadow-[0_4px_16px_rgba(0,0,0,0.025)]">
-
-                <div class="flex items-start justify-between">
-                    <div class="w-10 h-10 rounded-[11px] bg-[#E8F0FF] dark:bg-[#A8F23A]/15
-                                flex items-center justify-center text-[#273D8C] dark:text-[#A8F23A]">
-                        <svg class="w-[21px] h-[21px]" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="6" width="18" height="12" rx="2"></rect>
-                            <circle cx="12" cy="12" r="3"></circle>
-                            <path d="M7 9h.01"></path>
-                            <path d="M17 15h.01"></path>
-                        </svg>
-                    </div>
-
-                    <span class="rounded-full bg-[#B9F43A] px-2 py-1 text-[10px] font-semibold text-[#315000]">
-                        ↗ +8.4%
-                    </span>
-                </div>
-
-                <p class="mt-4 text-[10px] font-semibold tracking-[0.03em] text-black/45 dark:text-white/45">
-                    OMZET BULAN INI
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+                <p class="text-xs font-medium uppercase tracking-[0.14em] text-black/40 dark:text-white/40">
+                    Business overview
                 </p>
-
-                <p class="mt-1 text-[25px] font-bold leading-none tracking-[-0.035em] text-[#171719] dark:text-white">
-                    Rp 482.600.000
-                </p>
-
-                <p class="mt-1.5 text-[11px] text-black/40 dark:text-white/40">
-                    Target bulan tercapai 82%
+                <h1 class="mt-1 text-2xl font-semibold tracking-[-0.03em] text-[#171719] dark:text-white">
+                    Dashboard Admin
+                </h1>
+                <p class="mt-1 text-sm text-black/45 dark:text-white/45">
+                    Ringkasan operasional Madura Mart hari ini.
                 </p>
             </div>
 
-            {{-- RATA-RATA TRANSAKSI --}}
-            <div class="min-h-[156px] rounded-[14px] border border-black/[0.05] dark:border-white/[0.08]
-                        bg-white dark:bg-white/[0.04] p-4 shadow-[0_4px_16px_rgba(0,0,0,0.025)]">
+            <div class="rounded-full border border-black/[0.06] bg-white px-3 py-1.5 text-xs text-black/55
+                        dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white/55">
+                {{ now()->translatedFormat('d F Y') }}
+            </div>
+        </div>
 
-                <div class="flex items-start justify-between">
-                    <div class="w-10 h-10 rounded-[11px] bg-[#E8F0FF] dark:bg-[#A8F23A]/15
-                                flex items-center justify-center text-[#5267D8] dark:text-[#A8F23A]">
-                        <svg class="w-[20px] h-[20px]" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="5" y="3" width="14" height="18" rx="2"></rect>
-                            <path d="M8 17v-4"></path>
-                            <path d="M12 17V9"></path>
-                            <path d="M16 17v-7"></path>
-                        </svg>
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            @foreach([
+                ['label' => 'Omzet bulan ini', 'value' => 'Rp '.number_format($monthlyRevenue, 0, ',', '.'), 'meta' => 'Transaksi berstatus paid', 'icon' => 'Rp'],
+                ['label' => 'Transaksi hari ini', 'value' => number_format($todayTransactions, 0, ',', '.'), 'meta' => 'Penjualan paid', 'icon' => '#'],
+                ['label' => 'Produk aktif', 'value' => number_format($activeProducts, 0, ',', '.'), 'meta' => $lowStockProducts.' produk perlu perhatian stok', 'icon' => 'P'],
+                ['label' => 'Pesanan berjalan', 'value' => number_format($pendingOrders, 0, ',', '.'), 'meta' => $pendingPurchases.' pembelian masih draft', 'icon' => 'O'],
+            ] as $card)
+                <div class="rounded-2xl border border-black/[0.06] bg-white p-4 shadow-[0_8px_24px_rgba(0,0,0,0.035)]
+                            dark:border-white/[0.08] dark:bg-white/[0.04] dark:shadow-none">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#A8F23A]/20
+                                    text-sm font-bold text-[#365500] dark:text-[#A8F23A]">
+                            {{ $card['icon'] }}
+                        </div>
+                        <span class="rounded-full bg-black/[0.04] px-2.5 py-1 text-[10px] font-medium text-black/45
+                                     dark:bg-white/[0.06] dark:text-white/45">
+                            live data
+                        </span>
                     </div>
+                    <p class="mt-5 text-[11px] font-semibold uppercase tracking-[0.08em] text-black/40 dark:text-white/40">
+                        {{ $card['label'] }}
+                    </p>
+                    <p class="mt-1 text-2xl font-semibold tracking-[-0.035em] text-[#171719] dark:text-white">
+                        {{ $card['value'] }}
+                    </p>
+                    <p class="mt-1 text-xs text-black/40 dark:text-white/40">
+                        {{ $card['meta'] }}
+                    </p>
+                </div>
+            @endforeach
+        </div>
 
-                    <span class="rounded-full bg-[#EEF1F8] dark:bg-white/10 px-2 py-1 text-[10px] font-semibold text-black/55 dark:text-white/55">
-                        ≋ Stabil
-                    </span>
+        <div class="grid grid-cols-1 gap-4 xl:grid-cols-[1.35fr_.65fr]">
+
+            <section class="rounded-2xl border border-black/[0.06] bg-white p-5
+                            dark:border-white/[0.08] dark:bg-white/[0.04]">
+                <div class="flex items-center justify-between gap-3">
+                    <div>
+                        <h2 class="text-sm font-semibold text-[#171719] dark:text-white">Penjualan terbaru</h2>
+                        <p class="mt-1 text-xs text-black/40 dark:text-white/40">Transaksi paid paling baru.</p>
+                    </div>
+                    <a href="{{ route('admin.monitoring.penjualan') }}"
+                       class="text-xs font-semibold text-[#4d6800] hover:underline dark:text-[#A8F23A]">
+                        Lihat semua
+                    </a>
                 </div>
 
-                <p class="mt-4 text-[10px] font-semibold tracking-[0.03em] text-black/45 dark:text-white/45">
-                    RATA-RATA TRANSAKSI
-                </p>
+                <div class="mt-5 overflow-x-auto">
+                    <table class="w-full min-w-[620px] text-left">
+                        <thead>
+                            <tr class="border-b border-black/[0.06] text-[10px] uppercase tracking-[0.08em] text-black/35 dark:border-white/[0.08] dark:text-white/35">
+                                <th class="pb-3 font-semibold">Invoice</th>
+                                <th class="pb-3 font-semibold">Customer</th>
+                                <th class="pb-3 font-semibold">Pembayaran</th>
+                                <th class="pb-3 text-right font-semibold">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-black/[0.05] dark:divide-white/[0.06]">
+                            @forelse($recentSales as $sale)
+                                <tr>
+                                    <td class="py-3 text-xs font-semibold text-[#171719] dark:text-white">
+                                        {{ $sale->invoice }}
+                                        <span class="block mt-0.5 font-normal text-black/35 dark:text-white/35">
+                                            {{ $sale->sale_date->format('d/m/Y H:i') }}
+                                        </span>
+                                    </td>
+                                    <td class="py-3 text-xs text-black/55 dark:text-white/55">
+                                        {{ $sale->customer?->name ?? 'Umum' }}
+                                    </td>
+                                    <td class="py-3 text-xs capitalize text-black/55 dark:text-white/55">
+                                        {{ $sale->payment_method }}
+                                    </td>
+                                    <td class="py-3 text-right text-xs font-semibold text-[#171719] dark:text-white">
+                                        Rp {{ number_format($sale->total, 0, ',', '.') }}
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="py-10 text-center text-xs text-black/35 dark:text-white/35">
+                                        Belum ada transaksi penjualan.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </section>
 
-                <p class="mt-1 text-[25px] font-bold leading-none tracking-[-0.035em] text-[#171719] dark:text-white">
-                    Rp 128.500
-                </p>
-
-                <p class="mt-1.5 text-[11px] text-black/40 dark:text-white/40">
-                    Basket size 4.2 SKU/pelanggan
-                </p>
-            </div>
-
-            {{-- TRANSAKSI HARI INI --}}
-            <div class="min-h-[156px] rounded-[14px] border border-black/[0.05] dark:border-white/[0.08]
-                        bg-white dark:bg-white/[0.04] p-4 shadow-[0_4px_16px_rgba(0,0,0,0.025)]">
-
-                <div class="flex items-start justify-between">
-                    <div class="w-10 h-10 rounded-[11px] bg-[#E8F0FF] dark:bg-[#A8F23A]/15
-                                flex items-center justify-center text-[#173C77] dark:text-[#A8F23A]">
-                        <svg class="w-[21px] h-[21px]" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="9" cy="20" r="1"></circle>
-                            <circle cx="19" cy="20" r="1"></circle>
-                            <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 1.9-1.5L21 8H7"></path>
-                            <path d="M16 5l2 2-2 2"></path>
-                            <path d="M18 7h-5"></path>
-                        </svg>
-                    </div>
-
-                    <span class="rounded-full bg-[#B9F43A] px-2 py-1 text-[10px] font-semibold text-[#315000]">
-                        ↗ +14%
-                    </span>
+            <section class="rounded-2xl border border-black/[0.06] bg-white p-5
+                            dark:border-white/[0.08] dark:bg-white/[0.04]">
+                <div>
+                    <h2 class="text-sm font-semibold text-[#171719] dark:text-white">Perhatian stok</h2>
+                    <p class="mt-1 text-xs text-black/40 dark:text-white/40">Produk aktif dengan stok ≤ 10.</p>
                 </div>
 
-                <p class="mt-4 text-[10px] font-semibold tracking-[0.03em] text-black/45 dark:text-white/45">
-                    TRANSAKSI HARI INI
-                </p>
+                <div class="mt-5 space-y-2">
+                    @forelse($stockAlerts as $product)
+                        <div class="flex items-center justify-between gap-3 rounded-xl bg-black/[0.025] px-3 py-2.5
+                                    dark:bg-white/[0.035]">
+                            <div class="min-w-0">
+                                <p class="truncate text-xs font-semibold text-[#171719] dark:text-white">{{ $product->name }}</p>
+                                <p class="mt-0.5 text-[10px] text-black/35 dark:text-white/35">{{ $product->sku }}</p>
+                            </div>
+                            <span class="shrink-0 rounded-full px-2 py-1 text-[10px] font-semibold
+                                         {{ $product->stock === 0 ? 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-300' : 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300' }}">
+                                {{ $product->stock }} {{ $product->unit }}
+                            </span>
+                        </div>
+                    @empty
+                        <div class="rounded-xl bg-[#A8F23A]/10 p-4 text-xs text-[#4d6800] dark:text-[#A8F23A]">
+                            Tidak ada stok kritis saat ini.
+                        </div>
+                    @endforelse
+                </div>
+            </section>
+        </div>
 
-                <p class="mt-1 text-[25px] font-bold leading-none tracking-[-0.035em] text-[#171719] dark:text-white">
-                    312 Transaksi
-                </p>
-
-                <p class="mt-1.5 text-[11px] text-black/40 dark:text-white/40">
-                    Puncak kunjungan: 12.00 - 13.30
-                </p>
-            </div>
-
-            {{-- TERMINAL KASIR --}}
-            <div class="min-h-[156px] rounded-[14px] border border-black/[0.05] dark:border-white/[0.08]
-                        bg-white dark:bg-white/[0.04] p-4 shadow-[0_4px_16px_rgba(0,0,0,0.025)]">
-
-                <div class="flex items-start justify-between">
-                    <div class="w-10 h-10 rounded-[11px] bg-[#E8F0FF] dark:bg-[#A8F23A]/15
-                                flex items-center justify-center text-[#526A1A] dark:text-[#A8F23A]">
-                        <svg class="w-[21px] h-[21px]" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="4" y="3" width="16" height="18" rx="2"></rect>
-                            <path d="M8 7h8"></path>
-                            <path d="M8 11h2"></path>
-                            <path d="M14 11h2"></path>
-                            <path d="M8 15h2"></path>
-                            <path d="M14 15h2"></path>
-                        </svg>
-                    </div>
-
-                    <div class="flex -space-x-1.5">
-                        <span class="w-5 h-5 rounded-full bg-[#C8F53A] border-2 border-white dark:border-[#202124] text-[7px] font-bold flex items-center justify-center">K</span>
-                        <span class="w-5 h-5 rounded-full bg-[#7776E8] border-2 border-white dark:border-[#202124] text-[7px] font-bold text-white flex items-center justify-center">K</span>
-                        <span class="w-5 h-5 rounded-full bg-[#3B3B6D] border-2 border-white dark:border-[#202124] text-[7px] font-bold text-white flex items-center justify-center">K</span>
-                        <span class="w-5 h-5 rounded-full bg-[#DDE2F0] border-2 border-white dark:border-[#202124] text-[7px] font-bold text-black/50 flex items-center justify-center">+1</span>
+        <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <section class="rounded-2xl border border-black/[0.06] bg-white p-5 dark:border-white/[0.08] dark:bg-white/[0.04]">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-sm font-semibold text-[#171719] dark:text-white">Produk terlaris bulan ini</h2>
+                        <p class="mt-1 text-xs text-black/40 dark:text-white/40">Berdasarkan jumlah unit terjual.</p>
                     </div>
                 </div>
 
-                <p class="mt-4 text-[10px] font-semibold tracking-[0.03em] text-black/45 dark:text-white/45">
-                    TERMINAL KASIR POS
-                </p>
+                <div class="mt-5 space-y-3">
+                    @forelse($topProducts as $item)
+                        <div class="flex items-center gap-3">
+                            <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#A8F23A]/20 text-xs font-bold text-[#365500] dark:text-[#A8F23A]">
+                                {{ $loop->iteration }}
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <p class="truncate text-xs font-semibold text-[#171719] dark:text-white">
+                                    {{ $item->product?->name ?? 'Produk dihapus' }}
+                                </p>
+                                <div class="mt-1 h-1.5 overflow-hidden rounded-full bg-black/[0.05] dark:bg-white/[0.08]">
+                                    <div class="h-full rounded-full bg-[#A8F23A]"
+                                         style="width: {{ max(8, min(100, ($item->quantity_sold / max(1, (int) $topProducts->max('quantity_sold'))) * 100)) }}%"></div>
+                                </div>
+                            </div>
+                            <span class="text-xs font-semibold text-black/55 dark:text-white/55">
+                                {{ $item->quantity_sold }} unit
+                            </span>
+                        </div>
+                    @empty
+                        <p class="py-8 text-center text-xs text-black/35 dark:text-white/35">
+                            Belum ada data penjualan produk bulan ini.
+                        </p>
+                    @endforelse
+                </div>
+            </section>
 
-                <p class="mt-1 text-[25px] font-bold leading-none tracking-[-0.035em] text-[#171719] dark:text-white">
-                    4 Kasir Aktif
-                </p>
+            <section class="rounded-2xl border border-black/[0.06] bg-white p-5 dark:border-white/[0.08] dark:bg-white/[0.04]">
+                <div>
+                    <h2 class="text-sm font-semibold text-[#171719] dark:text-white">Ringkasan operasional</h2>
+                    <p class="mt-1 text-xs text-black/40 dark:text-white/40">Data pendukung aktivitas bisnis.</p>
+                </div>
 
-                <p class="mt-1.5 text-[11px] leading-4 text-black/40 dark:text-white/40">
-                    POS-01, POS-02, POS-03,<br>
-                    POS-04 Online
-                </p>
-            </div>
+                <div class="mt-5 grid grid-cols-2 gap-2.5">
+                    <div class="rounded-xl bg-black/[0.025] p-3 dark:bg-white/[0.035]">
+                        <p class="text-[10px] uppercase tracking-[0.07em] text-black/35 dark:text-white/35">Customer aktif</p>
+                        <p class="mt-1 text-xl font-semibold text-[#171719] dark:text-white">{{ number_format($activeCustomers) }}</p>
+                    </div>
+                    <div class="rounded-xl bg-black/[0.025] p-3 dark:bg-white/[0.035]">
+                        <p class="text-[10px] uppercase tracking-[0.07em] text-black/35 dark:text-white/35">Kurir aktif</p>
+                        <p class="mt-1 text-xl font-semibold text-[#171719] dark:text-white">{{ number_format($activeCouriers) }}</p>
+                    </div>
+                    <div class="rounded-xl bg-black/[0.025] p-3 dark:bg-white/[0.035]">
+                        <p class="text-[10px] uppercase tracking-[0.07em] text-black/35 dark:text-white/35">Pesanan aktif</p>
+                        <p class="mt-1 text-xl font-semibold text-[#171719] dark:text-white">{{ number_format($pendingOrders) }}</p>
+                    </div>
+                    <div class="rounded-xl bg-black/[0.025] p-3 dark:bg-white/[0.035]">
+                        <p class="text-[10px] uppercase tracking-[0.07em] text-black/35 dark:text-white/35">Pembelian draft</p>
+                        <p class="mt-1 text-xl font-semibold text-[#171719] dark:text-white">{{ number_format($pendingPurchases) }}</p>
+                    </div>
+                </div>
 
+                <div class="mt-4 rounded-xl border border-[#A8F23A]/30 bg-[#A8F23A]/10 p-3 text-xs text-[#4d6800] dark:text-[#A8F23A]">
+                    Dashboard admin menggunakan data database secara langsung agar informasi operasional tetap aktual.
+                </div>
+            </section>
         </div>
 
     </div>
-
 </x-app-layout>

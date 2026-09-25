@@ -2,6 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\Purchase;
+use App\Models\Sale;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -28,6 +32,38 @@ class DashboardTest extends TestCase
     public function test_admin_users_see_the_admin_dashboard(): void
     {
         $this->assertDashboardForRole('admin', 'admin.dashboard');
+    }
+
+    public function test_admin_dashboard_uses_operational_database_metrics(): void
+    {
+        $user = User::factory()->create(['role' => 'admin']);
+
+        Sale::factory()->create([
+            'status' => 'paid',
+            'total' => 125000,
+            'sale_date' => now(),
+        ]);
+
+        Sale::factory()->create([
+            'status' => 'cancelled',
+            'total' => 90000,
+            'sale_date' => now(),
+        ]);
+
+        Product::factory()->create(['stock' => 4, 'is_active' => true]);
+        Order::factory()->create(['status' => 'pending']);
+        Purchase::factory()->create(['status' => 'draft']);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('admin.dashboard')
+            ->assertViewHas('monthlyRevenue', 125000.0)
+            ->assertViewHas('todayTransactions', 1)
+            ->assertViewHas('activeProducts', 1)
+            ->assertViewHas('lowStockProducts', 1)
+            ->assertViewHas('pendingOrders', 1)
+            ->assertViewHas('pendingPurchases', 1);
     }
 
     public function test_kurir_users_see_the_kurir_dashboard(): void

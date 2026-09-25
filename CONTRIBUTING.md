@@ -2,7 +2,7 @@
 
 ## Before You Start
 
-Read the project documentation in `docs/` and make sure your local Laravel and Node.js environments are available.
+Read the project documentation in `docs/` and make sure your local Laravel and Node.js environments are available. For dashboard work, also follow `docs/dashboard-design.md`.
 
 ## Branches
 
