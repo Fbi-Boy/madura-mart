@@ -155,7 +155,7 @@
                         <h3 class="font-semibold text-gray-900 dark:text-white">Fokus Operasional</h3>
                         <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Prioritaskan {{ $draftPurchases }} transaksi draft yang masih menunggu proses.</p>
                     </div>
-                    <span class="inline-flex w-fit rounded-full bg-[#A8F23A] px-3 py-1 text-xs font-semibold text-gray-900">Procurement</span>
+                    <a href="{{ route('purchasing.purchases.index') }}" class="inline-flex w-fit rounded-full bg-[#A8F23A] px-3 py-1.5 text-xs font-semibold text-gray-900 transition hover:opacity-80">Buka Purchase Order</a>
                 </div>
             </div>
         </div>
