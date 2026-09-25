@@ -107,6 +107,27 @@ class DashboardTest extends TestCase
             ->assertViewHas('lowStockProducts', fn ($products) => $products->count() === 1);
     }
 
+    public function test_gudang_users_see_inventory_dashboard(): void
+    {
+        $user = User::factory()->create(['role' => 'gudang']);
+
+        Product::factory()->create(['stock' => 4, 'is_active' => true]);
+        Product::factory()->create(['stock' => 0, 'is_active' => true]);
+        Product::factory()->create(['stock' => 30, 'is_active' => true]);
+        Product::factory()->create(['stock' => 2, 'is_active' => false]);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('gudang.dashboard')
+            ->assertViewHas('activeProducts', 3)
+            ->assertViewHas('totalStock', 34)
+            ->assertViewHas('lowStockCount', 1)
+            ->assertViewHas('outOfStockCount', 1)
+            ->assertViewHas('inboundToday', 0)
+            ->assertViewHas('outboundToday', 0);
+    }
+
     public function test_kurir_users_see_the_kurir_dashboard(): void
     {
         $this->assertDashboardForRole('kurir', 'kurir.dashboard');
