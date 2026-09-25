@@ -24,6 +24,15 @@
                         <p class="text-xs uppercase tracking-wider text-gray-400">Ketersediaan</p>
                         <p class="mt-1 font-semibold text-gray-900 dark:text-white">{{ $product->stock }} {{ $product->unit }} tersedia</p>
                     </div>
+                    <form method="POST" action="{{ route('customer.cart.add', $product) }}" class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-end">
+                        @csrf
+                        <div>
+                            <label for="quantity" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Jumlah</label>
+                            <input id="quantity" name="quantity" type="number" min="1" max="{{ $product->stock }}" value="1" class="mt-1 w-24 rounded-xl border-gray-300 text-sm dark:border-gray-600 dark:bg-gray-900 dark:text-white">
+                        </div>
+                        <button class="rounded-xl bg-[#A8F23A] px-5 py-2.5 text-sm font-semibold text-gray-900 transition hover:brightness-95">Tambah ke Keranjang</button>
+                    </form>
+
                     @if ($product->description)
                         <div class="mt-6">
                             <h3 class="font-semibold text-gray-900 dark:text-white">Deskripsi</h3>
