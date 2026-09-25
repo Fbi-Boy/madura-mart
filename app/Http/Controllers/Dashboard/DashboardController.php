@@ -254,6 +254,24 @@ class DashboardController extends Controller
             ->whereDate('order_date', $today)
             ->count();
 
+        $activeDeliveryOrders = (clone $baseOrders)
+            ->whereIn('status', ['processing', 'shipped'])
+            ->count();
+
+        $priorityOrders = (clone $baseOrders)
+            ->with('customer:id,name')
+            ->where('status', 'shipped')
+            ->latest('order_date')
+            ->limit(4)
+            ->get([
+                'id',
+                'order_number',
+                'customer_id',
+                'order_date',
+                'delivery_address',
+                'status',
+            ]);
+
         $statusSummary = [
             'pending' => (clone $baseOrders)->where('status', 'pending')->count(),
             'processing' => (clone $baseOrders)->where('status', 'processing')->count(),
@@ -281,6 +299,8 @@ class DashboardController extends Controller
             'pendingOrders',
             'shippingOrders',
             'deliveredToday',
+            'activeDeliveryOrders',
+            'priorityOrders',
             'statusSummary',
             'recentOrders',
         ));
