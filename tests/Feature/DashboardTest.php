@@ -102,7 +102,7 @@ class DashboardTest extends TestCase
             ->assertViewIs('kasir.dashboard')
             ->assertViewHas('todayRevenue', 150000.0)
             ->assertViewHas('todayTransactions', 1)
-            ->assertViewHas('paymentSummary', fn ($summary) => $summary['cash'] === 150000.0)
+            ->assertViewHas('paymentSummary', fn ($summary) => (float) $summary['cash'] === 150000.0)
             ->assertViewHas('expectedCash', 250000.0)
             ->assertViewHas('lowStockProducts', fn ($products) => $products->count() === 1);
     }
