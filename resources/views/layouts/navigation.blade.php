@@ -47,6 +47,7 @@
                 <a href="{{ route('admin.monitoring.distributor') }}" class="menu-link">Distributor</a>
                 <a href="{{ route('admin.monitoring.client') }}" class="menu-link">Client</a>
                 <a href="{{ route('admin.monitoring.kurir') }}" class="menu-link">Kurir</a>
+                <a href="{{ route('admin.monitoring.supplier') }}" class="menu-link">Supplier</a>
                 <a href="{{ route('admin.report.penjualan') }}" class="menu-link">Laporan Penjualan</a>
                 <a href="{{ route('admin.report.pembelian') }}" class="menu-link">Laporan Pembelian</a>
                 <a href="{{ route('admin.report.stok') }}" class="menu-link">Stok</a>
