@@ -4,54 +4,74 @@
 - purchasing
 
 ## Fokus
-Pengadaan barang dari supplier.
+Pengadaan barang dari supplier sampai purchase order diterima gudang.
 
-## Menu
-### Dashboard Purchasing
-- Total Supplier
-- Purchase Order Aktif
-- Pembelian Berjalan
-- Barang Belum Diterima
+## Dashboard Purchasing
+- Supplier aktif
+- Nilai pembelian hari ini
+- Jumlah transaksi hari ini
+- Draft purchase order
+- Barang/purchase yang sudah diterima hari ini
+- Ringkasan status pembelian
+- Tren nilai procurement 6 bulan
+- Supplier dengan nilai pembelian terbesar
+- Akses cepat ke workspace purchase order
 
-### Supplier
-- Tambah Supplier
-- Edit Supplier
-- Lihat Supplier
-- Nonaktifkan Supplier
-- Informasi Kontak Supplier
+## Supplier
+Supplier digunakan sebagai sumber pengadaan. Purchase wajib menunjuk supplier aktif.
 
-### Purchase Order
-- Buat PO
-- Pilih Supplier
-- Pilih Produk
-- Tentukan Jumlah
-- Tentukan Harga Beli
-- Kirim PO
-- Batalkan PO
+## Purchase Order / Pembelian
+Implementasi saat ini memakai tabel `purchases` sebagai purchase order sekaligus catatan pembelian:
+- Buat invoice
+- Pilih supplier aktif
+- Pilih produk aktif
+- Tentukan quantity
+- Tentukan harga beli
+- Tambahkan catatan
+- Purchasing membuat status `draft`
+- Admin dapat membuat transaksi berstatus `received`
+- Draft belum menambah stok
+- Transaksi received menambah stok
 
-### Pembelian
-- Daftar Pembelian
-- Detail Pembelian
-- Status Pembelian
-- Riwayat Pembelian
+## Penerimaan
+Role gudang menangani penerimaan draft:
+1. Melihat purchase berstatus `draft`.
+2. Mengonfirmasi penerimaan.
+3. Sistem mengunci purchase dan produk dalam database transaction.
+4. Quantity setiap `purchase_item` ditambahkan ke stok produk.
+5. Status purchase berubah menjadi `received`.
 
-### Penerimaan
-- Lihat Barang yang Harus Diterima
-- Konfirmasi Penerimaan
-- Catat Barang Kurang / Rusak
-- Status Penerimaan
+## Status Purchase
+- `draft` — PO masih menunggu penerimaan.
+- `received` — barang sudah diterima dan stok diperbarui.
+- `cancelled` — transaksi dibatalkan.
 
 ## Tabel yang terkait
-- suppliers
-- purchase_orders
-- purchase_order_details
-- purchases
-- purchase_details
-- products
-- goods_receipts
-- goods_receipt_details
-- stocks
-- stock_movements
+- `suppliers`
+- `users`
+- `purchases`
+- `purchase_items`
+- `products`
+
+## Struktur Data Utama
+
+### purchases
+- `invoice` — nomor invoice unik.
+- `supplier_id` — supplier pengadaan.
+- `user_id` — user pembuat transaksi.
+- `purchase_date` — tanggal pembelian.
+- `total` — total nilai pembelian.
+- `status` — draft / received / cancelled.
+- `notes` — catatan opsional.
+
+### purchase_items
+- `purchase_id` — parent purchase.
+- `product_id` — produk yang dibeli.
+- `quantity` — jumlah barang.
+- `unit_price` — harga beli per unit.
+- `subtotal` — quantity × unit price.
 
 ## Flow
-Purchasing → Supplier → Purchase Order → Pembelian → Penerimaan Barang → Gudang → Stok
+Purchasing → Supplier → Purchase (`draft`) → Gudang Penerimaan → Purchase (`received`) → Stok Produk
+
+> Catatan: dokumentasi ini mengikuti implementasi migration, model, dan controller yang saat ini ada. Tabel `purchase_orders`, `goods_receipts`, dan tabel detail terpisah belum menjadi bagian dari implementasi purchasing saat ini.
