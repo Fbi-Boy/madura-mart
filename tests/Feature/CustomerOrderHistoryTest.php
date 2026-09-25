@@ -28,8 +28,7 @@ class CustomerOrderHistoryTest extends TestCase
             'status' => 'pending',
         ]);
 
-        OrderItem::factory()->create([
-            'order_id' => $ownOrder->id,
+        $ownOrder->items()->create([
             'product_id' => $product->id,
             'quantity' => 2,
             'unit_price' => 15000,
