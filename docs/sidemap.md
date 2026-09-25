@@ -473,62 +473,72 @@ Pengembangan Madura Mart dilakukan secara bertahap.
 - [x] Sidebar berdasarkan Role
 
 ## PHASE 2 — MASTER DATA
-- [ ] User
+- [x] User
 - [ ] Role & Permission
 - [x] Kategori
-- [ ] Produk
-- [ ] Supplier
-- [ ] Customer
+- [x] Produk
+- [x] Supplier
+- [x] Customer
 - [ ] Alamat
+- [x] Distributor
+- [x] Kurir
+- [x] Unit
 
 ## PHASE 3 — GUDANG
-- [ ] Stok
+- [x] Dashboard Inventory
+- [x] Stok Monitoring
 - [ ] Barang Masuk
 - [ ] Barang Keluar
 - [ ] Stock Opname
 - [ ] Riwayat Stok
 
 ## PHASE 4 — PURCHASING
-- [ ] Supplier
+- [x] Supplier
 - [ ] Purchase Order
-- [ ] Pembelian
+- [x] Pembelian
 - [ ] Penerimaan Barang
 
 ## PHASE 5 — KASIR
-- [ ] Shift
-- [ ] Transaksi
-- [ ] Pembayaran
+- [x] Shift
+- [x] Transaksi
+- [x] Pembayaran
 - [ ] Struk
-- [ ] Riwayat Transaksi
-- [ ] Retur
+- [x] Riwayat Transaksi
+- [x] Retur
 
 ## PHASE 6 — CUSTOMER
 - [ ] Produk
 - [ ] Keranjang
 - [ ] Checkout
 - [ ] Pembayaran
-- [ ] Pesanan
-- [ ] Profil
+- [x] Pesanan Monitoring
+- [x] Profil
 
 ## PHASE 7 — KURIR
-- [ ] Daftar Pengiriman
-- [ ] Tugas Kurir
+- [x] Dashboard Pengiriman
+- [x] Daftar Pengiriman
+- [x] Monitoring Tugas Kurir
 - [ ] Update Status
 - [ ] Riwayat Pengiriman
 
 ## PHASE 8 — ADMIN & REPORTING
-- [ ] Dashboard Admin
-- [ ] Monitoring Penjualan
-- [ ] Monitoring Pembelian
-- [ ] Monitoring Stok
-- [ ] Monitoring Pesanan
-- [ ] Laporan Penjualan
-- [ ] Laporan Pembelian
-- [ ] Laporan Stok
+- [x] Dashboard Admin
+- [x] Monitoring Penjualan
+- [x] Monitoring Pembelian
+- [x] Monitoring Produk
+- [x] Monitoring Supplier
+- [x] Monitoring Pesanan
+- [x] Monitoring Client
+- [x] Monitoring Distributor
+- [x] Monitoring Kurir
+- [x] Laporan Penjualan
+- [x] Laporan Pembelian
+- [x] Laporan Stok
 - [ ] Laporan Pengiriman
 
 ## PHASE 9 — SUPER ADMIN
-- [ ] Manajemen User
+- [x] Dashboard Management & Analytics
+- [x] Manajemen User
 - [ ] Role
 - [ ] Permission
 - [ ] Pengaturan Sistem
