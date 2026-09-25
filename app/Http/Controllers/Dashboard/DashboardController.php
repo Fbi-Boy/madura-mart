@@ -103,7 +103,6 @@ class DashboardController extends Controller
             'roleSummary',
             'recentUsers',
             'recentOrders',
-            'cartItemCount',
         ));
     }
 
