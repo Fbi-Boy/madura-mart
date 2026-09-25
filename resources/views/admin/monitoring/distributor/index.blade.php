@@ -1,11 +1,35 @@
 <x-app-layout>
-<div class="h-full flex flex-col gap-5">
-<div><p class="text-sm text-black/45 dark:text-white/45">Monitoring</p><h2 class="mt-1 text-2xl font-semibold text-[#171719] dark:text-white">Distributor</h2></div>
-<div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-<div class="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 p-5"><p class="text-sm text-black/45 dark:text-white/45">Total Data</p><p class="mt-2 text-2xl font-semibold text-[#171719] dark:text-white">0</p></div>
-<div class="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 p-5"><p class="text-sm text-black/45 dark:text-white/45">Status</p><p class="mt-2 text-sm font-medium text-[#171719] dark:text-white">Belum ada data</p></div>
-<div class="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 p-5"><p class="text-sm text-black/45 dark:text-white/45">Informasi</p><p class="mt-2 text-sm font-medium text-[#171719] dark:text-white">Halaman siap digunakan</p></div>
-</div>
-<div class="flex-1 rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 overflow-hidden"><div class="px-5 py-4 border-b border-black/5 dark:border-white/10"><h3 class="text-sm font-semibold text-[#171719] dark:text-white">Data Distributor</h3></div><div class="h-full flex items-center justify-center"><div class="text-center"><div class="mx-auto w-12 h-12 rounded-2xl bg-[#A8F23A]/20 flex items-center justify-center"><span class="text-xl">▦</span></div><p class="mt-4 text-sm font-medium text-[#171719] dark:text-white">Belum ada data</p><p class="mt-1 text-xs text-black/40 dark:text-white/40">Data distributor akan tampil di halaman ini.</p></div></div></div>
+<div class="space-y-5">
+    <div><p class="text-sm text-black/45">Monitoring</p><h2 class="mt-1 text-2xl font-semibold">Monitoring Distributor</h2><p class="mt-1 text-sm text-black/40">Pantau data distributor dan status kerja sama.</p></div>
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <div class="rounded-2xl border bg-white p-5"><p class="text-sm text-black/45">Total Distributor</p><p class="mt-2 text-2xl font-semibold">{{ $totalDistributors }}</p></div>
+        <div class="rounded-2xl border bg-white p-5"><p class="text-sm text-black/45">Distributor Aktif</p><p class="mt-2 text-2xl font-semibold">{{ $activeDistributors }}</p></div>
+        <div class="rounded-2xl border bg-white p-5"><p class="text-sm text-black/45">Distributor Nonaktif</p><p class="mt-2 text-2xl font-semibold">{{ $inactiveDistributors }}</p></div>
+    </div>
+    <form method="GET" class="flex gap-3 rounded-2xl border bg-white p-5">
+        <input name="search" value="{{ $search }}" placeholder="Cari kode, distributor, atau contact person..." class="w-full rounded-xl border px-3 py-2.5">
+        <button class="rounded-xl bg-[#171719] px-5 py-2.5 font-semibold text-white">Cari</button>
+    </form>
+    <div class="overflow-hidden rounded-2xl border bg-white">
+        <div class="overflow-x-auto"><table class="w-full text-left text-sm">
+            <thead class="border-b text-xs uppercase text-black/45"><tr>
+                <th class="px-5 py-4">Kode</th><th class="px-5 py-4">Distributor</th><th class="px-5 py-4">Contact Person</th><th class="px-5 py-4">Kota</th><th class="px-5 py-4">Status</th>
+            </tr></thead>
+            <tbody class="divide-y">
+            @forelse($distributors as $distributor)
+                <tr>
+                    <td class="px-5 py-4 font-medium">{{ $distributor->code }}</td>
+                    <td class="px-5 py-4">{{ $distributor->name }}</td>
+                    <td class="px-5 py-4">{{ $distributor->contact_person ?: '-' }}</td>
+                    <td class="px-5 py-4">{{ $distributor->city ?: '-' }}</td>
+                    <td class="px-5 py-4"><span class="rounded-full px-2.5 py-1 text-xs font-medium {{ $distributor->is_active ? 'bg-green-50 text-green-700' : 'bg-gray-100 text-gray-600' }}">{{ $distributor->is_active ? 'Aktif' : 'Nonaktif' }}</span></td>
+                </tr>
+            @empty
+                <tr><td colspan="5" class="px-5 py-12 text-center text-black/40">Belum ada distributor.</td></tr>
+            @endforelse
+            </tbody>
+        </table></div>
+        @if($distributors->hasPages())<div class="border-t px-5 py-4">{{ $distributors->links() }}</div>@endif
+    </div>
 </div>
 </x-app-layout>
