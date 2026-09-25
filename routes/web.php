@@ -27,6 +27,7 @@ use App\Http\Controllers\Kasir\SaleController;
 use App\Http\Controllers\Kasir\SaleReturnController;
 use App\Http\Controllers\Kasir\CashierShiftController;
 use App\Http\Controllers\Kurir\DeliveryStatusController;
+use App\Http\Controllers\Kurir\DeliveryHistoryController;
 use App\Http\Controllers\Customer\CatalogController;
 use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\CheckoutController;
@@ -159,6 +160,9 @@ Route::middleware('auth')->group(function () {
         ->name('kurir.')
         ->middleware('role:kurir')
         ->group(function () {
+            Route::get('/pengiriman/riwayat', [DeliveryHistoryController::class, 'index'])
+                ->name('pengiriman.riwayat');
+
             Route::patch('/pengiriman/{order}/status', [DeliveryStatusController::class, 'update'])
                 ->name('pengiriman.status');
         });
