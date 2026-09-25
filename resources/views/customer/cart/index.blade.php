@@ -64,9 +64,9 @@
                             <span class="text-sm text-gray-600 dark:text-gray-300">Total sementara</span>
                             <span class="text-xl font-bold text-gray-900 dark:text-white">Rp {{ number_format($total, 0, ',', '.') }}</span>
                         </div>
-                        <div class="mt-5 rounded-xl bg-gray-50 p-3 text-xs text-gray-500 dark:bg-gray-700/50 dark:text-gray-400">
-                            Checkout akan ditambahkan pada tahap berikutnya. Stok dibatasi saat item dimasukkan atau diperbarui.
-                        </div>
+                        <form method="GET" action="{{ route('customer.checkout.index') }}" class="mt-5">
+                            <button class="w-full rounded-xl bg-[#A8F23A] px-4 py-3 text-sm font-semibold text-gray-900 transition hover:brightness-95">Lanjut ke Checkout</button>
+                        </form>
                     </aside>
                 </div>
             @endif
