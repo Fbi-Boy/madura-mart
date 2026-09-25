@@ -44,7 +44,7 @@ class CustomerCheckoutTest extends TestCase
 
         $response = $this->withSession([
             'customer_cart' => [$product->id => 3],
-         ])->actingAs($user)->post(route('customer.checkout.store'), ['payment_method' => 'qris']);
+        ])->actingAs($user)->post(route('customer.checkout.store'), ['payment_method' => 'qris']);
 
         $order = Order::query()->where('customer_id', $customer->id)->first();
 
