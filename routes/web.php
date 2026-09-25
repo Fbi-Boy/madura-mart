@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\Report\PenjualanController as ReportPenjualanCont
 use App\Http\Controllers\Admin\Report\StokController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Purchasing\SupplierController as PurchasingSupplierController;
 use App\Http\Controllers\Gudang\StockOpnameController;
 use App\Http\Controllers\Gudang\PurchaseReceivingController;
 use App\Http\Controllers\Gudang\OutboundController;
@@ -99,6 +100,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('purchasing')->name('purchasing.')->middleware('role:purchasing')->group(function () {
         Route::resource('purchases', PurchaseController::class)->only(['index', 'create', 'store']);
+        Route::get('/suppliers', [PurchasingSupplierController::class, 'index'])->name('suppliers.index');
     });
 
     /*
