@@ -8,6 +8,7 @@ use App\Models\Courier;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\PurchaseItem;
 use App\Models\Purchase;
 use App\Models\Sale;
 use App\Models\SaleItem;
