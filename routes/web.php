@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\Monitoring\PembelianController as MonitoringPembe
 use App\Http\Controllers\Admin\Monitoring\PenjualanController as MonitoringPenjualanController;
 use App\Http\Controllers\Admin\Monitoring\PesananController;
 use App\Http\Controllers\Admin\Monitoring\ProdukController;
+use App\Http\Controllers\Admin\Monitoring\SupplierController as MonitoringSupplierController;
 use App\Http\Controllers\Admin\Report\PembelianController as ReportPembelianController;
 use App\Http\Controllers\Admin\Report\PenjualanController as ReportPenjualanController;
 use App\Http\Controllers\Admin\Report\StokController;
@@ -54,6 +55,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/distributor', [MonitoringDistributorController::class, 'index'])->name('distributor');
             Route::get('/client', [ClientController::class, 'index'])->name('client');
             Route::get('/kurir', [KurirController::class, 'index'])->name('kurir');
+            Route::get('/supplier', [MonitoringSupplierController::class, 'index'])->name('supplier');
         });
 
     /*
