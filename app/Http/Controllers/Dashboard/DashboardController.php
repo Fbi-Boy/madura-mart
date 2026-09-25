@@ -209,6 +209,14 @@ class DashboardController extends Controller
             ->whereIn('status', ['pending', 'processing', 'shipped', 'delivered'])
             ->sum('total');
 
+        $activeOrder = (clone $baseOrders)
+            ->whereIn('status', ['pending', 'processing', 'shipped'])
+            ->latest('order_date')
+            ->first(['id', 'order_number', 'order_date', 'total', 'status']);
+
+        $cartItemCount = collect(request()->session()->get('customer_cart', []))
+            ->sum(fn ($quantity) => (int) $quantity);
+
         $statusSummary = [
             'pending' => (clone $baseOrders)->where('status', 'pending')->count(),
             'processing' => (clone $baseOrders)->where('status', 'processing')->count(),
@@ -238,6 +246,8 @@ class DashboardController extends Controller
             'completedOrders',
             'cancelledOrders',
             'totalSpent',
+            'activeOrder',
+            'cartItemCount',
             'statusSummary',
             'recentOrders',
         ));

@@ -30,6 +30,34 @@
                 </div>
             </div>
 
+            <div class="grid gap-3 sm:grid-cols-3">
+                <a href="{{ route('customer.catalog.index') }}" class="group rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-[#A8F23A] dark:border-gray-700 dark:bg-gray-800">
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Belanja</p>
+                    <p class="mt-1 font-semibold text-gray-900 dark:text-white">Cari produk <span class="text-[#6f9f00] transition group-hover:translate-x-1 dark:text-[#A8F23A]">→</span></p>
+                </a>
+                <a href="{{ route('customer.cart.index') }}" class="group rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-[#A8F23A] dark:border-gray-700 dark:bg-gray-800">
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Keranjang</p>
+                    <p class="mt-1 font-semibold text-gray-900 dark:text-white">{{ number_format($cartItemCount, 0, ',', '.') }} item <span class="text-[#6f9f00] transition group-hover:translate-x-1 dark:text-[#A8F23A]">→</span></p>
+                </a>
+                <a href="{{ route('customer.orders.index') }}" class="group rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-[#A8F23A] dark:border-gray-700 dark:bg-gray-800">
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Riwayat</p>
+                    <p class="mt-1 font-semibold text-gray-900 dark:text-white">Lihat pesanan <span class="text-[#6f9f00] transition group-hover:translate-x-1 dark:text-[#A8F23A]">→</span></p>
+                </a>
+            </div>
+
+            @if ($activeOrder)
+                <div class="flex flex-col gap-4 rounded-2xl border border-[#A8F23A]/40 bg-[#A8F23A]/10 p-5 dark:bg-[#A8F23A]/5 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-[0.08em] text-[#5b7f00] dark:text-[#A8F23A]">Pesanan aktif</p>
+                        <p class="mt-1 font-semibold text-gray-900 dark:text-white">{{ $activeOrder->order_number }}</p>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Rp {{ number_format((float) $activeOrder->total, 0, ',', '.') }} · {{ ucfirst($activeOrder->status) }}</p>
+                    </div>
+                    <a href="{{ route('customer.orders.show', $activeOrder) }}" class="inline-flex w-fit items-center rounded-xl bg-gray-900 px-4 py-2 text-xs font-semibold text-white transition hover:bg-gray-700 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200">
+                        Detail pesanan
+                    </a>
+                </div>
+            @endif
+
             <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 @php
                     $kpis = [

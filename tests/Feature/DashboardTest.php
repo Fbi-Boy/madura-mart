@@ -309,9 +309,16 @@ class DashboardTest extends TestCase
 
         Order::factory()->create([
             'customer_id' => $customer->id,
+            'status' => 'processing',
+            'total' => 175000,
+            'order_date' => now(),
+        ]);
+
+        Order::factory()->create([
+            'customer_id' => $customer->id,
             'status' => 'delivered',
             'total' => 125000,
-            'order_date' => now(),
+            'order_date' => now()->subHour(),
         ]);
 
         Order::factory()->create([
@@ -327,15 +334,18 @@ class DashboardTest extends TestCase
             'order_date' => now(),
         ]);
 
-        $this->actingAs($user)
+        $this->withSession(['customer_cart' => [1 => 2, 2 => 1]])
+            ->actingAs($user)
             ->get('/dashboard')
             ->assertOk()
             ->assertViewIs('customer.dashboard')
-            ->assertViewHas('totalOrders', 2)
-            ->assertViewHas('activeOrders', 1)
+            ->assertViewHas('cartItemCount', 3)
+            ->assertViewHas('activeOrder', fn ($order) => $order?->order_number !== null && $order->status === 'processing')
+            ->assertViewHas('totalOrders', 3)
+            ->assertViewHas('activeOrders', 2)
             ->assertViewHas('completedOrders', 1)
             ->assertViewHas('cancelledOrders', 0)
-            ->assertViewHas('totalSpent', 200000.0)
+            ->assertViewHas('totalSpent', 375000.0)
             ->assertViewHas('statusSummary', [
                 'pending' => 0,
                 'processing' => 0,
