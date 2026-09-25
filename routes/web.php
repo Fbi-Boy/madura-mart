@@ -27,6 +27,7 @@ use App\Http\Controllers\Kasir\SaleController;
 use App\Http\Controllers\Kasir\SaleReturnController;
 use App\Http\Controllers\Kasir\CashierShiftController;
 use App\Http\Controllers\Kurir\DeliveryStatusController;
+use App\Http\Controllers\Customer\CatalogController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -95,6 +96,20 @@ Route::middleware('auth')->group(function () {
     | GUDANG
     |--------------------------------------------------------------------------
     */
+
+    /*
+    |--------------------------------------------------------------------------
+    | CUSTOMER - CATALOG
+    |--------------------------------------------------------------------------
+    */
+
+    Route::prefix('customer/catalog')
+        ->name('customer.catalog.')
+        ->middleware('role:customer')
+        ->group(function () {
+            Route::get('/', [CatalogController::class, 'index'])->name('index');
+            Route::get('/{slug}', [CatalogController::class, 'show'])->name('show');
+        });
 
     Route::prefix('gudang')
         ->name('gudang.')
