@@ -20,6 +20,8 @@ Pengadaan barang dari supplier sampai purchase order diterima gudang.
 ## Supplier
 Supplier digunakan sebagai sumber pengadaan. Purchase wajib menunjuk supplier aktif.
 
+Workspace purchasing menyediakan directory read-only supplier aktif dengan pencarian berdasarkan kode, nama, dan contact person. CRUD supplier tetap berada pada area admin.
+
 ## Purchase Order / Pembelian
 Implementasi saat ini memakai tabel `purchases` sebagai purchase order sekaligus catatan pembelian:
 - Buat invoice
