@@ -43,7 +43,7 @@ class DashboardController extends Controller
     {
         $today = Carbon::today();
 
-        $activeSuppliers = AppModelsSupplier::query()
+        $activeSuppliers = Supplier::query()
             ->where('is_active', true)
             ->count();
 
