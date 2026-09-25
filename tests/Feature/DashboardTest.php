@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Sale;
+use App\Models\Supplier;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -32,6 +33,48 @@ class DashboardTest extends TestCase
     public function test_admin_users_see_the_admin_dashboard(): void
     {
         $this->assertDashboardForRole('admin', 'admin.dashboard');
+    }
+
+    public function test_purchasing_dashboard_uses_procurement_metrics(): void
+    {
+        $user = User::factory()->create(['role' => 'purchasing']);
+        $supplier = Supplier::factory()->create(['is_active' => true]);
+
+        Purchase::factory()->create([
+            'supplier_id' => $supplier->id,
+            'status' => 'received',
+            'total' => 200000,
+            'purchase_date' => now(),
+        ]);
+
+        Purchase::factory()->create([
+            'supplier_id' => $supplier->id,
+            'status' => 'draft',
+            'total' => 150000,
+            'purchase_date' => now(),
+        ]);
+
+        Purchase::factory()->create([
+            'supplier_id' => $supplier->id,
+            'status' => 'cancelled',
+            'total' => 50000,
+            'purchase_date' => now()->subDay(),
+        ]);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('purchasing.dashboard')
+            ->assertViewHas('activeSuppliers', 1)
+            ->assertViewHas('todayPurchases', 350000.0)
+            ->assertViewHas('todayTransactions', 2)
+            ->assertViewHas('draftPurchases', 1)
+            ->assertViewHas('receivedToday', 1)
+            ->assertViewHas('statusSummary', [
+                'draft' => 1,
+                'received' => 1,
+                'cancelled' => 1,
+            ]);
     }
 
     public function test_admin_dashboard_uses_operational_database_metrics(): void
