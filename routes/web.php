@@ -96,7 +96,7 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::prefix('gudang')
+    /*\n    |--------------------------------------------------------------------------\n    | CUSTOMER - CATALOG\n    |--------------------------------------------------------------------------\n    */\n\n    Route::prefix('customer/catalog')\n        ->name('customer.catalog.')\n        ->middleware('role:customer')\n        ->group(function () {\n            Route::get('/', [CatalogController::class, 'index'])->name('index');\n            Route::get('/{slug}', [CatalogController::class, 'show'])->name('show');\n        });\n\n    Route::prefix('gudang')
         ->name('gudang.')
         ->middleware('role:gudang')
         ->group(function () {
