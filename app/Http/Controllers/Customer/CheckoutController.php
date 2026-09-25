@@ -38,13 +38,16 @@ class CheckoutController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $request->validate([
+            'payment_method' => ['required', 'in:bank_transfer,qris'],
+        ]);
         $customer = $this->customer($request);
         abort_unless($customer, 403);
 
         $cart = $request->session()->get('customer_cart', []);
         abort_if($cart === [], 422, 'Keranjang masih kosong.');
 
-        $order = DB::transaction(function () use ($cart, $customer) {
+        $order = DB::transaction(function () use ($cart, $customer, $request) {
             $items = collect($cart)->mapWithKeys(fn ($quantity, $productId) => [
                 (int) $productId => (int) $quantity,
             ])->filter(fn ($quantity) => $quantity > 0);
@@ -75,6 +78,8 @@ class CheckoutController extends Controller
                 'customer_id' => $customer->id,
                 'order_date' => now(),
                 'total' => $total,
+                'payment_method' => $request->string('payment_method')->toString(),
+                'payment_status' => 'pending',
                 'status' => 'pending',
                 'delivery_address' => trim(implode(', ', array_filter([$customer->address, $customer->city]))),
             ]);
