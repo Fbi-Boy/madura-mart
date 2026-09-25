@@ -28,9 +28,15 @@ The dashboard is selected from the authenticated user's `role`:
 
 ## Main Modules
 
-- **Admin Monitoring** — sales, purchases, orders, products, distributors, clients, and couriers.
+- **Role Dashboards** — Admin, Super Admin, Gudang, Kasir, Purchasing, Kurir, and Customer dashboards with role-specific operational metrics.
+- **Admin Monitoring** — sales, purchases, orders, products, distributors, clients, suppliers, and couriers.
 - **Admin Reports** — sales, purchases, and stock reports.
+- **Master Data** — categories, products, suppliers, customers, distributors, couriers, units, and users.
+- **Purchasing** — purchase orders, purchase history, procurement dashboard, and read-only active supplier directory.
+- **Gudang** — stock opname, purchase receiving, and outbound operations.
 - **Kasir** — new transactions, transaction history, returns, and shift management.
+- **Kurir** — delivery status updates and delivery history.
+- **Customer** — catalog, cart, checkout, orders, and personal dashboard.
 - **Profile** — update account information and delete an account.
 
 ## Local Setup
@@ -108,7 +114,7 @@ php artisan route:list
 
 ## Route access
 
-Protected application routes are scoped by authenticated role. Administrative monitoring and reporting routes require `admin` or `super-admin`, while cashier routes require `kasir`. Authorization behavior is covered by feature tests in `tests/Feature/RoleRouteAccessTest.php`.
+Protected application routes are scoped by authenticated role. Administrative monitoring and reporting routes require `admin` or `super-admin`; purchasing has explicit access to purchase monitoring; and operational workspaces are isolated by role. Authorization behavior is covered by feature tests in `tests/Feature/RoleRouteAccessTest.php`.
 
 ## Master Data Produk
 - Kategori: CRUD admin.
