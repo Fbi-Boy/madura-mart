@@ -27,7 +27,7 @@
                 </div>
             </div>
 
-            <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
                 @php
                     $kpis = [
                         ['label' => 'Pesanan Hari Ini', 'value' => number_format($todayOrders, 0, ',', '.'), 'hint' => 'pesanan masuk hari ini'],
@@ -45,6 +45,22 @@
                     </div>
                 @endforeach
             </div>
+
+            <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Progress Pengiriman</h3>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Persentase pesanan aktif yang sudah mencapai status selesai.</p>
+                    </div>
+                    <div class="text-left sm:text-right">
+                        <p class="text-3xl font-semibold tracking-tight text-gray-900 dark:text-white">{{ number_format($deliveryRate, 1, ',', '.') }}%</p>
+                        <p class="mt-1 text-xs text-gray-400 dark:text-gray-500">completion rate</p>
+                    </div>
+                </div>
+                <div class="mt-5 h-2 overflow-hidden rounded-full bg-gray-100 dark:bg-gray-700">
+                    <div class="h-full rounded-full bg-[#A8F23A]" style="width: {{ min($deliveryRate, 100) }}%"></div>
+                </div>
+            </section>
 
             <div class="grid gap-6 xl:grid-cols-[1.55fr_1fr]">
                 <section class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
