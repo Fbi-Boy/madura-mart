@@ -111,19 +111,12 @@ class DashboardController extends Controller
 
         $courier = Courier::query()
             ->where('is_active', true)
-            ->where(function ($query) use ($user) {
-                $query->where('email', $user->email)
-                    ->orWhere('name', $user->name);
-            })
+            ->where('email', $user->email)
             ->first();
 
-        $baseOrders = Order::query();
-
-        if ($courier) {
-            $baseOrders->where('courier_id', $courier->id);
-        } else {
-            $baseOrders->whereNull('courier_id');
-        }
+        $baseOrders = $courier
+            ? Order::query()->where('courier_id', $courier->id)
+            : Order::query()->whereRaw('1 = 0');
 
         $todayOrders = (clone $baseOrders)->whereDate('order_date', $today)->count();
         $pendingOrders = (clone $baseOrders)->whereIn('status', ['pending', 'processing'])->count();
