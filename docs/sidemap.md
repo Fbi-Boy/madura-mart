@@ -487,7 +487,7 @@ Pengembangan Madura Mart dilakukan secara bertahap.
 ## PHASE 3 — GUDANG
 - [x] Dashboard Inventory
 - [x] Stok Monitoring
-- [ ] Barang Masuk
+- [x] Barang Masuk
 - [ ] Barang Keluar
 - [x] Stock Opname
 - [ ] Riwayat Stok
@@ -496,7 +496,7 @@ Pengembangan Madura Mart dilakukan secara bertahap.
 - [x] Supplier
 - [ ] Purchase Order (draft creation tersedia untuk role purchasing)
 - [x] Pembelian
-- [ ] Penerimaan Barang
+- [x] Penerimaan Barang
 
 ## PHASE 5 — KASIR
 - [x] Shift
