@@ -36,7 +36,7 @@ class PurchaseReceivingTest extends TestCase
             'status' => 'draft',
         ]);
 
-        PurchaseItem::factory()->create([
+        PurchaseItem::create([
             'purchase_id' => $purchase->id,
             'product_id' => $product->id,
             'quantity' => 5,
