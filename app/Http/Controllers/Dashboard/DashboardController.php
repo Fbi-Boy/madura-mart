@@ -12,6 +12,7 @@ use App\Models\PurchaseItem;
 use App\Models\Purchase;
 use App\Models\Sale;
 use App\Models\SaleItem;
+use App\Models\Supplier;
 use Illuminate\Support\Carbon;
 use Illuminate\View\View;
 
