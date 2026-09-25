@@ -23,10 +23,12 @@ class GudangOutboundTest extends TestCase
             'sale_date' => now(),
         ]);
 
-        SaleItem::factory()->create([
+        SaleItem::query()->create([
             'sale_id' => $paidSale->id,
             'product_id' => $product->id,
             'quantity' => 4,
+            'unit_price' => 12000,
+            'subtotal' => 48000,
         ]);
 
         $cancelledSale = Sale::factory()->create([
@@ -34,10 +36,12 @@ class GudangOutboundTest extends TestCase
             'sale_date' => now(),
         ]);
 
-        SaleItem::factory()->create([
+        SaleItem::query()->create([
             'sale_id' => $cancelledSale->id,
             'product_id' => $product->id,
             'quantity' => 9,
+            'unit_price' => 12000,
+            'subtotal' => 108000,
         ]);
 
         $this->actingAs($user)
