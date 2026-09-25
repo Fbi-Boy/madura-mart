@@ -1,11 +1,11 @@
 <?php
 
-namespace App\\Http\\Controllers\\Admin\\Report;
+namespace App\Http\Controllers\Admin\Report;
 
-use App\\Http\\Controllers\\Controller;
-use App\\Models\\Purchase;
-use Illuminate\\Http\\Request;
-use Illuminate\\View\\View;
+use App\Http\Controllers\Controller;
+use App\Models\Purchase;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class PembelianController extends Controller
 {
