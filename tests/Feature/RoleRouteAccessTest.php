@@ -10,6 +10,12 @@ class RoleRouteAccessTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_guest_is_redirected_from_dashboard(): void
+    {
+        $this->get('/dashboard')
+            ->assertRedirect(route('login'));
+    }
+
     /**
      * @dataProvider unauthorizedRouteMatrix
      */
