@@ -64,7 +64,7 @@ class PurchaseReceivingTest extends TestCase
         $product = Product::factory()->create(['stock' => 10]);
         $purchase = Purchase::factory()->create(['status' => 'received']);
 
-        PurchaseItem::factory()->create([
+        PurchaseItem::create([
             'purchase_id' => $purchase->id,
             'product_id' => $product->id,
             'quantity' => 5,
