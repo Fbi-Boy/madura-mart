@@ -168,6 +168,21 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
+        $procurementTrend = collect(range(5, 0))->map(function (int $monthsAgo) {
+            $month = Carbon::today()->startOfMonth()->subMonths($monthsAgo);
+
+            return [
+                'label' => $month->translatedFormat('M'),
+                'value' => (float) Purchase::query()
+                    ->where('status', 'received')
+                    ->whereBetween('purchase_date', [
+                        $month->toDateString(),
+                        $month->copy()->endOfMonth()->toDateString(),
+                    ])
+                    ->sum('total'),
+            ];
+        });
+
         return view('purchasing.dashboard', compact(
             'activeSuppliers',
             'todayPurchases',
@@ -179,6 +194,7 @@ class DashboardController extends Controller
             'statusSummary',
             'recentPurchases',
             'supplierPurchases',
+            'procurementTrend',
         ));
     }
 
