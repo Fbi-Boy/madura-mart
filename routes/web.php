@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\Report\StokController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Gudang\StockOpnameController;
+use App\Http\Controllers\Gudang\PurchaseReceivingController;
 use App\Http\Controllers\Kasir\SaleController;
 use App\Http\Controllers\Kasir\SaleReturnController;
 use App\Http\Controllers\Kasir\CashierShiftController;
@@ -152,6 +153,8 @@ Route::middleware('auth')->group(function () {
         ->group(function () {
             Route::get('/stock-opname', [StockOpnameController::class, 'index'])->name('stock-opname.index');
             Route::post('/stock-opname', [StockOpnameController::class, 'store'])->name('stock-opname.store');
+            Route::get('/penerimaan', [PurchaseReceivingController::class, 'index'])->name('penerimaan.index');
+            Route::post('/penerimaan/{purchase}', [PurchaseReceivingController::class, 'receive'])->name('penerimaan.receive');
         });
 
     /*
