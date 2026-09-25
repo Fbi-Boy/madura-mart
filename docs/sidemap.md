@@ -511,7 +511,7 @@ Pengembangan Madura Mart dilakukan secara bertahap.
 - [x] Shift
 - [x] Transaksi
 - [x] Pembayaran
-- [ ] Struk
+- [x] Struk
 - [x] Riwayat Transaksi
 - [x] Retur
 
