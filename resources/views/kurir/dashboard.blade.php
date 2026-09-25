@@ -74,7 +74,7 @@
                     <div class="overflow-x-auto">
                         <table class="w-full min-w-[720px] text-left text-sm">
                             <thead class="border-b border-gray-100 text-xs uppercase text-gray-400 dark:border-gray-700 dark:text-gray-500">
-                                <tr><th class="px-5 py-3">Pesanan</th><th class="px-5 py-3">Customer</th><th class="px-5 py-3">Tanggal</th><th class="px-5 py-3">Status</th><th class="px-5 py-3 text-right">Total</th></tr>
+                                <tr><th class="px-5 py-3">Pesanan</th><th class="px-5 py-3">Customer</th><th class="px-5 py-3">Tanggal</th><th class="px-5 py-3">Status</th><th class="px-5 py-3 text-right">Total</th><th class="px-5 py-3 text-right">Aksi</th></tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
                                 @forelse ($recentOrders as $order)
@@ -83,10 +83,25 @@
                                         <td class="px-5 py-4 text-gray-600 dark:text-gray-300">{{ $order->customer?->name ?? '-' }}</td>
                                         <td class="px-5 py-4 text-gray-500 dark:text-gray-400">{{ $order->order_date?->format('d/m/Y H:i') }}</td>
                                         <td class="px-5 py-4"><span class="rounded-full px-2.5 py-1 text-xs font-medium @if ($order->status === 'delivered') bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-300 @elseif ($order->status === 'shipped') bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300 @elseif ($order->status === 'cancelled') bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-300 @else bg-yellow-50 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-300 @endif">{{ ucfirst($order->status) }}</span></td>
-                                        <td class="px-5 py-4 text-right font-semibold text-gray-900 dark:text-white">Rp {{ number_format((float) $order->total, 0, ',', '.') }}</td>
+                                        <td class="px-5 py-4 text-right font-semibold text-gray-900 dark:text-white">Rp {{ number_format((float) $order->total, 0, ',', '.') }}</td><td class="px-5 py-4 text-right">
+                                            @php
+                                                $nextStatus = ['pending' => 'processing', 'processing' => 'shipped', 'shipped' => 'delivered'][$order->status] ?? null;
+                                                $nextLabel = ['processing' => 'Proses', 'shipped' => 'Kirim', 'delivered' => 'Selesai'][$nextStatus] ?? null;
+                                            @endphp
+                                            @if ($nextStatus)
+                                                <form method="POST" action="{{ route('kurir.pengiriman.status', $order) }}">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <input type="hidden" name="status" value="{{ $nextStatus }}">
+                                                    <button type="submit" class="rounded-lg bg-[#A8F23A] px-3 py-1.5 text-xs font-semibold text-gray-900 transition hover:brightness-95">{{ $nextLabel }}</button>
+                                                </form>
+                                            @else
+                                                <span class="text-xs text-gray-400">Selesai</span>
+                                            @endif
+                                        </td>
                                     </tr>
                                 @empty
-                                    <tr><td colspan="5" class="px-5 py-10 text-center text-gray-400">Belum ada tugas pengiriman.</td></tr>
+                                    <tr><td colspan="6" class="px-5 py-10 text-center text-gray-400">Belum ada tugas pengiriman.</td></tr>
                                 @endforelse
                             </tbody>
                         </table>
