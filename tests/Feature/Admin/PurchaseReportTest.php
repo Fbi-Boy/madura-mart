@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\\Feature\\Admin;
+namespace Tests\Feature\Admin;
 
-use App\\Models\\Purchase;
-use App\\Models\\Supplier;
-use App\\Models\\User;
-use Illuminate\\Foundation\\Testing\\RefreshDatabase;
-use Tests\\TestCase;
+use App\Models\Purchase;
+use App\Models\Supplier;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class PurchaseReportTest extends TestCase
 {
