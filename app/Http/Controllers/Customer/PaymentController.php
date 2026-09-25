@@ -36,10 +36,10 @@ class PaymentController extends Controller
         ]);
 
         if ($order->payment_proof) {
-            Storage::disk('public')->delete($order->payment_proof);
+            Storage::disk('local')->delete($order->payment_proof);
         }
 
-        $path = $validated['payment_proof']->store('payment-proofs', 'public');
+        $path = $validated['payment_proof']->store('payment-proofs', 'local');
 
         $order->update([
             'payment_status' => 'pending',

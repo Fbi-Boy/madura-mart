@@ -84,7 +84,7 @@ class CustomerCheckoutTest extends TestCase
 
     public function test_customer_can_upload_payment_proof_for_own_order(): void
     {
-        Storage::fake('public');
+        Storage::fake('local');
         [$user, $customer] = $this->customerUser();
 
         $order = Order::factory()->create([
@@ -105,7 +105,7 @@ class CustomerCheckoutTest extends TestCase
 
         $this->assertSame('pending', $order->payment_status);
         $this->assertNotNull($order->payment_proof);
-        Storage::disk('public')->assertExists($order->payment_proof);
+        Storage::disk('local')->assertExists($order->payment_proof);
     }
 
     public function test_customer_cannot_upload_payment_proof_to_another_customer_order(): void

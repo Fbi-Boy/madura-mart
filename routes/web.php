@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\CourierController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\PaymentVerificationController;
 use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Admin\PurchaseController;
 use App\Http\Controllers\Admin\DistributorController;
@@ -79,6 +80,15 @@ Route::middleware('auth')->group(function () {
     | ADMIN - REPORT
     |--------------------------------------------------------------------------
     */
+
+    Route::prefix('admin/payment-verification')
+        ->name('admin.payment-verification.')
+        ->middleware('role:admin,super-admin')
+        ->group(function () {
+            Route::get('/', [PaymentVerificationController::class, 'index'])->name('index');
+            Route::get('/{order}/proof', [PaymentVerificationController::class, 'downloadProof'])->name('proof');
+            Route::patch('/{order}', [PaymentVerificationController::class, 'update'])->name('update');
+        });
 
     Route::prefix('admin/report')
         ->name('admin.report.')

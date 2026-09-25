@@ -111,7 +111,13 @@ Fokus: Monitoring dan administrasi operasional.
 - Status Pesanan
 - Status Pengiriman
 
-## 3.7 Laporan
+## 3.7 Verifikasi Pembayaran
+- Lihat bukti pembayaran customer
+- Konfirmasi pembayaran
+- Tolak bukti pembayaran
+- Kelola status pending, paid, rejected
+
+## 3.8 Laporan
 - Laporan Penjualan
 - Laporan Pembelian
 - Laporan Stok
@@ -534,6 +540,7 @@ Pengembangan Madura Mart dilakukan secara bertahap.
 - [x] Monitoring Client
 - [x] Monitoring Distributor
 - [x] Monitoring Kurir
+- [x] Verifikasi Pembayaran
 - [x] Laporan Penjualan
 - [x] Laporan Pembelian
 - [x] Laporan Stok
