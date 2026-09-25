@@ -36,7 +36,7 @@ class CashierReceiptTest extends TestCase
             'payment_method' => 'cash',
         ]);
 
-        SaleItem::factory()->create([
+        SaleItem::query()->create([
             'sale_id' => $sale->id,
             'product_id' => $product->id,
             'quantity' => 2,
