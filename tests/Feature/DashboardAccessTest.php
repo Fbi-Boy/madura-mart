@@ -3,10 +3,12 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class DashboardAccessTest extends TestCase
 {
+    use RefreshDatabase;
     public function test_guest_users_are_redirected_to_login(): void
     {
         $this->get('/dashboard')
