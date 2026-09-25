@@ -44,12 +44,15 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
 
+    Route::get('/admin/monitoring/pembelian', [MonitoringPembelianController::class, 'index'])
+        ->name('admin.monitoring.pembelian')
+        ->middleware('role:admin,super-admin,purchasing');
+
     Route::prefix('admin/monitoring')
         ->name('admin.monitoring.')
         ->middleware('role:admin,super-admin')
         ->group(function () {
             Route::get('/penjualan', [MonitoringPenjualanController::class, 'index'])->name('penjualan');
-            Route::get('/pembelian', [MonitoringPembelianController::class, 'index'])->name('pembelian');
             Route::get('/pesanan', [PesananController::class, 'index'])->name('pesanan');
             Route::get('/produk', [ProdukController::class, 'index'])->name('produk');
             Route::get('/distributor', [MonitoringDistributorController::class, 'index'])->name('distributor');

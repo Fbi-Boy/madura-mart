@@ -189,4 +189,23 @@ class RoleRouteAccessTest extends TestCase
             ->assertOk();
     }
 
+    public function test_purchasing_can_access_purchase_monitoring(): void
+    {
+        $user = User::factory()->create(['role' => 'purchasing']);
+
+        $this->actingAs($user)
+            ->get('/admin/monitoring/pembelian')
+            ->assertOk();
+    }
+
+    public function test_purchasing_cannot_access_other_admin_monitoring(): void
+    {
+        $user = User::factory()->create(['role' => 'purchasing']);
+
+        $this->actingAs($user)
+            ->get('/admin/monitoring/penjualan')
+            ->assertForbidden();
+    }
+
+
 }
