@@ -50,7 +50,7 @@
                 <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h3 class="font-semibold text-gray-900 dark:text-white">Progress Pengiriman</h3>
-                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Persentase pesanan aktif yang sudah mencapai status selesai.</p>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Persentase pesanan non-cancelled yang sudah mencapai status selesai.</p>
                     </div>
                     <div class="text-left sm:text-right">
                         <p class="text-3xl font-semibold tracking-tight text-gray-900 dark:text-white">{{ number_format($deliveryRate, 1, ',', '.') }}%</p>
