@@ -13,6 +13,7 @@ use App\Models\Purchase;
 use App\Models\Sale;
 use App\Models\SaleItem;
 use App\Models\Supplier;
+use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\View\View;
 
@@ -29,7 +30,7 @@ class DashboardController extends Controller
                 'kurir' => $this->courierDashboard(),
                 'customer' => $this->customerDashboard(),
                 'purchasing' => $this->purchasingDashboard(),
-                'super-admin' => view('super-admin.dashboard'),
+                'super-admin' => $this->superAdminDashboard(),
                 default => view('dashboard.index'),
             };
         }
@@ -38,6 +39,72 @@ class DashboardController extends Controller
     }
 
 
+
+    private function superAdminDashboard(): View
+    {
+        $now = Carbon::now();
+        $monthStart = $now->copy()->startOfMonth();
+
+        $totalUsers = User::query()->count();
+        $activeProducts = Product::query()->where('is_active', true)->count();
+        $activeCustomers = Customer::query()->where('is_active', true)->count();
+        $activeCouriers = Courier::query()->where('is_active', true)->count();
+
+        $monthlyRevenue = (float) Sale::query()
+            ->where('status', 'paid')
+            ->whereBetween('sale_date', [$monthStart, $now])
+            ->sum('total');
+
+        $monthlyPurchases = (float) Purchase::query()
+            ->where('status', 'received')
+            ->whereDate('purchase_date', '>=', $monthStart->toDateString())
+            ->whereDate('purchase_date', '<=', $now->toDateString())
+            ->sum('total');
+
+        $pendingOrders = Order::query()
+            ->whereIn('status', ['pending', 'processing'])
+            ->count();
+
+        $lowStockProducts = Product::query()
+            ->where('is_active', true)
+            ->where('stock', '<=', 10)
+            ->count();
+
+        $roleSummary = [
+            'admin' => User::query()->where('role', 'admin')->count(),
+            'super-admin' => User::query()->where('role', 'super-admin')->count(),
+            'gudang' => User::query()->where('role', 'gudang')->count(),
+            'kasir' => User::query()->where('role', 'kasir')->count(),
+            'purchasing' => User::query()->where('role', 'purchasing')->count(),
+            'kurir' => User::query()->where('role', 'kurir')->count(),
+            'customer' => User::query()->where('role', 'customer')->count(),
+        ];
+
+        $recentUsers = User::query()
+            ->latest()
+            ->limit(6)
+            ->get(['id', 'name', 'email', 'role', 'created_at']);
+
+        $recentOrders = Order::query()
+            ->with('customer:id,name')
+            ->latest('order_date')
+            ->limit(6)
+            ->get(['id', 'order_number', 'customer_id', 'order_date', 'total', 'status']);
+
+        return view('super-admin.dashboard', compact(
+            'totalUsers',
+            'activeProducts',
+            'activeCustomers',
+            'activeCouriers',
+            'monthlyRevenue',
+            'monthlyPurchases',
+            'pendingOrders',
+            'lowStockProducts',
+            'roleSummary',
+            'recentUsers',
+            'recentOrders',
+        ));
+    }
 
     private function purchasingDashboard(): View
     {

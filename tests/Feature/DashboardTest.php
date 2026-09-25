@@ -91,6 +91,52 @@ class DashboardTest extends TestCase
         $this->assertDashboardForRole('admin', 'admin.dashboard');
     }
 
+
+    public function test_super_admin_dashboard_uses_system_and_business_metrics(): void
+    {
+        $user = User::factory()->create(['role' => 'super-admin']);
+
+        User::factory()->count(2)->create(['role' => 'kasir']);
+        Product::factory()->create(['is_active' => true, 'stock' => 3]);
+        Product::factory()->create(['is_active' => false, 'stock' => 0]);
+        Customer::factory()->create(['is_active' => true]);
+        Courier::factory()->create(['is_active' => true]);
+
+        Sale::factory()->create([
+            'status' => 'paid',
+            'total' => 300000,
+            'sale_date' => now(),
+        ]);
+
+        Sale::factory()->create([
+            'status' => 'cancelled',
+            'total' => 900000,
+            'sale_date' => now(),
+        ]);
+
+        Purchase::factory()->create([
+            'status' => 'received',
+            'total' => 125000,
+            'purchase_date' => now(),
+        ]);
+
+        Order::factory()->create(['status' => 'processing']);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('super-admin.dashboard')
+            ->assertViewHas('totalUsers', fn ($count) => $count >= 3)
+            ->assertViewHas('activeProducts', 1)
+            ->assertViewHas('activeCustomers', fn ($count) => $count >= 1)
+            ->assertViewHas('activeCouriers', fn ($count) => $count >= 1)
+            ->assertViewHas('monthlyRevenue', 300000.0)
+            ->assertViewHas('monthlyPurchases', 125000.0)
+            ->assertViewHas('pendingOrders', 1)
+            ->assertViewHas('lowStockProducts', 1)
+            ->assertViewHas('roleSummary', fn ($summary) => $summary['super-admin'] >= 1 && $summary['kasir'] >= 2);
+    }
+
     public function test_purchasing_dashboard_uses_procurement_metrics(): void
     {
         $user = User::factory()->create(['role' => 'purchasing']);
