@@ -518,8 +518,8 @@ Pengembangan Madura Mart dilakukan secara bertahap.
 - [x] Dashboard Pengiriman
 - [x] Daftar Pengiriman
 - [x] Monitoring Tugas Kurir
-- [ ] Update Status
-- [ ] Riwayat Pengiriman
+- [x] Update Status
+- [x] Riwayat Pengiriman
 
 ## PHASE 8 — ADMIN & REPORTING
 - [x] Dashboard Admin
