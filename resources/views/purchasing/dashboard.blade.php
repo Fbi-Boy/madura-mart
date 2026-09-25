@@ -1,24 +1,120 @@
 <x-app-layout>
 
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Dashboard Admin
-        </h2>
+        <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Dashboard Purchasing</h2>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Procurement Operations · Pantau pembelian dan penerimaan barang.</p>
+            </div>
+            <div class="rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                {{ now()->translatedFormat('d M Y') }}
+            </div>
+        </div>
     </x-slot>
 
     <div class="py-8">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-7xl space-y-6 px-4 sm:px-6 lg:px-8">
+            <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                @php
+                    $kpis = [
+                        ['label' => 'Supplier Aktif', 'value' => number_format($activeSuppliers, 0, ',', '.'), 'hint' => 'supplier yang tersedia', 'icon' => 'S'],
+                        ['label' => 'Pembelian Hari Ini', 'value' => 'Rp '.number_format($todayPurchases, 0, ',', '.'), 'hint' => $todayTransactions.' transaksi', 'icon' => 'Rp'],
+                        ['label' => 'Draft Menunggu', 'value' => number_format($draftPurchases, 0, ',', '.'), 'hint' => 'perlu ditindaklanjuti', 'icon' => 'D'],
+                        ['label' => 'Diterima Hari Ini', 'value' => number_format($receivedToday, 0, ',', '.'), 'hint' => 'transaksi berstatus received', 'icon' => 'R'],
+                    ];
+                @endphp
 
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h1 class="text-2xl font-bold text-gray-800">
-                    Selamat Datang, {{ auth()->user()->name }}
-                </h1>
-
-                <p class="text-gray-500 mt-2">
-                    Anda login sebagai kasir Madura Mart.
-                </p>
+                @foreach ($kpis as $kpi)
+                    <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                        <div class="flex items-start justify-between gap-4">
+                            <div>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">{{ $kpi['label'] }}</p>
+                                <p class="mt-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">{{ $kpi['value'] }}</p>
+                                <p class="mt-1 text-xs text-gray-400 dark:text-gray-500">{{ $kpi['hint'] }}</p>
+                            </div>
+                            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#A8F23A]/20 text-sm font-bold text-gray-900 dark:text-[#A8F23A]">{{ $kpi['icon'] }}</div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
 
+            <div class="grid gap-6 xl:grid-cols-[1.65fr_1fr]">
+                <section class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                    <div class="flex items-center justify-between border-b border-gray-100 px-5 py-4 dark:border-gray-700">
+                        <div>
+                            <h3 class="font-semibold text-gray-900 dark:text-white">Pembelian Terbaru</h3>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Aktivitas procurement terbaru.</p>
+                        </div>
+                        <span class="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-300">{{ $recentPurchases->count() }} data</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full min-w-[680px] text-left text-sm">
+                            <thead class="border-b border-gray-100 text-xs uppercase text-gray-400 dark:border-gray-700 dark:text-gray-500">
+                                <tr>
+                                    <th class="px-5 py-3">Invoice</th><th class="px-5 py-3">Supplier</th><th class="px-5 py-3">Tanggal</th><th class="px-5 py-3">Item</th><th class="px-5 py-3">Status</th><th class="px-5 py-3 text-right">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                                @forelse ($recentPurchases as $purchase)
+                                    <tr class="transition hover:bg-gray-50 dark:hover:bg-gray-700/40">
+                                        <td class="px-5 py-4 font-medium text-gray-900 dark:text-white">{{ $purchase->invoice }}</td>
+                                        <td class="px-5 py-4 text-gray-600 dark:text-gray-300">{{ $purchase->supplier?->name ?? '-' }}</td>
+                                        <td class="px-5 py-4 text-gray-500 dark:text-gray-400">{{ $purchase->purchase_date?->format('d/m/Y') }}</td>
+                                        <td class="px-5 py-4 text-gray-600 dark:text-gray-300">{{ $purchase->items_count }}</td>
+                                        <td class="px-5 py-4"><span class="rounded-full px-2.5 py-1 text-xs font-medium @if ($purchase->status === 'received') bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-300 @elseif ($purchase->status === 'cancelled') bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-300 @else bg-yellow-50 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-300 @endif">{{ ucfirst($purchase->status) }}</span></td>
+                                        <td class="px-5 py-4 text-right font-semibold text-gray-900 dark:text-white">Rp {{ number_format((float) $purchase->total, 0, ',', '.') }}</td>
+                                    </tr>
+                                @empty
+                                    <tr><td colspan="6" class="px-5 py-10 text-center text-gray-400">Belum ada transaksi pembelian.</td></tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="space-y-6">
+                    <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Status Pembelian</h3>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Ringkasan seluruh transaksi.</p>
+                        <div class="mt-5 space-y-3">
+                            @foreach (['draft' => 'Draft', 'received' => 'Received', 'cancelled' => 'Cancelled'] as $key => $label)
+                                <div class="flex items-center justify-between rounded-xl bg-gray-50 px-4 py-3 dark:bg-gray-700/50">
+                                    <span class="text-sm text-gray-600 dark:text-gray-300">{{ $label }}</span>
+                                    <span class="font-semibold text-gray-900 dark:text-white">{{ number_format($statusSummary[$key], 0, ',', '.') }}</span>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Supplier Utama</h3>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Berdasarkan nilai pembelian tercatat.</p>
+                        <div class="mt-5 space-y-4">
+                            @forelse ($supplierPurchases as $item)
+                                <div>
+                                    <div class="flex items-center justify-between gap-4 text-sm">
+                                        <span class="truncate font-medium text-gray-700 dark:text-gray-200">{{ $item->supplier?->name ?? 'Supplier tidak tersedia' }}</span>
+                                        <span class="shrink-0 text-gray-500 dark:text-gray-400">{{ $item->transaction_count }} transaksi</span>
+                                    </div>
+                                    <p class="mt-1 text-xs text-gray-400 dark:text-gray-500">Rp {{ number_format((float) $item->total_value, 0, ',', '.') }}</p>
+                                </div>
+                            @empty
+                                <p class="text-sm text-gray-400">Belum ada data supplier.</p>
+                            @endforelse
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="rounded-2xl border border-[#A8F23A]/40 bg-[#A8F23A]/10 p-5 dark:bg-[#A8F23A]/5">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Fokus Operasional</h3>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Prioritaskan {{ $draftPurchases }} transaksi draft yang masih menunggu proses.</p>
+                    </div>
+                    <span class="inline-flex w-fit rounded-full bg-[#A8F23A] px-3 py-1 text-xs font-semibold text-gray-900">Procurement</span>
+                </div>
+            </div>
         </div>
     </div>
 
