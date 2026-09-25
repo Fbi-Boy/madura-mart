@@ -185,6 +185,8 @@ class DashboardController extends Controller
     private function customerDashboard(): View
     {
         $user = auth()->user();
+        $cart = $user->role === 'customer' ? request()->session()->get('customer_cart', []) : [];
+        $cartItemCount = collect($cart)->sum(fn ($quantity) => max((int) $quantity, 0));
 
         $customer = Customer::query()
             ->where('email', $user->email)
@@ -240,6 +242,7 @@ class DashboardController extends Controller
             'totalSpent',
             'statusSummary',
             'recentOrders',
+            'cartItemCount',
         ));
     }
 

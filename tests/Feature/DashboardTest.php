@@ -294,6 +294,40 @@ class DashboardTest extends TestCase
     }
 
 
+    public function test_customer_dashboard_exposes_shopping_workspace_and_cart_count(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'customer',
+            'email' => 'workspace@maduramart.test',
+        ]);
+
+        $customer = Customer::factory()->create([
+            'email' => 'workspace@maduramart.test',
+            'is_active' => true,
+        ]);
+
+        $order = Order::factory()->create([
+            'customer_id' => $customer->id,
+            'status' => 'pending',
+            'order_date' => now(),
+        ]);
+
+        $this->withSession([
+            'customer_cart' => [
+                10 => 2,
+                20 => 3,
+            ],
+        ])->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('customer.dashboard')
+            ->assertViewHas('cartItemCount', 5)
+            ->assertSee(route('customer.catalog.index'), false)
+            ->assertSee(route('customer.cart.index'), false)
+            ->assertSee(route('customer.orders.index'), false)
+            ->assertSee(route('customer.orders.show', $order), false);
+    }
+
     public function test_customer_dashboard_is_scoped_to_authenticated_customer(): void
     {
         $user = User::factory()->create([
