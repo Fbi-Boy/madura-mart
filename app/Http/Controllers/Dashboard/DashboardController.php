@@ -8,6 +8,7 @@ use App\Models\Courier;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\PurchaseItem;
 use App\Models\Purchase;
 use App\Models\Sale;
 use App\Models\SaleItem;
@@ -23,6 +24,7 @@ class DashboardController extends Controller
         if ($role !== 'admin') {
             return match ($role) {
                 'kasir' => $this->cashierDashboard(),
+                'gudang' => $this->warehouseDashboard(),
                 'kurir' => view('kurir.dashboard'),
                 'customer' => view('customer.dashboard'),
                 'purchasing' => view('purchasing.dashboard'),
@@ -90,6 +92,77 @@ class DashboardController extends Controller
             'expectedCash',
             'recentSales',
             'lowStockProducts',
+        ));
+    }
+
+    private function warehouseDashboard(): View
+    {
+        $today = Carbon::today();
+
+        $activeProducts = Product::query()
+            ->where('is_active', true)
+            ->count();
+
+        $totalStock = Product::query()
+            ->where('is_active', true)
+            ->sum('stock');
+
+        $lowStockCount = Product::query()
+            ->where('is_active', true)
+            ->whereBetween('stock', [1, 10])
+            ->count();
+
+        $outOfStockCount = Product::query()
+            ->where('is_active', true)
+            ->where('stock', 0)
+            ->count();
+
+        $inboundToday = PurchaseItem::query()
+            ->whereHas('purchase', function ($query) use ($today) {
+                $query->where('status', 'received')
+                    ->whereDate('purchase_date', $today);
+            })
+            ->sum('quantity');
+
+        $outboundToday = SaleItem::query()
+            ->whereHas('sale', function ($query) use ($today) {
+                $query->where('status', 'paid')
+                    ->whereDate('sale_date', $today);
+            })
+            ->sum('quantity');
+
+        $restockProducts = Product::query()
+            ->where('is_active', true)
+            ->where('stock', '<=', 10)
+            ->orderBy('stock')
+            ->orderBy('name')
+            ->limit(8)
+            ->get(['id', 'name', 'sku', 'stock', 'unit']);
+
+        $recentInbound = PurchaseItem::query()
+            ->with(['product:id,name,sku,unit', 'purchase:id,invoice,supplier_id,purchase_date'])
+            ->whereHas('purchase', fn ($query) => $query->where('status', 'received'))
+            ->latest('created_at')
+            ->limit(5)
+            ->get(['id', 'purchase_id', 'product_id', 'quantity']);
+
+        $recentOutbound = SaleItem::query()
+            ->with(['product:id,name,sku,unit', 'sale:id,invoice,sale_date,status'])
+            ->whereHas('sale', fn ($query) => $query->where('status', 'paid'))
+            ->latest('created_at')
+            ->limit(5)
+            ->get(['id', 'sale_id', 'product_id', 'quantity']);
+
+        return view('gudang.dashboard', compact(
+            'activeProducts',
+            'totalStock',
+            'lowStockCount',
+            'outOfStockCount',
+            'inboundToday',
+            'outboundToday',
+            'restockProducts',
+            'recentInbound',
+            'recentOutbound',
         ));
     }
 
