@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Courier;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Purchase;
@@ -23,6 +24,60 @@ class DashboardTest extends TestCase
             ->get('/dashboard')
             ->assertOk()
             ->assertViewIs($view);
+    }
+
+    public function test_kurir_dashboard_uses_courier_assigned_orders(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'kurir',
+            'email' => 'kurir@maduramart.test',
+            'name' => 'Kurir Madura',
+        ]);
+
+        $courier = Courier::factory()->create([
+            'email' => 'kurir@maduramart.test',
+            'name' => 'Kurir Madura',
+            'is_active' => true,
+        ]);
+
+        Order::factory()->create([
+            'courier_id' => $courier->id,
+            'status' => 'shipped',
+            'order_date' => now(),
+        ]);
+
+        Order::factory()->create([
+            'courier_id' => $courier->id,
+            'status' => 'delivered',
+            'order_date' => now(),
+        ]);
+
+        Order::factory()->create([
+            'courier_id' => $courier->id,
+            'status' => 'cancelled',
+            'order_date' => now(),
+        ]);
+
+        Order::factory()->create([
+            'courier_id' => null,
+            'status' => 'pending',
+            'order_date' => now(),
+        ]);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('kurir.dashboard')
+            ->assertViewHas('todayOrders', 3)
+            ->assertViewHas('pendingOrders', 0)
+            ->assertViewHas('shippingOrders', 1)
+            ->assertViewHas('deliveredToday', 1)
+            ->assertViewHas('statusSummary', [
+                'pending' => 0,
+                'processing' => 0,
+                'shipped' => 1,
+                'delivered' => 1,
+            ]);
     }
 
     public function test_purchasing_users_see_the_purchasing_dashboard(): void

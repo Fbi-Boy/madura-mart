@@ -26,7 +26,7 @@ class DashboardController extends Controller
             return match ($role) {
                 'kasir' => $this->cashierDashboard(),
                 'gudang' => $this->warehouseDashboard(),
-                'kurir' => view('kurir.dashboard'),
+                'kurir' => $this->courierDashboard(),
                 'customer' => view('customer.dashboard'),
                 'purchasing' => $this->purchasingDashboard(),
                 'super-admin' => view('super-admin.dashboard'),
@@ -101,6 +101,60 @@ class DashboardController extends Controller
             'statusSummary',
             'recentPurchases',
             'supplierPurchases',
+        ));
+    }
+
+    private function courierDashboard(): View
+    {
+        $user = auth()->user();
+        $today = Carbon::today();
+
+        $courier = Courier::query()
+            ->where('is_active', true)
+            ->where('email', $user->email)
+            ->first();
+
+        $baseOrders = $courier
+            ? Order::query()->where('courier_id', $courier->id)
+            : Order::query()->whereRaw('1 = 0');
+
+        $todayOrders = (clone $baseOrders)->whereDate('order_date', $today)->count();
+        $pendingOrders = (clone $baseOrders)->whereIn('status', ['pending', 'processing'])->count();
+        $shippingOrders = (clone $baseOrders)->where('status', 'shipped')->count();
+        $deliveredToday = (clone $baseOrders)
+            ->where('status', 'delivered')
+            ->whereDate('order_date', $today)
+            ->count();
+
+        $statusSummary = [
+            'pending' => (clone $baseOrders)->where('status', 'pending')->count(),
+            'processing' => (clone $baseOrders)->where('status', 'processing')->count(),
+            'shipped' => (clone $baseOrders)->where('status', 'shipped')->count(),
+            'delivered' => (clone $baseOrders)->where('status', 'delivered')->count(),
+        ];
+
+        $recentOrders = (clone $baseOrders)
+            ->with('customer:id,name')
+            ->latest('order_date')
+            ->limit(7)
+            ->get([
+                'id',
+                'order_number',
+                'customer_id',
+                'order_date',
+                'total',
+                'status',
+                'delivery_address',
+            ]);
+
+        return view('kurir.dashboard', compact(
+            'courier',
+            'todayOrders',
+            'pendingOrders',
+            'shippingOrders',
+            'deliveredToday',
+            'statusSummary',
+            'recentOrders',
         ));
     }
 
