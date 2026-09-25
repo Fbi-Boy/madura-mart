@@ -26,6 +26,7 @@ use App\Http\Controllers\Gudang\StockOpnameController;
 use App\Http\Controllers\Kasir\SaleController;
 use App\Http\Controllers\Kasir\SaleReturnController;
 use App\Http\Controllers\Kasir\CashierShiftController;
+use App\Http\Controllers\Kurir\DeliveryStatusController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -101,6 +102,20 @@ Route::middleware('auth')->group(function () {
         ->group(function () {
             Route::get('/stock-opname', [StockOpnameController::class, 'index'])->name('stock-opname.index');
             Route::post('/stock-opname', [StockOpnameController::class, 'store'])->name('stock-opname.store');
+        });
+
+    /*
+    |--------------------------------------------------------------------------
+    | KURIR
+    |--------------------------------------------------------------------------
+    */
+
+    Route::prefix('kurir')
+        ->name('kurir.')
+        ->middleware('role:kurir')
+        ->group(function () {
+            Route::patch('/pengiriman/{order}/status', [DeliveryStatusController::class, 'update'])
+                ->name('pengiriman.status');
         });
 
     /*
