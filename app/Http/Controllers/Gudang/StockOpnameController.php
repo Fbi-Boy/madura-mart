@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Gudang;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\StockOpname;
+use App\Services\StockMovementService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -64,6 +65,7 @@ class StockOpnameController extends Controller
 
                 if ($actualStock !== $systemStock) {
                     $product->update(['stock' => $actualStock]);
+                    StockMovementService::record($product, $actualStock - $systemStock, 'adjustment', auth()->user(), 'stock_opname', $opname->id, 'Penyesuaian hasil stock opname');
                 }
             }
         });
