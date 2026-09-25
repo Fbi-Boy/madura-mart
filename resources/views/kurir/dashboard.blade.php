@@ -33,6 +33,7 @@
                         ['label' => 'Pesanan Hari Ini', 'value' => number_format($todayOrders, 0, ',', '.'), 'hint' => 'pesanan masuk hari ini'],
                         ['label' => 'Perlu Diproses', 'value' => number_format($pendingOrders, 0, ',', '.'), 'hint' => 'pending + processing'],
                         ['label' => 'Sedang Dikirim', 'value' => number_format($shippingOrders, 0, ',', '.'), 'hint' => 'status shipped'],
+                        ['label' => 'Rute Aktif', 'value' => number_format($activeDeliveryOrders, 0, ',', '.'), 'hint' => 'processing + shipped'],
                         ['label' => 'Selesai Hari Ini', 'value' => number_format($deliveredToday, 0, ',', '.'), 'hint' => 'status delivered'],
                     ];
                 @endphp
@@ -73,6 +74,32 @@
                                 @endforelse
                             </tbody>
                         </table>
+                    </div>
+                </section>
+
+                <section class="rounded-2xl border border-[#A8F23A]/30 bg-white p-5 shadow-sm dark:border-[#A8F23A]/20 dark:bg-gray-800">
+                    <div class="flex items-center justify-between gap-3">
+                        <div>
+                            <h3 class="font-semibold text-gray-900 dark:text-white">Prioritas Pengiriman</h3>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Pesanan berstatus shipped yang perlu dituntaskan.</p>
+                        </div>
+                        <span class="rounded-full bg-[#A8F23A]/20 px-2.5 py-1 text-xs font-semibold text-gray-900 dark:text-[#A8F23A]">{{ $priorityOrders->count() }}</span>
+                    </div>
+                    <div class="mt-5 space-y-3">
+                        @forelse ($priorityOrders as $order)
+                            <div class="rounded-xl bg-gray-50 p-3 dark:bg-gray-700/50">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div class="min-w-0">
+                                        <p class="font-medium text-gray-900 dark:text-white">{{ $order->order_number }}</p>
+                                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ $order->customer?->name ?? 'Customer' }}</p>
+                                    </div>
+                                    <span class="shrink-0 rounded-full bg-blue-50 px-2 py-1 text-[11px] font-medium text-blue-700 dark:bg-blue-900/20 dark:text-blue-300">Shipped</span>
+                                </div>
+                                <p class="mt-2 truncate text-xs text-gray-400 dark:text-gray-500">{{ $order->delivery_address }}</p>
+                            </div>
+                        @empty
+                            <p class="py-4 text-sm text-gray-400">Tidak ada pengiriman prioritas.</p>
+                        @endforelse
                     </div>
                 </section>
 
