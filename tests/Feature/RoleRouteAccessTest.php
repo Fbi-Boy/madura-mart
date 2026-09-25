@@ -10,6 +10,38 @@ class RoleRouteAccessTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_guest_is_redirected_from_dashboard(): void
+    {
+        $this->get('/dashboard')
+            ->assertRedirect(route('login'));
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('unauthorizedRouteMatrix')]
+    public function test_roles_cannot_cross_domain_boundaries(string $role, string $path): void
+    {
+        $user = User::factory()->create(['role' => $role]);
+
+        $this->actingAs($user)
+            ->get($path)
+            ->assertForbidden();
+    }
+
+    public static function unauthorizedRouteMatrix(): array
+    {
+        return [
+            'customer cannot purchasing workspace' => ['customer', '/purchasing/purchases'],
+            'customer cannot warehouse receiving' => ['customer', '/gudang/penerimaan'],
+            'customer cannot courier history' => ['customer', '/kurir/pengiriman/riwayat'],
+            'customer cannot cashier workspace' => ['customer', '/kasir/transaksi-baru'],
+            'purchasing cannot sales report' => ['purchasing', '/admin/report/penjualan'],
+            'purchasing cannot stock report' => ['purchasing', '/admin/report/stok'],
+            'purchasing cannot product monitoring' => ['purchasing', '/admin/monitoring/produk'],
+            'gudang cannot purchasing workspace' => ['gudang', '/purchasing/purchases'],
+            'kurir cannot cashier workspace' => ['kurir', '/kasir/transaksi-baru'],
+            'kasir cannot warehouse receiving' => ['kasir', '/gudang/penerimaan'],
+        ];
+    }
+
     public function test_customer_cannot_access_admin_monitoring_routes(): void
     {
         $user = User::factory()->create(['role' => 'customer']);
