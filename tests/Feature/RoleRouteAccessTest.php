@@ -16,9 +16,7 @@ class RoleRouteAccessTest extends TestCase
             ->assertRedirect(route('login'));
     }
 
-    /**
-     * @dataProvider unauthorizedRouteMatrix
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('unauthorizedRouteMatrix')]
     public function test_roles_cannot_cross_domain_boundaries(string $role, string $path): void
     {
         $user = User::factory()->create(['role' => $role]);
