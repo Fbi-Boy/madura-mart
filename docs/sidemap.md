@@ -490,7 +490,7 @@ Pengembangan Madura Mart dilakukan secara bertahap.
 - [x] Barang Masuk
 - [x] Barang Keluar
 - [x] Stock Opname
-- [ ] Riwayat Stok
+- [x] Riwayat Stok
 
 ## PHASE 4 — PURCHASING
 - [x] Supplier
