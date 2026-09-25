@@ -68,4 +68,29 @@ class PurchaseTransactionTest extends TestCase
             'items' => [],
         ])->assertSessionHasErrors('items');
     }
+    public function test_purchasing_can_create_draft_purchase_order_without_increasing_stock(): void
+    {
+        $purchasing = User::factory()->create(['role' => 'purchasing']);
+        $supplier = Supplier::factory()->create();
+        $product = Product::factory()->create(['stock' => 10]);
+
+        $this->actingAs($purchasing)->post(route('purchasing.purchases.store'), [
+            'invoice' => 'PO-DRAFT-001',
+            'supplier_id' => $supplier->id,
+            'purchase_date' => '2026-09-25',
+            'items' => [[
+                'product_id' => $product->id,
+                'quantity' => 5,
+                'unit_price' => 12000,
+            ]],
+        ])->assertRedirect(route('purchasing.purchases.index'));
+
+        $this->assertDatabaseHas('purchases', [
+            'invoice' => 'PO-DRAFT-001',
+            'total' => 60000,
+            'status' => 'draft',
+            'user_id' => $purchasing->id,
+        ]);
+        $this->assertDatabaseHas('products', ['id' => $product->id, 'stock' => 10]);
+    }
 }
