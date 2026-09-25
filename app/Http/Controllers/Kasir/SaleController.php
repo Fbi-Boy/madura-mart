@@ -25,6 +25,13 @@ class SaleController extends Controller
         return view('kasir.riwayat-transaksi.index', compact('sales'));
     }
 
+    public function receipt(Sale $sale): View
+    {
+        $sale->load(['customer:id,name', 'user:id,name', 'items.product:id,name,unit']);
+
+        return view('kasir.struk.index', compact('sale'));
+    }
+
     public function create(): View
     {
         $shift = CashierShift::where('user_id', auth()->id())->where('status', 'open')->firstOrFail();
