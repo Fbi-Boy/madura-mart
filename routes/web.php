@@ -28,6 +28,7 @@ use App\Http\Controllers\Kasir\SaleReturnController;
 use App\Http\Controllers\Kasir\CashierShiftController;
 use App\Http\Controllers\Kurir\DeliveryStatusController;
 use App\Http\Controllers\Customer\CatalogController;
+use App\Http\Controllers\Customer\CartController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -109,6 +110,16 @@ Route::middleware('auth')->group(function () {
         ->group(function () {
             Route::get('/', [CatalogController::class, 'index'])->name('index');
             Route::get('/{slug}', [CatalogController::class, 'show'])->name('show');
+        });
+
+    Route::prefix('customer/cart')
+        ->name('customer.cart.')
+        ->middleware('role:customer')
+        ->group(function () {
+            Route::get('/', [CartController::class, 'index'])->name('index');
+            Route::post('/items/{product}', [CartController::class, 'add'])->name('add');
+            Route::patch('/items', [CartController::class, 'update'])->name('update');
+            Route::delete('/items', [CartController::class, 'remove'])->name('remove');
         });
 
     Route::prefix('gudang')
