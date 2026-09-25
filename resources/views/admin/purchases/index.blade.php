@@ -1,8 +1,8 @@
 <x-app-layout>
 <div class="space-y-5">
     <div class="flex items-end justify-between gap-3">
-        <div><p class="text-xs font-semibold uppercase tracking-wide text-black/40">Transaksi</p><h1 class="mt-1 text-2xl font-bold">Pembelian</h1><p class="mt-1 text-sm text-black/50">Catat barang masuk dari supplier dan pembaruan stok.</p></div>
-        <a href="{{ route('admin.purchases.create') }}" class="rounded-xl bg-[#171719] px-4 py-2.5 text-sm font-semibold text-white">+ Pembelian Baru</a>
+        <div><p class="text-xs font-semibold uppercase tracking-wide text-black/40">Transaksi</p><h1 class="mt-1 text-2xl font-bold">Pembelian</h1><p class="mt-1 text-sm text-black/50">{{ auth()->user()->role === 'purchasing' ? 'Kelola purchase order dan siapkan pengadaan supplier.' : 'Catat barang masuk dari supplier dan pembaruan stok.' }}</p></div>
+        <a href="{{ route(auth()->user()->role === 'purchasing' ? 'purchasing.purchases.create' : 'admin.purchases.create') }}" class="rounded-xl bg-[#171719] px-4 py-2.5 text-sm font-semibold text-white">+ {{ auth()->user()->role === 'purchasing' ? 'Purchase Order' : 'Pembelian Baru' }}</a>
     </div>
     @if(session('success'))<div class="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">{{ session('success') }}</div>@endif
     <div class="overflow-hidden rounded-2xl border border-black/5 bg-white shadow-sm">

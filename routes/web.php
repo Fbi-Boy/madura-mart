@@ -95,6 +95,10 @@ Route::middleware('auth')->group(function () {
         Route::resource('distributors', DistributorController::class)->except(['show']);
     });
 
+    Route::prefix('purchasing')->name('purchasing.')->middleware('role:purchasing')->group(function () {
+        Route::resource('purchases', PurchaseController::class)->only(['index', 'create', 'store']);
+    });
+
     /*
     |--------------------------------------------------------------------------
     | GUDANG

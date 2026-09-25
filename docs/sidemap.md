@@ -494,7 +494,7 @@ Pengembangan Madura Mart dilakukan secara bertahap.
 
 ## PHASE 4 — PURCHASING
 - [x] Supplier
-- [ ] Purchase Order
+- [ ] Purchase Order (draft creation tersedia untuk role purchasing)
 - [x] Pembelian
 - [ ] Penerimaan Barang
 
