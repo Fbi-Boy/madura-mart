@@ -17,6 +17,9 @@ class Order extends Model
         'courier_id',
         'order_date',
         'total',
+        'payment_method',
+        'payment_status',
+        'payment_proof',
         'status',
         'delivery_address',
         'notes',
@@ -27,6 +30,7 @@ class Order extends Model
         return [
             'order_date' => 'datetime',
             'total' => 'decimal:2',
+            'payment_proof' => 'string',
         ];
     }
 

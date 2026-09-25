@@ -33,6 +33,19 @@
                     @endforeach
                 </div>
 
+                <div class="mt-6 rounded-2xl bg-gray-50 p-4 dark:bg-gray-700/50">
+                    <div class="flex items-center justify-between gap-4">
+                        <div>
+                            <p class="text-xs uppercase tracking-wide text-gray-400">Pembayaran</p>
+                            <p class="mt-1 font-semibold text-gray-900 dark:text-white">{{ $order->payment_method === 'qris' ? 'QRIS' : 'Transfer Bank' }}</p>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Status: {{ ucfirst($order->payment_status) }}</p>
+                        </div>
+                        @if ($order->payment_status !== 'paid' && $order->status !== 'cancelled')
+                            <a href="{{ route('customer.payment.show', $order) }}" class="rounded-xl bg-[#A8F23A] px-3 py-2 text-xs font-semibold text-gray-900">Bayar / Kirim Bukti</a>
+                        @endif
+                    </div>
+                </div>
+
                 <div class="mt-6 flex items-center justify-between border-t border-gray-100 pt-5 dark:border-gray-700">
                     <span class="text-sm text-gray-500 dark:text-gray-400">Total Pesanan</span>
                     <span class="text-xl font-bold text-gray-900 dark:text-white">Rp {{ number_format((float) $order->total, 0, ',', '.') }}</span>
