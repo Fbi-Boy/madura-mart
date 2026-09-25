@@ -37,6 +37,7 @@ use App\Http\Controllers\Customer\CatalogController;
 use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\CheckoutController;
 use App\Http\Controllers\Customer\OrderController;
+use App\Http\Controllers\Customer\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -151,6 +152,14 @@ Route::middleware('auth')->group(function () {
         ->group(function () {
             Route::get('/', [OrderController::class, 'index'])->name('index');
             Route::get('/{order}', [OrderController::class, 'show'])->name('show');
+        });
+
+    Route::prefix('customer/orders/{order}/payment')
+        ->name('customer.payment.')
+        ->middleware('role:customer')
+        ->group(function () {
+            Route::get('/', [PaymentController::class, 'show'])->name('show');
+            Route::post('/', [PaymentController::class, 'store'])->name('store');
         });
 
     Route::prefix('gudang')
