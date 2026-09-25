@@ -131,6 +131,15 @@ class DashboardController extends Controller
             ->whereDate('purchase_date', $today)
             ->count();
 
+        $receivedValueToday = (float) Purchase::query()
+            ->where('status', 'received')
+            ->whereDate('purchase_date', $today)
+            ->sum('total');
+
+        $draftPurchaseValue = (float) Purchase::query()
+            ->where('status', 'draft')
+            ->sum('total');
+
         $statusSummary = [
             'draft' => Purchase::query()->where('status', 'draft')->count(),
             'received' => Purchase::query()->where('status', 'received')->count(),
@@ -165,6 +174,8 @@ class DashboardController extends Controller
             'todayTransactions',
             'draftPurchases',
             'receivedToday',
+            'receivedValueToday',
+            'draftPurchaseValue',
             'statusSummary',
             'recentPurchases',
             'supplierPurchases',
