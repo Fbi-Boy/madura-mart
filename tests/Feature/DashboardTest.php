@@ -424,6 +424,7 @@ class DashboardTest extends TestCase
             'customer_id' => $customer->id,
             'status' => 'delivered',
             'total' => 125000,
+            'payment_status' => 'paid',
             'order_date' => now(),
         ]);
 
@@ -431,12 +432,14 @@ class DashboardTest extends TestCase
             'customer_id' => $customer->id,
             'status' => 'shipped',
             'total' => 75000,
+            'payment_status' => 'pending',
             'order_date' => now(),
         ]);
 
         Order::factory()->create([
             'status' => 'delivered',
             'total' => 999999,
+            'payment_status' => 'paid',
             'order_date' => now(),
         ]);
 
