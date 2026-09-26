@@ -177,22 +177,22 @@
                         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Jalur kerja utama purchasing.</p>
                     </div>
                     <div class="mt-5 grid gap-3 sm:grid-cols-2">
-                        <a href="{{ route('admin.monitoring.pembelian') }}" class="rounded-xl border border-gray-200 p-4 transition hover:border-[#A8F23A] hover:bg-[#A8F23A]/10 dark:border-gray-700">
-                            <p class="font-semibold text-gray-900 dark:text-white">Monitoring Pembelian</p>
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Pantau status dan nilai pembelian.</p>
+                        <a href="{{ route('purchasing.purchases.create') }}" class="rounded-xl border border-gray-200 p-4 transition hover:border-[#A8F23A] hover:bg-[#A8F23A]/10 dark:border-gray-700">
+                            <p class="font-semibold text-gray-900 dark:text-white">Buat Pembelian</p>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Catat transaksi procurement baru.</p>
                         </a>
-                        <a href="{{ route('admin.monitoring.pembelian') }}" class="rounded-xl border border-gray-200 p-4 transition hover:border-[#A8F23A] hover:bg-[#A8F23A]/10 dark:border-gray-700">
-                            <p class="font-semibold text-gray-900 dark:text-white">Riwayat Pembelian</p>
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Cari dan pantau transaksi pembelian.</p>
+                        <a href="{{ route('purchasing.purchases.index') }}" class="rounded-xl border border-gray-200 p-4 transition hover:border-[#A8F23A] hover:bg-[#A8F23A]/10 dark:border-gray-700">
+                            <p class="font-semibold text-gray-900 dark:text-white">Daftar Pembelian</p>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Cari dan kelola transaksi purchasing.</p>
+                        </a>
+                        <a href="{{ route('purchasing.suppliers.index') }}" class="rounded-xl border border-gray-200 p-4 transition hover:border-[#A8F23A] hover:bg-[#A8F23A]/10 dark:border-gray-700">
+                            <p class="font-semibold text-gray-900 dark:text-white">Supplier</p>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Kelola dan pantau supplier purchasing.</p>
                         </a>
                         <a href="{{ route('admin.monitoring.pembelian') }}" class="rounded-xl border border-gray-200 p-4 transition hover:border-[#A8F23A] hover:bg-[#A8F23A]/10 dark:border-gray-700">
                             <p class="font-semibold text-gray-900 dark:text-white">Monitoring</p>
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Lihat status dan nilai pembelian.</p>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Pantau status dan nilai pembelian.</p>
                         </a>
-                        <div class="rounded-xl border border-dashed border-gray-200 p-4 dark:border-gray-700">
-                            <p class="font-semibold text-gray-900 dark:text-white">Supplier</p>
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Ringkasan supplier aktif tersedia pada metrik dan data procurement.</p>
-                        </div>
                     </div>
                 </section>
             </div>
