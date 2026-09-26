@@ -76,6 +76,37 @@
                 <a href="{{ route('kasir.riwayat-shift') }}" class="menu-link">Riwayat Shift</a>
             </div>
 
+        @elseif(auth()->user()->role === 'gudang')
+
+            <div class="mt-3 space-y-0.5">
+                <a href="{{ route('gudang.stock-opname.index') }}" class="menu-link">Stock Opname</a>
+                <a href="{{ route('gudang.penerimaan.index') }}" class="menu-link">Penerimaan Barang</a>
+                <a href="{{ route('gudang.barang-keluar.index') }}" class="menu-link">Barang Keluar</a>
+                <a href="{{ route('gudang.riwayat-stok.index') }}" class="menu-link">Riwayat Stok</a>
+            </div>
+
+        @elseif(auth()->user()->role === 'purchasing')
+
+            <div class="mt-3 space-y-0.5">
+                <a href="{{ route('purchasing.purchases.index') }}" class="menu-link">Purchase Order</a>
+                <a href="{{ route('purchasing.suppliers.index') }}" class="menu-link">Supplier</a>
+            </div>
+
+        @elseif(auth()->user()->role === 'kurir')
+
+            <div class="mt-3 space-y-0.5">
+                <a href="{{ route('kurir.pengiriman.riwayat') }}" class="menu-link">Riwayat Pengiriman</a>
+            </div>
+
+        @elseif(auth()->user()->role === 'customer')
+
+            <div class="mt-3 space-y-0.5">
+                <a href="{{ route('customer.catalog.index') }}" class="menu-link">Katalog</a>
+                <a href="{{ route('customer.cart.index') }}" class="menu-link">Keranjang</a>
+                <a href="{{ route('customer.orders.index') }}" class="menu-link">Pesanan Saya</a>
+                <a href="{{ route('customer.address.edit') }}" class="menu-link">Alamat</a>
+            </div>
+
         @endif
 
     </div>
