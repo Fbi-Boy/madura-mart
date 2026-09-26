@@ -24,6 +24,17 @@ class PurchaseReceivingController extends Controller
         return view('gudang.penerimaan.index', compact('purchases'));
     }
 
+    public function show(Purchase $purchase): View
+    {
+        $purchase->load([
+            'supplier:id,name,contact_person,phone',
+            'user:id,name',
+            'items.product:id,name,sku,unit',
+        ]);
+
+        return view('gudang.penerimaan.show', compact('purchase'));
+    }
+
     public function receive(Purchase $purchase): RedirectResponse
     {
         if ($purchase->status !== 'draft' || $purchase->submitted_at === null) {
