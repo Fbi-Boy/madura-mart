@@ -31,7 +31,7 @@ class AuditLogTest extends TestCase
         $actor = User::factory()->create(['role' => 'super-admin']);
         $otherActor = User::factory()->create(['role' => 'admin']);
 
-        ActivityLog::factory()->create([
+        ActivityLog::query()->create([
             'user_id' => $actor->id,
             'action' => 'user.updated',
             'subject_type' => User::class,
@@ -40,7 +40,7 @@ class AuditLogTest extends TestCase
             'metadata' => ['role_before' => 'admin', 'role_after' => 'gudang'],
         ]);
 
-        ActivityLog::factory()->create([
+        ActivityLog::query()->create([
             'user_id' => $actor->id,
             'action' => 'system.viewed',
             'subject_type' => null,
