@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\ActivityLog;
 use App\Models\PermissionOverride;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -49,6 +50,8 @@ class RolePermissionController
         $permissionKeys = array_keys(config('permissions.permission_labels', []));
         $submitted = $validated['permissions'] ?? [];
 
+        $changes = [];
+
         foreach ($roles as $role) {
             foreach ($permissionKeys as $permission) {
                 if (! array_key_exists($role, $submitted) || ! array_key_exists($permission, $submitted[$role])) {
@@ -59,10 +62,19 @@ class RolePermissionController
                 $defaultEnabled = in_array($role, config('permissions.roles', [])[$permission] ?? [], true);
 
                 if ($enabled === $defaultEnabled) {
-                    PermissionOverride::query()
+                    $deleted = PermissionOverride::query()
                         ->where('role', $role)
                         ->where('permission', $permission)
                         ->delete();
+
+                    if ($deleted > 0) {
+                        $changes[] = [
+                            'role' => $role,
+                            'permission' => $permission,
+                            'enabled' => $enabled,
+                            'action' => 'restored_default',
+                        ];
+                    }
 
                     continue;
                 }
@@ -71,7 +83,25 @@ class RolePermissionController
                     ['role' => $role, 'permission' => $permission],
                     ['enabled' => $enabled, 'updated_by' => $request->user()->id],
                 );
+
+                $changes[] = [
+                    'role' => $role,
+                    'permission' => $permission,
+                    'enabled' => $enabled,
+                    'action' => 'override',
+                ];
             }
+        }
+
+        if ($changes !== []) {
+            ActivityLog::query()->create([
+                'user_id' => $request->user()->id,
+                'action' => 'permission.updated',
+                'description' => 'Permission role diperbarui oleh Super Admin.',
+                'metadata' => ['changes' => $changes],
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->userAgent(),
+            ]);
         }
 
         return to_route('admin.roles.index')
