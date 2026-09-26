@@ -82,7 +82,7 @@
                 <a href="{{ route('gudang.stock-opname.index') }}" class="menu-link">Stock Opname</a>
                 <a href="{{ route('gudang.penerimaan.index') }}" class="menu-link">Penerimaan Barang</a>
                 <a href="{{ route('gudang.barang-keluar.index') }}" class="menu-link">Barang Keluar</a>
-                <a href="{{ route('gudang.riwayat-stok') }}" class="menu-link">Riwayat Stok</a>
+                <a href="{{ route('gudang.riwayat-stok.index') }}" class="menu-link">Riwayat Stok</a>
             </div>
 
         @elseif(auth()->user()->role === 'purchasing')
