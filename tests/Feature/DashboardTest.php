@@ -106,7 +106,7 @@ class DashboardTest extends TestCase
             'status' => 'shipped',
         ]);
 
-        ActivityLog::factory()->create([
+        ActivityLog::query()->create([
             'user_id' => $user->id,
             'action' => 'delivery.status_updated',
             'subject_type' => Order::class,
@@ -114,7 +114,7 @@ class DashboardTest extends TestCase
             'description' => 'Status pengiriman assigned berubah.',
         ]);
 
-        ActivityLog::factory()->create([
+        ActivityLog::query()->create([
             'user_id' => $user->id,
             'action' => 'delivery.status_updated',
             'subject_type' => Order::class,
