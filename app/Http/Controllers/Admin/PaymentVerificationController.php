@@ -51,20 +51,20 @@ class PaymentVerificationController extends Controller
             ]);
 
             ActivityLog::query()->create([
-            'user_id' => $request->user()->id,
-            'action' => $validated['payment_status'] === 'paid'
-                ? 'payment.verified'
-                : 'payment.rejected',
-            'subject_type' => Order::class,
-            'subject_id' => $order->id,
-            'description' => $validated['payment_status'] === 'paid'
-                ? "Pembayaran order {$order->order_number} dikonfirmasi."
-                : "Bukti pembayaran order {$order->order_number} ditolak.",
-            'metadata' => [
-                'payment_status' => $validated['payment_status'],
-                'payment_method' => $order->payment_method,
-            ],
-            'ip_address' => $request->ip(),
+                'user_id' => $request->user()->id,
+                'action' => $validated['payment_status'] === 'paid'
+                    ? 'payment.verified'
+                    : 'payment.rejected',
+                'subject_type' => Order::class,
+                'subject_id' => $order->id,
+                'description' => $validated['payment_status'] === 'paid'
+                    ? "Pembayaran order {$order->order_number} dikonfirmasi."
+                    : "Bukti pembayaran order {$order->order_number} ditolak.",
+                'metadata' => [
+                    'payment_status' => $validated['payment_status'],
+                    'payment_method' => $order->payment_method,
+                ],
+                'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
             ]);
         });
