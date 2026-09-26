@@ -88,7 +88,7 @@ class OrderController extends Controller
                     $product,
                     (int) $item->quantity,
                     'return',
-                    $customer->user ?? null,
+                    auth()->user(),
                     'order_cancellation',
                     $lockedOrder->id,
                     'Stok dikembalikan karena pesanan customer dibatalkan',
