@@ -48,7 +48,21 @@ class OrderController extends Controller
             'courier:id,name',
         ]);
 
-        return view('customer.orders.show', compact('order'));
+        $trackingSteps = [
+            ['key' => 'pending', 'label' => 'Pesanan dibuat'],
+            ['key' => 'processing', 'label' => 'Sedang diproses'],
+            ['key' => 'shipped', 'label' => 'Dalam pengiriman'],
+            ['key' => 'delivered', 'label' => 'Pesanan selesai'],
+        ];
+
+        $statusOrder = collect(array_column($trackingSteps, 'key'));
+        $currentStatusIndex = $statusOrder->search($order->status);
+
+        if ($order->status === 'cancelled') {
+            $trackingSteps[] = ['key' => 'cancelled', 'label' => 'Pesanan dibatalkan'];
+        }
+
+        return view('customer.orders.show', compact('order', 'trackingSteps', 'currentStatusIndex'));
     }
 
     public function cancel(Request $request, Order $order): RedirectResponse

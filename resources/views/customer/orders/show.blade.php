@@ -21,6 +21,41 @@
                     </div>
                 </div>
 
+                <div class="mt-6 rounded-2xl border border-gray-100 p-5 dark:border-gray-700">
+                    <div class="flex items-center justify-between gap-3">
+                        <div>
+                            <h3 class="font-semibold text-gray-900 dark:text-white">Perjalanan Pesanan</h3>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Tahap saat ini berdasarkan status order yang tersimpan.</p>
+                        </div>
+                        <span class="rounded-full bg-[#A8F23A]/20 px-2.5 py-1 text-[10px] font-semibold text-gray-900 dark:text-[#A8F23A]">
+                            {{ ucfirst($order->status) }}
+                        </span>
+                    </div>
+
+                    <div class="mt-5 grid gap-3 sm:grid-cols-4">
+                        @foreach ($trackingSteps as $index => $step)
+                            @php
+                                $isCancelled = $step['key'] === 'cancelled';
+                                $isCurrent = $isCancelled
+                                    ? $order->status === 'cancelled'
+                                    : $currentStatusIndex !== false && $index <= $currentStatusIndex;
+                            @endphp
+                            <div class="relative rounded-xl border p-3 {{ $isCurrent ? 'border-[#A8F23A] bg-[#A8F23A]/10' : 'border-gray-100 bg-gray-50 dark:border-gray-700 dark:bg-gray-700/40' }}">
+                                <div class="flex items-center gap-2">
+                                    <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold {{ $isCurrent ? ($isCancelled ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' : 'bg-[#A8F23A] text-gray-900') : 'bg-gray-200 text-gray-500 dark:bg-gray-600 dark:text-gray-300' }}">
+                                        {{ $isCurrent ? '✓' : $index + 1 }}
+                                    </span>
+                                    <span class="text-xs font-semibold {{ $isCurrent ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-300' }}">{{ $step['label'] }}</span>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <p class="mt-4 text-[11px] text-gray-400 dark:text-gray-500">
+                        Timeline menunjukkan tahapan status, bukan waktu kejadian. Sistem belum menyimpan timestamp perubahan status.
+                    </p>
+                </div>
+
                 <div class="mt-6 divide-y divide-gray-100 rounded-2xl border border-gray-100 dark:divide-gray-700 dark:border-gray-700">
                     @foreach ($order->items as $item)
                         <div class="flex items-center justify-between gap-4 p-4">
