@@ -21,7 +21,7 @@ class RolePermissionTest extends TestCase
             ->assertOk()
             ->assertViewIs('admin.roles.index')
             ->assertViewHas('roles')
-            ->assertSee('Role & Permission')
+            ->assertSeeText('Role & Permission')
             ->assertSee('role-management.view');
 
         $this->actingAs($admin)
