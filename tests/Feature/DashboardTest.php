@@ -227,6 +227,11 @@ class DashboardTest extends TestCase
             'purchase_date' => now(),
         ]);
 
+        Purchase::factory()->create([
+            'status' => 'draft',
+            'total' => 175000,
+        ]);
+
         Order::factory()->create(['status' => 'processing']);
 
         $this->actingAs($user)
@@ -240,6 +245,7 @@ class DashboardTest extends TestCase
             ->assertViewHas('monthlyRevenue', 300000.0)
             ->assertViewHas('monthlyPurchases', 125000.0)
             ->assertViewHas('pendingOrders', 1)
+            ->assertViewHas('pendingPurchaseValue', 175000.0)
             ->assertViewHas('lowStockProducts', 1)
             ->assertViewHas('roleSummary', fn ($summary) => $summary['super-admin'] >= 1 && $summary['kasir'] >= 2);
     }
@@ -359,8 +365,7 @@ class DashboardTest extends TestCase
             ->assertViewHas('activeProducts', 1)
             ->assertViewHas('lowStockProducts', 1)
             ->assertViewHas('pendingOrders', 1)
-            ->assertViewHas('pendingPurchases', 1)
-            ->assertViewHas('pendingPurchaseValue', 175000.0);
+            ->assertViewHas('pendingPurchases', 1);
     }
 
     public function test_kasir_dashboard_uses_today_sales_and_open_shift_metrics(): void
