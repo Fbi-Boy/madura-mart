@@ -119,6 +119,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('couriers', CourierController::class)->except(['show']);
         Route::resource('users', UserController::class)->except(['show']);
         Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.index')->middleware('permission:role-management.view');
+        Route::patch('/roles', [RolePermissionController::class, 'update'])->name('roles.update')->middleware('permission:role-management.view');
         Route::resource('units', UnitController::class)->except(['show']);
         Route::resource('purchases', PurchaseController::class)->only(['index','create','store']);
         Route::resource('distributors', DistributorController::class)->except(['show']);
