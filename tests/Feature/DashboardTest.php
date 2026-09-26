@@ -316,6 +316,38 @@ class DashboardTest extends TestCase
             ->assertSee(route('admin.monitoring.pembelian'), false);
     }
 
+    public function test_purchasing_dashboard_excludes_cancelled_purchases_from_today_totals(): void
+    {
+        $user = User::factory()->create(['role' => 'purchasing']);
+        $supplier = Supplier::factory()->create(['is_active' => true]);
+
+        Purchase::factory()->create([
+            'supplier_id' => $supplier->id,
+            'status' => 'cancelled',
+            'total' => 900000,
+            'purchase_date' => now(),
+        ]);
+
+        Purchase::factory()->create([
+            'supplier_id' => $supplier->id,
+            'status' => 'received',
+            'total' => 125000,
+            'purchase_date' => now(),
+        ]);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('purchasing.dashboard')
+            ->assertViewHas('todayPurchases', 125000.0)
+            ->assertViewHas('todayTransactions', 1)
+            ->assertViewHas('receivedToday', 1)
+            ->assertViewHas('receivedValueToday', 125000.0)
+            ->assertViewHas('statusSummary', fn ($summary) =>
+                $summary['received'] === 1 && $summary['cancelled'] === 1
+            );
+    }
+
     public function test_purchasing_dashboard_separates_draft_and_submitted_purchase_orders(): void
     {
         $user = User::factory()->create(['role' => 'purchasing']);
