@@ -513,6 +513,14 @@ class DashboardTest extends TestCase
             'payment_proof' => 'payment-proofs/paid.pdf',
         ]);
 
+        $pendingPaymentOrder = Order::factory()->create([
+            'customer_id' => $customer->id,
+            'status' => 'processing',
+            'payment_status' => 'pending',
+            'payment_proof' => null,
+            'total' => 225000,
+        ]);
+
         Order::factory()->create([
             'customer_id' => $customer->id,
             'status' => 'cancelled',
@@ -525,9 +533,13 @@ class DashboardTest extends TestCase
             ->assertOk()
             ->assertViewIs('customer.dashboard')
             ->assertViewHas('paymentAttention', [
-                'unpaid' => 1,
+                'unpaid' => 2,
                 'verification' => 1,
             ])
+            ->assertViewHas('pendingPaymentOrders', fn ($orders) =>
+                $orders->count() === 3
+                && $orders->contains('id', $pendingPaymentOrder->id)
+            )
             ->assertSee('Status Pembayaran')
             ->assertSee('Belum Bayar')
             ->assertSee('Menunggu Verifikasi');

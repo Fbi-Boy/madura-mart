@@ -280,6 +280,23 @@ class DashboardController extends Controller
             'cancelled' => $cancelledOrders,
         ];
 
+        $pendingPaymentOrders = (clone $baseOrders)
+            ->with('courier:id,name')
+            ->where('payment_status', 'pending')
+            ->where('status', '!=', 'cancelled')
+            ->latest('order_date')
+            ->limit(4)
+            ->get([
+                'id',
+                'order_number',
+                'order_date',
+                'total',
+                'status',
+                'payment_status',
+                'payment_proof',
+                'courier_id',
+            ]);
+
         $recentOrders = (clone $baseOrders)
             ->with('courier:id,name')
             ->latest('order_date')
@@ -302,6 +319,7 @@ class DashboardController extends Controller
             'cancelledOrders',
             'totalSpent',
             'paymentAttention',
+            'pendingPaymentOrders',
             'statusSummary',
             'recentOrders',
             'cartItemCount',
