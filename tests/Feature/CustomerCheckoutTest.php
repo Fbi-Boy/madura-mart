@@ -108,6 +108,37 @@ class CustomerCheckoutTest extends TestCase
         Storage::disk('local')->assertExists($order->payment_proof);
     }
 
+
+
+    public function test_replacing_payment_proof_keeps_only_the_successful_replacement(): void
+    {
+        Storage::fake('local');
+        [$user, $customer] = $this->customerUser();
+
+        $order = Order::factory()->create([
+            'customer_id' => $customer->id,
+            'payment_method' => 'bank_transfer',
+            'payment_status' => 'pending',
+        ]);
+
+        Storage::disk('local')->put('payment-proofs/old-proof.pdf', 'old proof');
+        $order->update(['payment_proof' => 'payment-proofs/old-proof.pdf']);
+
+        $newFile = UploadedFile::fake()->create('bukti-transfer-baru.pdf', 500, 'application/pdf');
+
+        $this->actingAs($user)
+            ->post(route('customer.payment.store', $order), [
+                'payment_proof' => $newFile,
+            ])
+            ->assertRedirect(route('customer.orders.show', $order));
+
+        $newPath = $order->fresh()->payment_proof;
+
+        $this->assertNotSame('payment-proofs/old-proof.pdf', $newPath);
+        Storage::disk('local')->assertMissing('payment-proofs/old-proof.pdf');
+        Storage::disk('local')->assertExists($newPath);
+    }
+
     public function test_customer_cannot_upload_payment_proof_to_another_customer_order(): void
     {
         Storage::fake('public');

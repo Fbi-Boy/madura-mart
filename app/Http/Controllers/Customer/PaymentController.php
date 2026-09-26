@@ -35,16 +35,23 @@ class PaymentController extends Controller
             'payment_proof' => ['required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
         ]);
 
-        if ($order->payment_proof) {
-            Storage::disk('local')->delete($order->payment_proof);
-        }
-
+        $previousProof = $order->payment_proof;
         $path = $validated['payment_proof']->store('payment-proofs', 'local');
 
-        $order->update([
-            'payment_status' => 'pending',
-            'payment_proof' => $path,
-        ]);
+        try {
+            $order->update([
+                'payment_status' => 'pending',
+                'payment_proof' => $path,
+            ]);
+        } catch (\Throwable $exception) {
+            Storage::disk('local')->delete($path);
+
+            throw $exception;
+        }
+
+        if ($previousProof && $previousProof !== $path) {
+            Storage::disk('local')->delete($previousProof);
+        }
 
         return redirect()
             ->route('customer.orders.show', $order)
