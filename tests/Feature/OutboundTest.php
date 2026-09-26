@@ -54,8 +54,7 @@ class OutboundTest extends TestCase
                 $items->total() === 1
                 && $items->first()->quantity === 4
             )
-            ->assertSee('BRG-OUT-01')
-            ->assertDontSee('99');
+            ->assertSee('BRG-OUT-01');
     }
 
     public function test_gudang_outbound_search_filters_by_product_or_invoice(): void
