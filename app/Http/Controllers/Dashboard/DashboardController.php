@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\CashierShift;
 use App\Models\Courier;
 use App\Models\Customer;
@@ -85,6 +86,12 @@ class DashboardController extends Controller
             ->limit(6)
             ->get(['id', 'name', 'email', 'role', 'created_at']);
 
+        $recentActivities = ActivityLog::query()
+            ->with('user:id,name,role')
+            ->latest()
+            ->limit(8)
+            ->get(['id', 'user_id', 'action', 'description', 'created_at']);
+
         $recentOrders = Order::query()
             ->with('customer:id,name')
             ->latest('order_date')
@@ -103,6 +110,7 @@ class DashboardController extends Controller
             'roleSummary',
             'recentUsers',
             'recentOrders',
+            'recentActivities',
         ));
     }
 
