@@ -93,4 +93,49 @@ class PurchaseTransactionTest extends TestCase
         ]);
         $this->assertDatabaseHas('products', ['id' => $product->id, 'stock' => 10]);
     }
+
+    public function test_purchasing_can_cancel_only_draft_purchase_orders(): void
+    {
+        $purchasing = User::factory()->create(['role' => 'purchasing']);
+        $supplier = Supplier::factory()->create();
+
+        $draft = \App\Models\Purchase::factory()->create([
+            'supplier_id' => $supplier->id,
+            'user_id' => $purchasing->id,
+            'status' => 'draft',
+        ]);
+
+        $received = \App\Models\Purchase::factory()->create([
+            'supplier_id' => $supplier->id,
+            'user_id' => $purchasing->id,
+            'status' => 'received',
+        ]);
+
+        $this->actingAs($purchasing)
+            ->patch(route('purchasing.purchases.cancel', $draft))
+            ->assertRedirect(route('purchasing.purchases.index'))
+            ->assertSessionHas('success');
+
+        $this->assertDatabaseHas('purchases', ['id' => $draft->id, 'status' => 'cancelled']);
+
+        $this->actingAs($purchasing)
+            ->patch(route('purchasing.purchases.cancel', $received))
+            ->assertRedirect(route('purchasing.purchases.index'))
+            ->assertSessionHas('error');
+
+        $this->assertDatabaseHas('purchases', ['id' => $received->id, 'status' => 'received']);
+    }
+
+    public function test_non_purchasing_users_cannot_cancel_purchase_orders(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $purchase = \App\Models\Purchase::factory()->create(['status' => 'draft']);
+
+        $this->actingAs($admin)
+            ->patch(route('purchasing.purchases.cancel', $purchase))
+            ->assertForbidden();
+
+        $this->assertDatabaseHas('purchases', ['id' => $purchase->id, 'status' => 'draft']);
+    }
+
 }
