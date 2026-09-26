@@ -34,6 +34,7 @@ class PurchaseReceivingTest extends TestCase
         $purchase = Purchase::factory()->create([
             'supplier_id' => $supplier->id,
             'status' => 'draft',
+            'submitted_at' => now(),
         ]);
 
         PurchaseItem::create([
