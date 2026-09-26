@@ -256,7 +256,11 @@ class DashboardTest extends TestCase
                 'received' => 1,
                 'cancelled' => 1,
             ])
-            ->assertViewHas('procurementTrend', fn ($trend) => $trend->count() === 6 && (float) $trend->last()['value'] === 200000.0);
+            ->assertViewHas('procurementTrend', fn ($trend) => $trend->count() === 6 && (float) $trend->last()['value'] === 200000.0)
+            ->assertSee(route('purchasing.purchases.create'), false)
+            ->assertSee(route('purchasing.purchases.index'), false)
+            ->assertSee(route('purchasing.suppliers.index'), false)
+            ->assertSee(route('admin.monitoring.pembelian'), false);
     }
 
     public function test_admin_dashboard_uses_operational_database_metrics(): void
