@@ -172,6 +172,7 @@ Route::middleware('auth')->group(function () {
         ->group(function () {
             Route::get('/', [OrderController::class, 'index'])->name('index');
             Route::get('/{order}', [OrderController::class, 'show'])->name('show');
+            Route::patch('/{order}/cancel', [OrderController::class, 'cancel'])->name('cancel');
         });
 
     Route::prefix('customer/orders/{order}/payment')
