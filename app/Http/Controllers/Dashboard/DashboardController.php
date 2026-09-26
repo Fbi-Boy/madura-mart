@@ -16,6 +16,7 @@ use App\Models\SaleItem;
 use App\Models\Supplier;
 use App\Models\User;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -197,18 +198,27 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        $procurementTrend = collect(range(5, 0))->map(function (int $monthsAgo) {
+        $trendStart = Carbon::today()->startOfMonth()->subMonths(5);
+        $trendEnd = Carbon::today()->endOfMonth();
+
+        $monthExpression = DB::getDriverName() === 'sqlite'
+            ? "strftime('%Y-%m', purchase_date)"
+            : "DATE_FORMAT(purchase_date, '%Y-%m')";
+
+        $receivedPurchasesByMonth = Purchase::query()
+            ->where('status', 'received')
+            ->whereBetween('purchase_date', [$trendStart->toDateString(), $trendEnd->toDateString()])
+            ->selectRaw("{$monthExpression} as month_key, SUM(total) as total_value")
+            ->groupBy('month_key')
+            ->pluck('total_value', 'month_key');
+
+        $procurementTrend = collect(range(5, 0))->map(function (int $monthsAgo) use ($receivedPurchasesByMonth) {
             $month = Carbon::today()->startOfMonth()->subMonths($monthsAgo);
+            $monthKey = $month->format('Y-m');
 
             return [
                 'label' => $month->translatedFormat('M'),
-                'value' => (float) Purchase::query()
-                    ->where('status', 'received')
-                    ->whereBetween('purchase_date', [
-                        $month->toDateString(),
-                        $month->copy()->endOfMonth()->toDateString(),
-                    ])
-                    ->sum('total'),
+                'value' => (float) ($receivedPurchasesByMonth[$monthKey] ?? 0),
             ];
         });
 
