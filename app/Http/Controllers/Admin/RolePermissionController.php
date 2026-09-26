@@ -14,7 +14,7 @@ class RolePermissionController
         $permissionLabels = config('permissions.permission_labels', []);
         $permissionQuery = trim((string) request()->query('permission', ''));
 
-        $roleMatrix = collect($roles)->mapWithKeys(function (string $label, string $role) use ($descriptions, $permissions) {
+        $roleMatrix = collect($roles)->mapWithKeys(function (string $label, string $role) use ($descriptions, $permissions, $permissionLabels) {
             return [$role => [
                 'label' => $label,
                 'description' => $descriptions[$role] ?? '',
