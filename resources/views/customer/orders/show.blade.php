@@ -51,7 +51,19 @@
                     <span class="text-xl font-bold text-gray-900 dark:text-white">Rp {{ number_format((float) $order->total, 0, ',', '.') }}</span>
                 </div>
 
-                <a href="{{ route('customer.orders.index') }}" class="mt-6 inline-flex rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700">Kembali ke Pesanan</a>
+                <div class="mt-6 flex flex-col gap-3 border-t border-gray-100 pt-5 dark:border-gray-700 sm:flex-row sm:items-center sm:justify-between">
+                    <a href="{{ route('customer.orders.index') }}" class="inline-flex rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700">Kembali ke Pesanan</a>
+
+                    @if ($order->status === 'pending' && $order->payment_status !== 'paid')
+                        <form method="POST" action="{{ route('customer.orders.cancel', $order) }}" onsubmit="return confirm('Batalkan pesanan ini? Stok akan dikembalikan ke sistem.')">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="inline-flex rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-700 transition hover:bg-red-100 dark:border-red-900/40 dark:bg-red-900/10 dark:text-red-300 dark:hover:bg-red-900/20">
+                                Batalkan Pesanan
+                            </button>
+                        </form>
+                    @endif
+                </div>
             </section>
         </div>
     </div>
