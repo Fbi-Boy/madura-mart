@@ -34,7 +34,7 @@
                         ['label' => 'Perlu Diproses', 'value' => number_format($pendingOrders, 0, ',', '.'), 'hint' => 'pending + processing'],
                         ['label' => 'Sedang Dikirim', 'value' => number_format($shippingOrders, 0, ',', '.'), 'hint' => 'status shipped'],
                         ['label' => 'Rute Aktif', 'value' => number_format($activeDeliveryOrders, 0, ',', '.'), 'hint' => 'processing + shipped'],
-                        ['label' => 'Selesai Hari Ini', 'value' => number_format($deliveredToday, 0, ',', '.'), 'hint' => 'status delivered'],
+                        ['label' => 'Total Selesai', 'value' => number_format($deliveredOrders, 0, ',', '.'), 'hint' => 'status delivered'],
                     ];
                 @endphp
                 @foreach ($kpis as $kpi)
@@ -50,7 +50,7 @@
                 <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h3 class="font-semibold text-gray-900 dark:text-white">Progress Pengiriman</h3>
-                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Persentase pesanan non-cancelled yang sudah mencapai status selesai.</p>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Persentase tugas non-cancelled yang sudah mencapai status selesai.</p>
                     </div>
                     <div class="text-left sm:text-right">
                         <p class="text-3xl font-semibold tracking-tight text-gray-900 dark:text-white">{{ number_format($deliveryRate, 1, ',', '.') }}%</p>
