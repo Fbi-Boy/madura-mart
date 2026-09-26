@@ -14,7 +14,7 @@
 
     <div class="py-8">
         <div class="mx-auto max-w-7xl space-y-6 px-4 sm:px-6 lg:px-8">
-            <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
                 @php
                     $kpis = [
                         ['label' => 'Supplier Aktif', 'value' => number_format($activeSuppliers, 0, ',', '.'), 'hint' => 'supplier yang tersedia', 'icon' => 'S'],
@@ -133,12 +133,7 @@
                             <p class="mt-2 text-xl font-semibold text-gray-900 dark:text-white">Rp {{ number_format($receivedValueToday, 0, ',', '.') }}</p>
                             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ $receivedToday }} transaksi</p>
                         </div>
-                        <div class="rounded-xl bg-gray-50 p-4 dark:bg-gray-700/50">
-                            <p class="text-[10px] font-semibold uppercase tracking-[0.08em] text-gray-500 dark:text-gray-400">Nilai draft</p>
-                            <p class="mt-2 text-xl font-semibold text-gray-900 dark:text-white">Rp {{ number_format($draftPurchaseValue, 0, ',', '.') }}</p>
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ $draftPurchases }} transaksi menunggu proses</p>
-                        </div>
-                    </div>
+undefined                    </div>
                 </section>
 
                 <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
