@@ -523,6 +523,11 @@ class DashboardController extends Controller
             ->where('stock', 0)
             ->count();
 
+        $pendingReceiving = Purchase::query()
+            ->where('status', 'draft')
+            ->whereNotNull('submitted_at')
+            ->count();
+
         $inboundToday = PurchaseItem::query()
             ->whereHas('purchase', function ($query) use ($today) {
                 $query->where('status', 'received')
@@ -564,6 +569,7 @@ class DashboardController extends Controller
             'totalStock',
             'lowStockCount',
             'outOfStockCount',
+            'pendingReceiving',
             'inboundToday',
             'outboundToday',
             'restockProducts',
