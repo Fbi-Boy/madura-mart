@@ -483,7 +483,7 @@ Pengembangan Madura Mart dilakukan secara bertahap.
 
 ## PHASE 2 — MASTER DATA
 - [x] User
-- [ ] Role & Permission
+- [x] Role & Permission foundation
 - [x] Kategori
 - [x] Produk
 - [x] Supplier
@@ -578,3 +578,7 @@ dokumen ini terlebih dahulu.
 # 13. ROUTE ACCESS RULES
 
 Administrative monitoring and report routes are restricted to `admin` and `super-admin`. Cashier transaction and shift routes are restricted to `kasir`. Authentication is required before role authorization is evaluated.
+
+## 14. ROLE PERMISSION FOUNDATION
+
+Permissions are currently defined in `config/permissions.php` and enforced through the `permission:` middleware. This is an application-level foundation; it can later be migrated to database-backed permissions without changing the route-level middleware contract.
