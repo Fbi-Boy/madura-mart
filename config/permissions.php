@@ -6,6 +6,7 @@ return [
             'admin', 'super-admin', 'gudang', 'kasir', 'purchasing', 'kurir', 'customer',
         ],
         'activity-log.view' => ['admin', 'super-admin'],
+        'audit-log.view' => ['super-admin'],
         'system-settings.view' => ['admin', 'super-admin'],
         'system-settings.update' => ['admin', 'super-admin'],
         'system-monitoring.view' => ['admin', 'super-admin'],
