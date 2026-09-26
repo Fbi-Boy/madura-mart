@@ -45,10 +45,9 @@
                                     <td class="px-5 py-4 text-gray-600 dark:text-gray-300">{{ $purchase->user?->name ?? '-' }}</td>
                                     <td class="px-5 py-4 text-gray-600 dark:text-gray-300">{{ $purchase->items_count }}</td>
                                     <td class="px-5 py-4 text-right">
-                                        <form method="POST" action="{{ route('gudang.penerimaan.receive', $purchase) }}" onsubmit="return confirm('Konfirmasi barang sudah diterima dan tambah stok?')">
-                                            @csrf
-                                            <button type="submit" class="rounded-xl bg-[#A8F23A] px-3 py-2 text-xs font-semibold text-gray-900 transition hover:opacity-80">Terima Barang</button>
-                                        </form>
+                                        <a href="{{ route('gudang.penerimaan.show', $purchase) }}" class="rounded-xl border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 transition hover:border-[#A8F23A] hover:bg-[#A8F23A]/10 dark:border-gray-700 dark:text-gray-200">
+                                            Review
+                                        </a>
                                     </td>
                                 </tr>
                             @empty
