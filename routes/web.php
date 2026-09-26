@@ -203,6 +203,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/stock-opname', [StockOpnameController::class, 'index'])->name('stock-opname.index');
             Route::post('/stock-opname', [StockOpnameController::class, 'store'])->name('stock-opname.store');
             Route::get('/penerimaan', [PurchaseReceivingController::class, 'index'])->name('penerimaan.index');
+            Route::get('/penerimaan/{purchase}', [PurchaseReceivingController::class, 'show'])->name('penerimaan.show');
             Route::get('/barang-keluar', [OutboundController::class, 'index'])->name('barang-keluar.index');
             Route::get('/riwayat-stok', [StockHistoryController::class, 'index'])->name('riwayat-stok.index');
             Route::post('/penerimaan/{purchase}', [PurchaseReceivingController::class, 'receive'])->name('penerimaan.receive');
