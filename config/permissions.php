@@ -1,6 +1,41 @@
 <?php
 
 return [
+    'role_labels' => [
+        'super-admin' => 'Super Admin',
+        'admin' => 'Admin',
+        'gudang' => 'Gudang',
+        'kasir' => 'Kasir',
+        'purchasing' => 'Purchasing',
+        'kurir' => 'Kurir',
+        'customer' => 'Customer',
+    ],
+    'role_descriptions' => [
+        'super-admin' => 'Akses penuh untuk pengelolaan sistem dan kontrol administratif.',
+        'admin' => 'Monitoring bisnis dan administrasi operasional.',
+        'gudang' => 'Pengelolaan produk, stok, penerimaan, dan barang keluar.',
+        'kasir' => 'Transaksi penjualan, pembayaran, shift, dan retur.',
+        'purchasing' => 'Pengadaan barang, supplier, dan purchase order.',
+        'kurir' => 'Pengelolaan tugas dan status pengiriman.',
+        'customer' => 'Katalog, keranjang, checkout, pembayaran, dan pesanan sendiri.',
+    ],
+    'permission_labels' => [
+        'dashboard.view' => 'Lihat dashboard',
+        'activity-log.view' => 'Lihat activity log',
+        'audit-log.view' => 'Lihat audit log',
+        'system-settings.view' => 'Lihat pengaturan sistem',
+        'system-settings.update' => 'Ubah pengaturan sistem',
+        'system-monitoring.view' => 'Lihat monitoring sistem',
+        'reports.view' => 'Lihat laporan',
+        'products.manage' => 'Kelola produk',
+        'suppliers.manage' => 'Kelola supplier',
+        'purchases.manage' => 'Kelola pembelian',
+        'stock.manage' => 'Kelola stok',
+        'sales.manage' => 'Kelola penjualan',
+        'deliveries.manage' => 'Kelola pengiriman',
+        'orders.manage' => 'Kelola pesanan',
+        'role-management.view' => 'Lihat role & permission',
+    ],
     'roles' => [
         'dashboard.view' => [
             'admin', 'super-admin', 'gudang', 'kasir', 'purchasing', 'kurir', 'customer',
@@ -18,5 +53,6 @@ return [
         'sales.manage' => ['admin', 'super-admin', 'kasir'],
         'deliveries.manage' => ['admin', 'super-admin', 'kurir'],
         'orders.manage' => ['admin', 'super-admin', 'customer'],
+        'role-management.view' => ['super-admin'],
     ],
 ];
