@@ -160,6 +160,35 @@
                         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Bukti pembayaran sudah dikirim.</p>
                     </a>
                 </div>
+
+                @if ($pendingPaymentOrders->isNotEmpty())
+                    <div class="mt-5 border-t border-gray-100 pt-5 dark:border-gray-700">
+                        <div class="mb-3 flex items-center justify-between gap-3">
+                            <div>
+                                <p class="text-sm font-semibold text-gray-900 dark:text-white">Pesanan yang perlu ditindaklanjuti</p>
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Buka detail untuk menyelesaikan pembayaran atau memeriksa verifikasi.</p>
+                            </div>
+                            <a href="{{ route('customer.orders.index') }}" class="text-xs font-semibold text-[#4d6800] hover:underline dark:text-[#A8F23A]">Semua order</a>
+                        </div>
+                        <div class="grid gap-2 sm:grid-cols-2">
+                            @foreach ($pendingPaymentOrders as $order)
+                                <a href="{{ route('customer.orders.show', $order) }}" class="rounded-xl bg-gray-50 p-3 transition hover:bg-[#A8F23A]/10 dark:bg-gray-700/50 dark:hover:bg-[#A8F23A]/10">
+                                    <div class="flex items-start justify-between gap-3">
+                                        <span class="font-medium text-gray-900 dark:text-white">{{ $order->order_number }}</span>
+                                        <span class="shrink-0 rounded-full px-2 py-1 text-[10px] font-semibold {{ $order->payment_proof ? 'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-300' : 'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-300' }}">
+                                            {{ $order->payment_proof ? 'Verifikasi' : 'Belum bayar' }}
+                                        </span>
+                                    </div>
+                                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Rp {{ number_format((float) $order->total, 0, ',', '.') }} · {{ $order->order_date?->format('d/m/Y H:i') }}</p>
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+                @else
+                    <div class="mt-5 rounded-xl bg-[#A8F23A]/10 p-4 text-sm text-[#4d6800] dark:text-[#A8F23A]">
+                        Tidak ada pembayaran yang membutuhkan tindakan saat ini.
+                    </div>
+                @endif
             </section>
 
             @if (!$customer)
