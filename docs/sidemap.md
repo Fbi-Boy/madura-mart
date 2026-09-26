@@ -357,7 +357,7 @@ Fokus: Belanja dan mengelola pesanan.
 - Edit Nama
 - Edit Email
 - Ubah Password
-- Alamat
+- Alamat Pengiriman
 - Nomor Telepon
 
 
@@ -488,7 +488,7 @@ Pengembangan Madura Mart dilakukan secara bertahap.
 - [x] Produk
 - [x] Supplier
 - [x] Customer
-- [ ] Alamat
+- [x] Alamat
 - [x] Distributor
 - [x] Kurir
 - [x] Unit
