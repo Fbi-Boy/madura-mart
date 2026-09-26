@@ -53,7 +53,7 @@ class PurchaseReceivingTest extends TestCase
             ->assertSee('Supplier Review')
             ->assertSee('Produk Review')
             ->assertSee('REV-001')
-            ->assertSee('Terima & Tambah Stok');
+            ->assertSee('Terima & Tambah Stok', false);
     }
 
     public function test_customer_cannot_view_purchase_receiving_review(): void
