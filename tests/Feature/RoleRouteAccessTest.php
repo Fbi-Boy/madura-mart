@@ -230,6 +230,33 @@ class RoleRouteAccessTest extends TestCase
             ->assertOk();
     }
 
+    public function test_purchasing_can_access_its_procurement_workspace(): void
+    {
+        $user = User::factory()->create(['role' => 'purchasing']);
+
+        $this->actingAs($user)
+            ->get('/purchasing/purchases')
+            ->assertOk();
+
+        $this->actingAs($user)
+            ->get('/purchasing/suppliers')
+            ->assertOk();
+    }
+
+    public function test_purchasing_cannot_cross_into_warehouse_or_cashier_operations(): void
+    {
+        $user = User::factory()->create(['role' => 'purchasing']);
+
+        $this->actingAs($user)
+            ->get('/gudang/stock-opname')
+            ->assertForbidden();
+
+        $this->actingAs($user)
+            ->get('/kasir/riwayat-transaksi')
+            ->assertForbidden();
+    }
+
+
     public function test_purchasing_cannot_access_other_admin_monitoring(): void
     {
         $user = User::factory()->create(['role' => 'purchasing']);
