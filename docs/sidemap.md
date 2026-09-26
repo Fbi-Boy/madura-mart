@@ -556,7 +556,7 @@ Pengembangan Madura Mart dilakukan secara bertahap.
 - [ ] Permission
 - [x] Pengaturan Sistem
 - [x] Activity Log
-- [ ] Audit Log
+- [x] Audit Log
 - [x] Monitoring Sistem
 
 
