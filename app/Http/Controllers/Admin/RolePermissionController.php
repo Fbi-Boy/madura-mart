@@ -51,7 +51,11 @@ class RolePermissionController
 
         foreach ($roles as $role) {
             foreach ($permissionKeys as $permission) {
-                $enabled = (bool) ($submitted[$role][$permission] ?? false);
+                if (! array_key_exists($role, $submitted) || ! array_key_exists($permission, $submitted[$role])) {
+                    continue;
+                }
+
+                $enabled = (bool) $submitted[$role][$permission];
                 $defaultEnabled = in_array($role, config('permissions.roles', [])[$permission] ?? [], true);
 
                 if ($enabled === $defaultEnabled) {
