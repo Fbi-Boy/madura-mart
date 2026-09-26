@@ -18,7 +18,7 @@ class RoleAwareNavigationTest extends TestCase
             ->assertSee(route('gudang.stock-opname.index'), false)
             ->assertSee(route('gudang.penerimaan.index'), false)
             ->assertSee(route('gudang.barang-keluar.index'), false)
-            ->assertSee(route('gudang.riwayat-stok'), false);
+            ->assertSee(route('gudang.riwayat-stok.index'), false);
     }
 
     public function test_purchasing_navigation_exposes_procurement_workspaces(): void
