@@ -10,20 +10,13 @@ class RolePermissionController extends Controller
 {
     public function index(): View
     {
-        $rolePermissions = collect(config('permissions.roles', []))
-            ->flatMap(function (array $roles, string $permission) {
-                return collect($roles)->mapWithKeys(fn (string $role) => [
-                    $role => [$permission],
-                ]);
-            })
-            ->reduce(function (array $permissionsByRole, array $permissions, string $role) {
-                $permissionsByRole[$role] = array_merge(
-                    $permissionsByRole[$role] ?? [],
-                    $permissions,
-                );
+        $rolePermissions = [];
 
-                return $permissionsByRole;
-            }, []);
+        foreach (config('permissions.roles', []) as $permission => $allowedRoles) {
+            foreach ($allowedRoles as $role) {
+                $rolePermissions[$role][] = $permission;
+            }
+        }
 
         $roles = collect([
             'super-admin',
