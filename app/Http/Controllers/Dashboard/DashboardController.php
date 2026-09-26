@@ -259,6 +259,19 @@ class DashboardController extends Controller
             ->where('status', '!=', 'cancelled')
             ->sum('total');
 
+        $paymentAttention = [
+            'unpaid' => (clone $baseOrders)
+                ->where('payment_status', 'pending')
+                ->where('status', '!=', 'cancelled')
+                ->whereNull('payment_proof')
+                ->count(),
+            'verification' => (clone $baseOrders)
+                ->where('payment_status', 'pending')
+                ->whereNotNull('payment_proof')
+                ->where('status', '!=', 'cancelled')
+                ->count(),
+        ];
+
         $statusSummary = [
             'pending' => (clone $baseOrders)->where('status', 'pending')->count(),
             'processing' => (clone $baseOrders)->where('status', 'processing')->count(),
@@ -288,6 +301,7 @@ class DashboardController extends Controller
             'completedOrders',
             'cancelledOrders',
             'totalSpent',
+            'paymentAttention',
             'statusSummary',
             'recentOrders',
             'cartItemCount',
