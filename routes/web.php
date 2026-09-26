@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\CourierController;
 use App\Http\Controllers\Admin\UserController;
@@ -102,6 +103,7 @@ Route::middleware('auth')->group(function () {
         });
 
     Route::prefix('admin')->name('admin.')->middleware('role:admin,super-admin')->group(function () {
+    Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
         Route::resource('categories', CategoryController::class)->except(['show']);
         Route::resource('products', ProductController::class)->except(['show']);
         Route::resource('suppliers', SupplierController::class)->except(['show']);
