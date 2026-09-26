@@ -41,7 +41,7 @@ class PurchaseTransactionTest extends TestCase
             'subtotal' => 60000,
         ]);
         $this->assertDatabaseHas('products', ['id' => $product->id, 'stock' => 15]);
-
+    }
 
     public function test_purchase_rejects_inactive_supplier(): void
     {
