@@ -665,6 +665,30 @@ class DashboardController extends Controller
             ->limit(6)
             ->get(['id', 'name', 'sku', 'stock', 'unit']);
 
+        $trendStart = Carbon::today()->startOfMonth()->subMonths(5);
+        $trendEnd = Carbon::today()->endOfMonth();
+
+        $monthExpression = DB::getDriverName() === 'sqlite'
+            ? "strftime('%Y-%m', sale_date)"
+            : "DATE_FORMAT(sale_date, '%Y-%m')";
+
+        $paidSalesByMonth = Sale::query()
+            ->where('status', 'paid')
+            ->whereBetween('sale_date', [$trendStart->toDateString(), $trendEnd->toDateString()])
+            ->selectRaw("{$monthExpression} as month_key, SUM(total) as total_value")
+            ->groupBy('month_key')
+            ->pluck('total_value', 'month_key');
+
+        $salesTrend = collect(range(5, 0))->map(function (int $monthsAgo) use ($paidSalesByMonth) {
+            $month = Carbon::today()->startOfMonth()->subMonths($monthsAgo);
+            $monthKey = $month->format('Y-m');
+
+            return [
+                'label' => $month->translatedFormat('M'),
+                'value' => (float) ($paidSalesByMonth[$monthKey] ?? 0),
+            ];
+        });
+
         return view('admin.dashboard', compact(
             'monthlyRevenue',
             'todayTransactions',
@@ -679,6 +703,7 @@ class DashboardController extends Controller
             'recentOrders',
             'topProducts',
             'stockAlerts',
+            'salesTrend',
         ));
     }
 }
