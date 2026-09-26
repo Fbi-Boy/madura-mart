@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Product;
+use App\Models\Purchase;
 use App\Models\Supplier;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -40,32 +41,7 @@ class PurchaseTransactionTest extends TestCase
             'subtotal' => 60000,
         ]);
         $this->assertDatabaseHas('products', ['id' => $product->id, 'stock' => 15]);
-        public function test_purchasing_purchase_list_exposes_submission_action_for_draft_orders(): void
-    {
-        $user = User::factory()->create(['role' => 'purchasing']);
 
-        $draft = Purchase::factory()->create([
-            'user_id' => $user->id,
-            'status' => 'draft',
-            'submitted_at' => null,
-        ]);
-
-        $submitted = Purchase::factory()->create([
-            'user_id' => $user->id,
-            'status' => 'draft',
-            'submitted_at' => now(),
-        ]);
-
-        $this->actingAs($user)
-            ->get(route('purchasing.purchases.index'))
-            ->assertOk()
-            ->assertSee(route('purchasing.purchases.submit', $draft), false)
-            ->assertSee('Kirim')
-            ->assertSee('Submitted')
-            ->assertDontSee(route('purchasing.purchases.submit', $submitted), false);
-    }
-
-}
 
     public function test_purchase_rejects_inactive_supplier(): void
     {
@@ -161,6 +137,31 @@ class PurchaseTransactionTest extends TestCase
             ->assertForbidden();
 
         $this->assertDatabaseHas('purchases', ['id' => $purchase->id, 'status' => 'draft']);
+    }
+
+    public function test_purchasing_purchase_list_exposes_submission_action_for_draft_orders(): void
+    {
+        $user = User::factory()->create(['role' => 'purchasing']);
+
+        $draft = Purchase::factory()->create([
+            'user_id' => $user->id,
+            'status' => 'draft',
+            'submitted_at' => null,
+        ]);
+
+        $submitted = Purchase::factory()->create([
+            'user_id' => $user->id,
+            'status' => 'draft',
+            'submitted_at' => now(),
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('purchasing.purchases.index'))
+            ->assertOk()
+            ->assertSee(route('purchasing.purchases.submit', $draft), false)
+            ->assertSee('Kirim')
+            ->assertSee('Submitted')
+            ->assertDontSee(route('purchasing.purchases.submit', $submitted), false);
     }
 
 }
