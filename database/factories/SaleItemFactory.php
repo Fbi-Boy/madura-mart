@@ -1,11 +1,11 @@
 <?php
 
-namespace DatabaseFactories;
+namespace Database\Factories;
 
-use AppModelsProduct;
-use AppModelsSale;
-use AppModelsSaleItem;
-use IlluminateDatabaseEloquentFactoriesFactory;
+use App\Models\Product;
+use App\Models\Sale;
+use App\Models\SaleItem;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /** @extends Factory<SaleItem> */
 class SaleItemFactory extends Factory
