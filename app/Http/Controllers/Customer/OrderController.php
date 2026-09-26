@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
+use App\Services\ActivityLogService;
 use App\Services\StockMovementService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -97,6 +98,14 @@ class OrderController extends Controller
 
             $lockedOrder->update(['status' => 'cancelled']);
         });
+
+        ActivityLogService::record(
+            'order.cancelled',
+            "Pesanan {$order->order_number} dibatalkan oleh customer.",
+            $order,
+            ['total' => (float) $order->total],
+            $request,
+        );
 
         return to_route('customer.orders.show', $order)
             ->with('status', 'Pesanan berhasil dibatalkan dan stok dikembalikan.');

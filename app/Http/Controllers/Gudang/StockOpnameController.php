@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Gudang;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\StockOpname;
+use App\Services\ActivityLogService;
 use App\Services\StockMovementService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -38,7 +39,7 @@ class StockOpnameController extends Controller
             'actual_stock.*' => ['required', 'integer', 'min:0', 'max:4294967295'],
         ]);
 
-        DB::transaction(function () use ($validated): void {
+        $opname = DB::transaction(function () use ($validated) {
             $products = Product::query()
                 ->where('is_active', true)
                 ->whereIn('id', array_keys($validated['actual_stock']))
@@ -68,7 +69,17 @@ class StockOpnameController extends Controller
                     StockMovementService::record($product, $actualStock - $systemStock, 'adjustment', auth()->user(), 'stock_opname', $opname->id, 'Penyesuaian hasil stock opname');
                 }
             }
+
+            return $opname;
         });
+
+        ActivityLogService::record(
+            'stock_opname.completed',
+            "Stock opname #{$opname->id} berhasil diselesaikan.",
+            $opname,
+            ['item_count' => $opname->items()->count(), 'notes' => $opname->notes],
+            $request,
+        );
 
         return to_route('gudang.stock-opname.index')
             ->with('success', 'Stock opname berhasil disimpan dan stok disesuaikan.');

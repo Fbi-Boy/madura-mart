@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Kurir;
 use App\Http\Controllers\Controller;
 use App\Models\Courier;
 use App\Models\Order;
+use App\Services\ActivityLogService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -35,7 +36,16 @@ class DeliveryStatusController extends Controller
             'Status pengiriman harus mengikuti urutan proses.'
         );
 
+        $previousStatus = $order->status;
         $order->update(['status' => $data['status']]);
+
+        ActivityLogService::record(
+            'delivery.status_updated',
+            "Status pengiriman {$order->order_number} berubah dari {$previousStatus} menjadi {$data['status']}.",
+            $order,
+            ['from' => $previousStatus, 'to' => $data['status']],
+            $request,
+        );
 
         return to_route('dashboard')->with('success', 'Status pengiriman berhasil diperbarui.');
     }
