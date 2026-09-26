@@ -17,7 +17,7 @@
             <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 @php
                     $kpis = [
-                        ['label' => 'Supplier & Monitoring Aktif', 'value' => number_format($activeSuppliers, 0, ',', '.'), 'hint' => 'supplier yang tersedia', 'icon' => 'S'],
+                        ['label' => 'Supplier Aktif', 'value' => number_format($activeSuppliers, 0, ',', '.'), 'hint' => 'supplier yang tersedia', 'icon' => 'S'],
                         ['label' => 'Pembelian Hari Ini', 'value' => 'Rp '.number_format($todayPurchases, 0, ',', '.'), 'hint' => $todayTransactions.' transaksi', 'icon' => 'Rp'],
                         ['label' => 'Draft Menunggu', 'value' => number_format($draftPurchases, 0, ',', '.'), 'hint' => 'perlu ditindaklanjuti', 'icon' => 'D'],
                         ['label' => 'Diterima Hari Ini', 'value' => number_format($receivedToday, 0, ',', '.'), 'hint' => 'transaksi berstatus received', 'icon' => 'R'],
