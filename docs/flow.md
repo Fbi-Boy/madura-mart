@@ -16,7 +16,7 @@
 - `purchasing` → `purchasing.dashboard`
 - `super-admin` → `super-admin.dashboard`
 
-Unknown roles use the default dashboard view.
+Unknown roles use the default dashboard view as a safe fallback. The dashboard entry point is covered by feature tests for both unauthenticated access and unsupported-role fallback.
 
 ## Operational Areas
 

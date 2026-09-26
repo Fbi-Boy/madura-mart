@@ -28,6 +28,22 @@ class DashboardTest extends TestCase
             ->assertViewIs($view);
     }
 
+    public function test_guest_is_redirected_to_login_from_dashboard(): void
+    {
+        $this->get('/dashboard')
+            ->assertRedirect(route('login'));
+    }
+
+    public function test_unknown_role_uses_safe_default_dashboard(): void
+    {
+        $user = User::factory()->create(['role' => 'unknown-role']);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('dashboard.index');
+    }
+
     public function test_kurir_dashboard_uses_courier_assigned_orders(): void
     {
         $user = User::factory()->create([
