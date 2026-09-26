@@ -44,7 +44,7 @@
                 @foreach ($kpis as $kpi)
                     <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
                         <p class="text-sm text-gray-500 dark:text-gray-400">{{ $kpi['label'] }}</p>
-                        <p class="mt-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">{{ number_format($kpi['value'], 0, ',', '.') }}</p>
+                        <p class="mt-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">{{ is_numeric($kpi['value']) ? number_format($kpi['value'], 0, ',', '.') : $kpi['value'] }}</p>
                         <p class="mt-1 text-xs text-gray-400 dark:text-gray-500">{{ $kpi['hint'] }}</p>
                     </div>
                 @endforeach
