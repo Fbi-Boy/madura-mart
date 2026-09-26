@@ -68,6 +68,34 @@ class CustomerCatalogTest extends TestCase
                 && $products->first()->name === 'Beras Premium');
     }
 
+    public function test_customer_can_sort_catalog_by_price(): void
+    {
+        $user = User::factory()->create(['role' => 'customer']);
+
+        $expensive = Product::factory()->create([
+            'name' => 'Produk Mahal',
+            'price' => 90000,
+            'is_active' => true,
+            'stock' => 5,
+        ]);
+
+        $cheap = Product::factory()->create([
+            'name' => 'Produk Murah',
+            'price' => 10000,
+            'is_active' => true,
+            'stock' => 5,
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('customer.catalog.index', ['sort' => 'price_asc']))
+            ->assertOk()
+            ->assertViewHas('sort', 'price_asc')
+            ->assertViewHas('products', fn ($products) =>
+                $products->first()->id === $cheap->id
+                && $products->last()->id === $expensive->id
+            );
+    }
+
     public function test_customer_can_open_an_active_product_detail(): void
     {
         $user = User::factory()->create(['role' => 'customer']);
