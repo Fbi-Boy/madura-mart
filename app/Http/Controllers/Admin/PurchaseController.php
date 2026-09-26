@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Supplier;
+use App\Services\ActivityLogService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -39,6 +40,13 @@ class PurchaseController extends Controller
         }
 
         $purchase->update(['status' => 'cancelled']);
+
+        ActivityLogService::record(
+            'purchase.cancelled',
+            "Purchase order {$purchase->invoice} dibatalkan.",
+            $purchase,
+            ['supplier_id' => $purchase->supplier_id, 'total' => (float) $purchase->total],
+        );
 
         return to_route('purchasing.purchases.index')
             ->with('success', 'Purchase order berhasil dibatalkan.');
@@ -88,6 +96,14 @@ class PurchaseController extends Controller
 
             $purchase->update(['total' => $total]);
         });
+
+        ActivityLogService::record(
+            'purchase.created',
+            "Purchase {$purchase->invoice} berhasil dibuat dengan status {$purchase->status}.",
+            $purchase,
+            ['supplier_id' => $purchase->supplier_id, 'total' => (float) $purchase->total, 'status' => $purchase->status],
+            $request,
+        );
 
         $route = $request->user()->role === 'purchasing' ? 'purchasing.purchases.index' : 'admin.purchases.index';
         $message = $request->user()->role === 'purchasing'
