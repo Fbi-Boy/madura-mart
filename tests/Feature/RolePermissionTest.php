@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\ActivityLog;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -71,6 +72,11 @@ class RolePermissionTest extends TestCase
         $this->actingAs($admin)
             ->get(route('admin.system-monitoring.index'))
             ->assertForbidden();
+
+        $this->assertDatabaseHas('activity_logs', [
+            'user_id' => $superAdmin->id,
+            'action' => 'permission.updated',
+        ]);
 
         $this->actingAs($superAdmin)
             ->patch(route('admin.roles.update'), [
