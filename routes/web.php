@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\DistributorController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\SystemSettingController;
+use App\Http\Controllers\Admin\SystemMonitoringController;
 use App\Http\Controllers\Admin\Monitoring\ClientController;
 use App\Http\Controllers\Admin\Monitoring\DistributorController as MonitoringDistributorController;
 use App\Http\Controllers\Admin\Monitoring\KurirController;
@@ -107,6 +108,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index')->middleware('permission:activity-log.view');
         Route::get('/settings', [SystemSettingController::class, 'index'])->name('settings.index')->middleware('permission:system-settings.view');
         Route::patch('/settings', [SystemSettingController::class, 'update'])->name('settings.update')->middleware('permission:system-settings.update');
+        Route::get('/system-monitoring', [SystemMonitoringController::class, 'index'])->name('system-monitoring.index')->middleware('permission:system-monitoring.view');
         Route::resource('categories', CategoryController::class)->except(['show']);
         Route::resource('products', ProductController::class)->except(['show']);
         Route::resource('suppliers', SupplierController::class)->except(['show']);

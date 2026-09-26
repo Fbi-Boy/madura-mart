@@ -8,6 +8,7 @@ return [
         'activity-log.view' => ['admin', 'super-admin'],
         'system-settings.view' => ['admin', 'super-admin'],
         'system-settings.update' => ['admin', 'super-admin'],
+        'system-monitoring.view' => ['admin', 'super-admin'],
         'reports.view' => ['admin', 'super-admin'],
         'products.manage' => ['admin', 'super-admin'],
         'suppliers.manage' => ['admin', 'super-admin', 'purchasing'],
