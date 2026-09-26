@@ -10,7 +10,7 @@ use Illuminate\View\View;
 
 class RolePermissionController
 {
-    public function index(): View
+    public function index(Request $request): View
     {
         $roles = config('permissions.role_labels', []);
         $descriptions = config('permissions.role_descriptions', []);
