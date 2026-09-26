@@ -433,6 +433,7 @@ class DashboardTest extends TestCase
         Product::factory()->create(['stock' => 0, 'is_active' => true]);
         Product::factory()->create(['stock' => 30, 'is_active' => true]);
         Product::factory()->create(['stock' => 2, 'is_active' => false]);
+        Purchase::factory()->create(['status' => 'draft', 'submitted_at' => now()]);
 
         $this->actingAs($user)
             ->get('/dashboard')
@@ -442,6 +443,7 @@ class DashboardTest extends TestCase
             ->assertViewHas('totalStock', 34)
             ->assertViewHas('lowStockCount', 1)
             ->assertViewHas('outOfStockCount', 1)
+            ->assertViewHas('pendingReceiving', 1)
             ->assertViewHas('inboundToday', 0)
             ->assertViewHas('outboundToday', 0);
     }
