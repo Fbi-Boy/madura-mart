@@ -263,6 +263,39 @@ class DashboardTest extends TestCase
             ->assertSee(route('admin.monitoring.pembelian'), false);
     }
 
+    public function test_purchasing_dashboard_separates_draft_and_submitted_purchase_orders(): void
+    {
+        $user = User::factory()->create(['role' => 'purchasing']);
+        $supplier = Supplier::factory()->create(['is_active' => true]);
+
+        Purchase::factory()->create([
+            'supplier_id' => $supplier->id,
+            'status' => 'draft',
+            'total' => 100000,
+            'submitted_at' => null,
+        ]);
+
+        Purchase::factory()->create([
+            'supplier_id' => $supplier->id,
+            'status' => 'draft',
+            'total' => 250000,
+            'submitted_at' => now(),
+        ]);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('purchasing.dashboard')
+            ->assertViewHas('draftPurchases', 1)
+            ->assertViewHas('submittedPurchases', 1)
+            ->assertViewHas('draftPurchaseValue', 100000.0)
+            ->assertViewHas('submittedPurchaseValue', 250000.0)
+            ->assertViewHas('statusSummary', fn ($summary) =>
+                $summary['draft'] === 1 && $summary['submitted'] === 1
+            )
+            ->assertSee('Menunggu Penerimaan');
+    }
+
     public function test_admin_dashboard_uses_operational_database_metrics(): void
     {
         $user = User::factory()->create(['role' => 'admin']);
