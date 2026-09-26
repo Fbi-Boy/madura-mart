@@ -76,6 +76,15 @@ class DashboardController extends Controller
             ->where('stock', '<=', 10)
             ->count();
 
+        $pendingReceiving = Purchase::query()
+            ->where('status', 'draft')
+            ->whereNotNull('submitted_at')
+            ->count();
+
+        $activeDeliveries = Order::query()
+            ->whereIn('status', ['processing', 'shipped'])
+            ->count();
+
         $roleSummary = [
             'admin' => User::query()->where('role', 'admin')->count(),
             'super-admin' => User::query()->where('role', 'super-admin')->count(),
@@ -112,6 +121,8 @@ class DashboardController extends Controller
             'monthlyPurchases',
             'pendingOrders',
             'pendingPurchaseValue',
+            'pendingReceiving',
+            'activeDeliveries',
             'lowStockProducts',
             'roleSummary',
             'recentUsers',

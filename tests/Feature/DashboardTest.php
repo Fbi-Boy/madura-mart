@@ -246,6 +246,7 @@ class DashboardTest extends TestCase
         Purchase::factory()->create([
             'status' => 'draft',
             'total' => 175000,
+            'submitted_at' => now(),
         ]);
 
         Order::factory()->create(['status' => 'processing']);
@@ -262,6 +263,8 @@ class DashboardTest extends TestCase
             ->assertViewHas('monthlyPurchases', 125000.0)
             ->assertViewHas('pendingOrders', 1)
             ->assertViewHas('pendingPurchaseValue', 175000.0)
+            ->assertViewHas('pendingReceiving', 1)
+            ->assertViewHas('activeDeliveries', 1)
             ->assertViewHas('lowStockProducts', 1)
             ->assertViewHas('roleSummary', fn ($summary) => $summary['super-admin'] >= 1 && $summary['kasir'] >= 2);
     }
