@@ -58,8 +58,6 @@
                         @forelse($data['permissions'] as $permission)
                             @php
                                 $label = $permissions[$permission] ?? $permission;
-
-                            @php
                                 $defaultEnabled = $data['permissions']->contains($permission);
                                 $override = $overrides[$role.'|'.$permission] ?? null;
                                 $enabled = $override ? $override->enabled : $defaultEnabled;
