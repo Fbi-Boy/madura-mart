@@ -555,7 +555,7 @@ Pengembangan Madura Mart dilakukan secara bertahap.
 - [x] Role & Permission workspace
   - [x] Role catalog
   - [x] Permission matrix
-  - [ ] Dynamic permission editing
+  - [x] Dynamic permission editing
 - [x] Pengaturan Sistem
 - [x] Activity Log
 - [x] Audit Log
