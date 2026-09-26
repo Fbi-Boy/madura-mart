@@ -12,13 +12,19 @@
     <div class="py-8">
         <div class="mx-auto max-w-7xl space-y-6 px-4 sm:px-6 lg:px-8">
             <form method="GET" action="{{ route('customer.catalog.index') }}" class="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                <div class="grid gap-3 md:grid-cols-[1fr_220px_auto]">
+                <div class="grid gap-3 md:grid-cols-[1fr_200px_200px_auto]">
                     <input name="q" value="{{ $search }}" type="search" placeholder="Cari nama, SKU, atau deskripsi..." class="w-full rounded-xl border-gray-300 text-sm focus:border-[#A8F23A] focus:ring-[#A8F23A] dark:border-gray-600 dark:bg-gray-900 dark:text-white">
                     <select name="category" class="rounded-xl border-gray-300 text-sm focus:border-[#A8F23A] focus:ring-[#A8F23A] dark:border-gray-600 dark:bg-gray-900 dark:text-white">
                         <option value="">Semua kategori</option>
                         @foreach ($categories as $item)
                             <option value="{{ $item->slug }}" @selected($category === $item->slug)>{{ $item->name }}</option>
                         @endforeach
+                    </select>
+                    <select name="sort" class="rounded-xl border-gray-300 text-sm focus:border-[#A8F23A] focus:ring-[#A8F23A] dark:border-gray-600 dark:bg-gray-900 dark:text-white">
+                        <option value="newest" @selected($sort === 'newest')>Terbaru</option>
+                        <option value="price_asc" @selected($sort === 'price_asc')>Harga terendah</option>
+                        <option value="price_desc" @selected($sort === 'price_desc')>Harga tertinggi</option>
+                        <option value="name_asc" @selected($sort === 'name_asc')>Nama A–Z</option>
                     </select>
                     <button class="rounded-xl bg-gray-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-gray-700 dark:bg-[#A8F23A] dark:text-gray-900 dark:hover:bg-[#b8ff63]">Cari</button>
                 </div>
@@ -29,7 +35,7 @@
                     <h3 class="font-semibold text-gray-900 dark:text-white">Produk Tersedia</h3>
                     <p class="text-xs text-gray-500 dark:text-gray-400">{{ $products->total() }} produk ditemukan</p>
                 </div>
-                @if ($search || $category)
+                @if ($search || $category || $sort !== 'newest')
                     <a href="{{ route('customer.catalog.index') }}" class="text-xs font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Reset filter</a>
                 @endif
             </div>
