@@ -100,6 +100,78 @@ class PurchaseReceivingTest extends TestCase
         ]);
     }
 
+
+    public function test_gudang_can_record_received_and_damaged_quantities(): void
+    {
+        $user = User::factory()->create(['role' => 'gudang']);
+        $product = Product::factory()->create(['stock' => 10]);
+        $purchase = Purchase::factory()->create([
+            'status' => 'draft',
+            'submitted_at' => now(),
+        ]);
+
+        $item = PurchaseItem::create([
+            'purchase_id' => $purchase->id,
+            'product_id' => $product->id,
+            'quantity' => 10,
+            'unit_price' => 12000,
+            'subtotal' => 120000,
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('gudang.penerimaan.receive', $purchase), [
+                'received' => [$item->id => 7],
+                'damaged' => [$item->id => 2],
+            ])
+            ->assertRedirect(route('gudang.penerimaan.index'));
+
+        $this->assertDatabaseHas('purchase_items', [
+            'id' => $item->id,
+            'received_quantity' => 7,
+            'damaged_quantity' => 2,
+        ]);
+
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id,
+            'stock' => 17,
+        ]);
+    }
+
+    public function test_receiving_rejects_received_and_damaged_quantity_above_purchase_quantity(): void
+    {
+        $user = User::factory()->create(['role' => 'gudang']);
+        $product = Product::factory()->create(['stock' => 10]);
+        $purchase = Purchase::factory()->create([
+            'status' => 'draft',
+            'submitted_at' => now(),
+        ]);
+
+        $item = PurchaseItem::create([
+            'purchase_id' => $purchase->id,
+            'product_id' => $product->id,
+            'quantity' => 10,
+            'unit_price' => 12000,
+            'subtotal' => 120000,
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('gudang.penerimaan.receive', $purchase), [
+                'received' => [$item->id => 8],
+                'damaged' => [$item->id => 3],
+            ])
+            ->assertSessionHasErrors("received.{$item->id}");
+
+        $this->assertDatabaseHas('purchases', [
+            'id' => $purchase->id,
+            'status' => 'draft',
+        ]);
+
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id,
+            'stock' => 10,
+        ]);
+    }
+
     public function test_receiving_same_purchase_twice_does_not_double_stock(): void
     {
         $user = User::factory()->create(['role' => 'gudang']);
