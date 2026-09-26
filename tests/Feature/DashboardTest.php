@@ -614,4 +614,25 @@ class DashboardTest extends TestCase
                 'cancelled' => 0,
             ]);
     }
+
+    public function test_dashboard_query_indexes_are_available(): void
+    {
+        $expectedIndexes = [
+            'purchases' => 'purchases_status_purchase_date_index',
+            'sales' => 'sales_status_sale_date_index',
+            'orders' => 'orders_status_order_date_index',
+            'products' => 'products_active_stock_index',
+            'suppliers' => 'suppliers_active_index',
+        ];
+
+        foreach ($expectedIndexes as $table => $indexName) {
+            $indexes = collect(\Illuminate\Support\Facades\Schema::getIndexes($table))
+                ->pluck('name');
+
+            $this->assertTrue(
+                $indexes->contains($indexName),
+                "Expected {$indexName} to exist on {$table}."
+            );
+        }
+    }
 }
