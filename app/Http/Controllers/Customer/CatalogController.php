@@ -15,6 +15,15 @@ class CatalogController extends Controller
         $search = trim((string) $request->query('q', ''));
         $category = trim((string) $request->query('category', ''));
         $sort = (string) $request->query('sort', 'newest');
+        $minPrice = $request->query('min_price');
+        $maxPrice = $request->query('max_price');
+
+        $minPrice = is_numeric($minPrice) && (float) $minPrice >= 0 ? (float) $minPrice : null;
+        $maxPrice = is_numeric($maxPrice) && (float) $maxPrice >= 0 ? (float) $maxPrice : null;
+
+        if ($minPrice !== null && $maxPrice !== null && $minPrice > $maxPrice) {
+            [$minPrice, $maxPrice] = [$maxPrice, $minPrice];
+        }
         $allowedSorts = ['newest', 'price_asc', 'price_desc', 'name_asc'];
         $sort = in_array($sort, $allowedSorts, true) ? $sort : 'newest';
 
@@ -29,6 +38,8 @@ class CatalogController extends Controller
                         ->orWhere('description', 'like', "%{$search}%");
                 });
             })
+            ->when($minPrice !== null, fn ($query) => $query->where('price', '>=', $minPrice))
+            ->when($maxPrice !== null, fn ($query) => $query->where('price', '<=', $maxPrice))
             ->when($category !== '', function ($query) use ($category) {
                 $query->whereHas('category', fn ($query) => $query
                     ->where('slug', $category)
@@ -49,7 +60,7 @@ class CatalogController extends Controller
             ->orderBy('name')
             ->get(['id', 'name', 'slug']);
 
-        return view('customer.catalog.index', compact('products', 'categories', 'search', 'category', 'sort'));
+        return view('customer.catalog.index', compact('products', 'categories', 'search', 'category', 'sort', 'minPrice', 'maxPrice'));
     }
 
     public function show(string $slug): View

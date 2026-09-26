@@ -96,6 +96,61 @@ class CustomerCatalogTest extends TestCase
             );
     }
 
+    public function test_customer_can_filter_catalog_by_price_range(): void
+    {
+        $user = User::factory()->create(['role' => 'customer']);
+
+        $cheap = Product::factory()->create([
+            'name' => 'Produk Murah',
+            'price' => 10000,
+            'is_active' => true,
+            'stock' => 5,
+        ]);
+
+        Product::factory()->create([
+            'name' => 'Produk Tengah',
+            'price' => 50000,
+            'is_active' => true,
+            'stock' => 5,
+        ]);
+
+        Product::factory()->create([
+            'name' => 'Produk Mahal',
+            'price' => 100000,
+            'is_active' => true,
+            'stock' => 5,
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('customer.catalog.index', ['min_price' => 20000, 'max_price' => 75000]))
+            ->assertOk()
+            ->assertViewHas('minPrice', 20000.0)
+            ->assertViewHas('maxPrice', 75000.0)
+            ->assertViewHas('products', fn ($products) => $products->count() === 1
+                && $products->first()->name === 'Produk Tengah');
+
+        $this->assertDatabaseHas('products', ['id' => $cheap->id]);
+    }
+
+    public function test_customer_price_range_is_normalized_when_bounds_are_reversed(): void
+    {
+        $user = User::factory()->create(['role' => 'customer']);
+
+        Product::factory()->create([
+            'name' => 'Produk Tengah',
+            'price' => 50000,
+            'is_active' => true,
+            'stock' => 5,
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('customer.catalog.index', ['min_price' => 75000, 'max_price' => 20000]))
+            ->assertOk()
+            ->assertViewHas('minPrice', 20000.0)
+            ->assertViewHas('maxPrice', 75000.0)
+            ->assertViewHas('products', fn ($products) => $products->count() === 1);
+    }
+
     public function test_customer_can_open_an_active_product_detail(): void
     {
         $user = User::factory()->create(['role' => 'customer']);
