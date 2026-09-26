@@ -29,4 +29,22 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function hasPermission(string $permission): bool
+    {
+        $override = PermissionOverride::query()
+            ->where('role', $this->role)
+            ->where('permission', $permission)
+            ->first();
+
+        if ($override) {
+            return $override->enabled;
+        }
+
+        return in_array(
+            $this->role,
+            config('permissions.roles', [])[$permission] ?? [],
+            true,
+        );
+    }
 }
