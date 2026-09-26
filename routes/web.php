@@ -39,6 +39,7 @@ use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\CheckoutController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\PaymentController;
+use App\Http\Controllers\Customer\AddressController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -155,6 +156,14 @@ Route::middleware('auth')->group(function () {
             Route::post('/', [CheckoutController::class, 'store'])->name('store');
             Route::get('/success/{order}', [CheckoutController::class, 'success'])->name('success');
         });
+
+    Route::get('/customer/address', [AddressController::class, 'edit'])
+        ->name('customer.address.edit')
+        ->middleware('role:customer');
+
+    Route::patch('/customer/address', [AddressController::class, 'update'])
+        ->name('customer.address.update')
+        ->middleware('role:customer');
 
     Route::prefix('customer/orders')
         ->name('customer.orders.')

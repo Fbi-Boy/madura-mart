@@ -46,6 +46,11 @@
                     </div>
                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Total item yang tersimpan di sesi keranjang.</p>
                 </a>
+                <a href="{{ route('customer.address.edit') }}" class="group rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-[#A8F23A] dark:border-gray-700 dark:bg-gray-800">
+                    <p class="text-xs font-semibold uppercase tracking-[0.12em] text-gray-400">Alamat</p>
+                    <p class="mt-1 font-semibold text-gray-900 group-hover:text-gray-700 dark:text-white dark:group-hover:text-[#A8F23A]">Kelola Alamat →</p>
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Atur nama, nomor telepon, dan alamat pengiriman.</p>
+                </a>
                 <a href="{{ route('customer.orders.index') }}" class="group rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-[#A8F23A] dark:border-gray-700 dark:bg-gray-800">
                     <p class="text-xs font-semibold uppercase tracking-[0.12em] text-gray-400">Riwayat</p>
                     <p class="mt-1 font-semibold text-gray-900 group-hover:text-gray-700 dark:text-white dark:group-hover:text-[#A8F23A]">Lihat Semua Order →</p>
