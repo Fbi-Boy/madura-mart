@@ -552,7 +552,7 @@ Pengembangan Madura Mart dilakukan secara bertahap.
 - [x] Manajemen User
 - [ ] Role
 - [ ] Permission
-- [ ] Pengaturan Sistem
+- [x] Pengaturan Sistem
 - [x] Activity Log
 - [ ] Audit Log
 - [ ] Monitoring Sistem
