@@ -133,7 +133,7 @@
                             <p class="mt-2 text-xl font-semibold text-gray-900 dark:text-white">Rp {{ number_format($receivedValueToday, 0, ',', '.') }}</p>
                             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ $receivedToday }} transaksi</p>
                         </div>
-undefined                    </div>
+                    </div>
                 </section>
 
                 <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
