@@ -31,7 +31,7 @@ class PurchaseController extends Controller
 
     public function cancel(Purchase $purchase): RedirectResponse
     {
-        abort_unless($requestRole = auth()->user()->role === 'purchasing', 403);
+        abort_unless(auth()->user()->role === 'purchasing', 403);
 
         if ($purchase->status !== 'draft') {
             return to_route('purchasing.purchases.index')
