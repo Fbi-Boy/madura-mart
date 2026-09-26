@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\CourierController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\PaymentVerificationController;
 use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Admin\PurchaseController;
@@ -106,6 +107,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('admin')->name('admin.')->middleware('role:admin,super-admin')->group(function () {
         Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index')->middleware('permission:activity-log.view');
+        Route::get('/roles/permissions', [RolePermissionController::class, 'index'])->name('roles.permissions.index')->middleware('permission:role-permission.view');
         Route::get('/settings', [SystemSettingController::class, 'index'])->name('settings.index')->middleware('permission:system-settings.view');
         Route::patch('/settings', [SystemSettingController::class, 'update'])->name('settings.update')->middleware('permission:system-settings.update');
         Route::get('/system-monitoring', [SystemMonitoringController::class, 'index'])->name('system-monitoring.index')->middleware('permission:system-monitoring.view');

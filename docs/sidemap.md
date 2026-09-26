@@ -552,8 +552,8 @@ Pengembangan Madura Mart dilakukan secara bertahap.
 ## PHASE 9 — SUPER ADMIN
 - [x] Dashboard Management & Analytics
 - [x] Manajemen User
-- [ ] Role
-- [ ] Permission
+- [x] Role & permission matrix
+- [ ] Permission mutation / assignment
 - [x] Pengaturan Sistem
 - [x] Activity Log
 - [ ] Audit Log
