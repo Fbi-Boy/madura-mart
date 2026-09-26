@@ -252,7 +252,7 @@ Fokus: Pengadaan barang dari supplier.
 - Tentukan Jumlah
 - Tentukan Harga Beli
 - Kirim PO
-- Batalkan PO
+- Batalkan PO draft
 
 ## 6.4 Pembelian
 - Daftar Pembelian
@@ -504,6 +504,7 @@ Pengembangan Madura Mart dilakukan secara bertahap.
 ## PHASE 4 — PURCHASING
 - [x] Supplier
 - [ ] Purchase Order (draft creation tersedia untuk role purchasing)
+  - [x] Batalkan PO draft sebelum diterima gudang
 - [x] Pembelian
 - [x] Penerimaan Barang
 
