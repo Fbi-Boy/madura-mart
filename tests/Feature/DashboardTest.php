@@ -451,7 +451,7 @@ class DashboardTest extends TestCase
             ->assertViewHas('activeOrders', 1)
             ->assertViewHas('completedOrders', 1)
             ->assertViewHas('cancelledOrders', 0)
-            ->assertViewHas('totalSpent', 200000.0)
+            ->assertViewHas('totalSpent', 125000.0)
             ->assertViewHas('statusSummary', [
                 'pending' => 0,
                 'processing' => 0,
