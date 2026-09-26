@@ -44,7 +44,7 @@ class PurchaseReceivingController extends Controller
                 ->with('error', 'Purchase order sudah diproses dan tidak dapat diterima lagi.');
         }
 
-        DB::transaction(function () use ($purchase): void {
+        DB::transaction(function () use ($request, $purchase): void {
             $lockedPurchase = Purchase::query()
                 ->lockForUpdate()
                 ->with('items')
