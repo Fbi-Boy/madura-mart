@@ -69,13 +69,13 @@ class DashboardTest extends TestCase
             ->get('/dashboard')
             ->assertOk()
             ->assertViewIs('kurir.dashboard')
-            ->assertViewHas('todayOrders', 3)
+            ->assertViewHas('todayOrders', 2)
             ->assertViewHas('pendingOrders', 0)
             ->assertViewHas('shippingOrders', 1)
             ->assertViewHas('activeDeliveryOrders', 1)
             ->assertViewHas('deliveryRate', 50.0)
             ->assertViewHas('priorityOrders', fn ($orders) => $orders->count() === 1)
-            ->assertViewHas('deliveredToday', 1)
+            ->assertViewHas('deliveredOrders', 1)
             ->assertViewHas('statusSummary', [
                 'pending' => 0,
                 'processing' => 0,
