@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\ActivityLog;
 use App\Models\Courier;
 use App\Models\Customer;
 use App\Models\Order;
@@ -94,6 +95,30 @@ class DashboardTest extends TestCase
         $this->assertDashboardForRole('admin', 'admin.dashboard');
     }
 
+
+    public function test_super_admin_dashboard_exposes_recent_activity(): void
+    {
+        $user = User::factory()->create(['role' => 'super-admin']);
+        $actor = User::factory()->create(['role' => 'admin', 'name' => 'Admin Activity']);
+
+        ActivityLog::query()->create([
+            'user_id' => $actor->id,
+            'action' => 'product.created',
+            'description' => 'Produk baru berhasil dibuat.',
+        ]);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('super-admin.dashboard')
+            ->assertViewHas('recentActivities', fn ($activities) =>
+                $activities->count() === 1
+                && $activities->first()->action === 'product.created'
+                && $activities->first()->user?->name === 'Admin Activity'
+            )
+            ->assertSee('Produk baru berhasil dibuat.')
+            ->assertSee('Admin Activity');
+    }
 
     public function test_super_admin_dashboard_uses_system_and_business_metrics(): void
     {
