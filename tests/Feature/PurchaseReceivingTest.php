@@ -25,6 +25,47 @@ class PurchaseReceivingTest extends TestCase
             ->assertViewIs('gudang.penerimaan.index');
     }
 
+
+    public function test_gudang_can_review_submitted_purchase_before_receiving(): void
+    {
+        $user = User::factory()->create(['role' => 'gudang']);
+        $supplier = Supplier::factory()->create(['name' => 'Supplier Review']);
+        $product = Product::factory()->create(['name' => 'Produk Review', 'sku' => 'REV-001', 'stock' => 8]);
+
+        $purchase = Purchase::factory()->create([
+            'supplier_id' => $supplier->id,
+            'status' => 'draft',
+            'submitted_at' => now(),
+        ]);
+
+        PurchaseItem::create([
+            'purchase_id' => $purchase->id,
+            'product_id' => $product->id,
+            'quantity' => 5,
+            'unit_price' => 12000,
+            'subtotal' => 60000,
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('gudang.penerimaan.show', $purchase))
+            ->assertOk()
+            ->assertViewIs('gudang.penerimaan.show')
+            ->assertSee('Supplier Review')
+            ->assertSee('Produk Review')
+            ->assertSee('REV-001')
+            ->assertSee('Terima & Tambah Stok');
+    }
+
+    public function test_customer_cannot_view_purchase_receiving_review(): void
+    {
+        $user = User::factory()->create(['role' => 'customer']);
+        $purchase = Purchase::factory()->create(['status' => 'draft']);
+
+        $this->actingAs($user)
+            ->get(route('gudang.penerimaan.show', $purchase))
+            ->assertForbidden();
+    }
+
     public function test_gudang_receiving_changes_status_and_increases_stock(): void
     {
         $user = User::factory()->create(['role' => 'gudang']);
