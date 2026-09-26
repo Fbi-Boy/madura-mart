@@ -56,7 +56,10 @@ class RoleAwareNavigationTest extends TestCase
         $this->actingAs($admin)
             ->get(route('dashboard'))
             ->assertOk()
-            ->assertSee(route('admin.monitoring.penjualan'), false);
+            ->assertSee(route('admin.monitoring.penjualan'), false)
+            ->tap(function ($response) use ($admin) {
+                $this->assertSame(2, substr_count($response->getContent(), route('admin.monitoring.penjualan')));
+            });
 
         \App\Models\PermissionOverride::query()->create([
             'role' => 'admin',
@@ -68,7 +71,9 @@ class RoleAwareNavigationTest extends TestCase
         $this->actingAs($admin)
             ->get(route('dashboard'))
             ->assertOk()
-            ->assertDontSee(route('admin.monitoring.penjualan'), false);
+            ->tap(function ($response) use ($admin) {
+                $this->assertSame(1, substr_count($response->getContent(), route('admin.monitoring.penjualan')));
+            });
     }
 
 }
