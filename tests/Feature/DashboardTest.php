@@ -445,7 +445,11 @@ class DashboardTest extends TestCase
             ->assertViewHas('outOfStockCount', 1)
             ->assertViewHas('pendingReceiving', 1)
             ->assertViewHas('inboundToday', 0)
-            ->assertViewHas('outboundToday', 0);
+            ->assertViewHas('outboundToday', 0)
+            ->assertSee(route('gudang.penerimaan.index'), false)
+            ->assertSee(route('gudang.stock-opname.index'), false)
+            ->assertSee(route('gudang.barang-keluar.index'), false)
+            ->assertSee(route('gudang.riwayat-stok.index'), false);
     }
 
     public function test_kurir_users_see_the_kurir_dashboard(): void
