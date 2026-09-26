@@ -108,4 +108,40 @@ class RolePermissionTest extends TestCase
             ->assertForbidden();
     }
 
+    public function test_super_admin_can_filter_role_permissions_by_label_or_key(): void
+    {
+        $user = User::factory()->create(['role' => 'super-admin']);
+
+        $this->actingAs($user)
+            ->get(route('admin.roles.index', ['permission' => 'laporan']))
+            ->assertOk()
+            ->assertViewHas('permissionQuery', 'laporan')
+            ->assertViewHas('roles', fn ($roles) =>
+                $roles['admin']['permissions']->contains('reports.view')
+                && ! $roles['admin']['permissions']->contains('products.manage')
+            );
+
+        $this->actingAs($user)
+            ->get(route('admin.roles.index', ['permission' => 'stock.manage']))
+            ->assertOk()
+            ->assertViewHas('roles', fn ($roles) =>
+                $roles['gudang']['permissions']->contains('stock.manage')
+                && ! $roles['gudang']['permissions']->contains('products.manage')
+            );
+    }
+
+    public function test_empty_permission_search_preserves_role_matrix(): void
+    {
+        $user = User::factory()->create(['role' => 'super-admin']);
+
+        $this->actingAs($user)
+            ->get(route('admin.roles.index', ['permission' => '']))
+            ->assertOk()
+            ->assertViewHas('permissionQuery', '')
+            ->assertViewHas('roles', fn ($roles) =>
+                $roles->count() === 7
+                && $roles['admin']['permissions']->count() > 1
+            );
+    }
+
 }
