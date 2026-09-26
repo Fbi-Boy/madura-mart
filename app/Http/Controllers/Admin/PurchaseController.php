@@ -29,6 +29,21 @@ class PurchaseController extends Controller
         ]);
     }
 
+    public function cancel(Purchase $purchase): RedirectResponse
+    {
+        abort_unless(auth()->user()->role === 'purchasing', 403);
+
+        if ($purchase->status !== 'draft') {
+            return to_route('purchasing.purchases.index')
+                ->with('error', 'Purchase order yang sudah diproses tidak dapat dibatalkan.');
+        }
+
+        $purchase->update(['status' => 'cancelled']);
+
+        return to_route('purchasing.purchases.index')
+            ->with('success', 'Purchase order berhasil dibatalkan.');
+    }
+
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
