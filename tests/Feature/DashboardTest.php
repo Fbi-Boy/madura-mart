@@ -480,6 +480,59 @@ class DashboardTest extends TestCase
             ->assertSee(route('customer.orders.show', $order), false);
     }
 
+    public function test_customer_dashboard_exposes_payment_attention_metrics(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'customer',
+            'email' => 'payment@maduramart.test',
+        ]);
+
+        $customer = Customer::factory()->create([
+            'email' => 'payment@maduramart.test',
+            'is_active' => true,
+        ]);
+
+        Order::factory()->create([
+            'customer_id' => $customer->id,
+            'status' => 'pending',
+            'payment_status' => 'pending',
+            'payment_proof' => null,
+        ]);
+
+        Order::factory()->create([
+            'customer_id' => $customer->id,
+            'status' => 'processing',
+            'payment_status' => 'pending',
+            'payment_proof' => 'payment-proofs/proof.pdf',
+        ]);
+
+        Order::factory()->create([
+            'customer_id' => $customer->id,
+            'status' => 'delivered',
+            'payment_status' => 'paid',
+            'payment_proof' => 'payment-proofs/paid.pdf',
+        ]);
+
+        Order::factory()->create([
+            'customer_id' => $customer->id,
+            'status' => 'cancelled',
+            'payment_status' => 'pending',
+            'payment_proof' => null,
+        ]);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('customer.dashboard')
+            ->assertViewHas('paymentAttention', [
+                'unpaid' => 1,
+                'verification' => 1,
+            ])
+            ->assertSee('Status Pembayaran')
+            ->assertSee('Belum Bayar')
+            ->assertSee('Menunggu Verifikasi');
+    }
+
     public function test_customer_dashboard_is_scoped_to_authenticated_customer(): void
     {
         $user = User::factory()->create([
