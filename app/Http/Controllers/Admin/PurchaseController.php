@@ -30,11 +30,33 @@ class PurchaseController extends Controller
         ]);
     }
 
+    public function submit(Purchase $purchase): RedirectResponse
+    {
+        abort_unless(auth()->user()->role === 'purchasing', 403);
+
+        if ($purchase->status !== 'draft' || $purchase->submitted_at !== null) {
+            return to_route('purchasing.purchases.index')
+                ->with('error', 'Purchase order ini tidak berada pada status draft yang dapat dikirim.');
+        }
+
+        $purchase->update(['submitted_at' => now()]);
+
+        ActivityLogService::record(
+            'purchase.submitted',
+            "Purchase order {$purchase->invoice} dikirim untuk penerimaan gudang.",
+            $purchase,
+            ['supplier_id' => $purchase->supplier_id, 'total' => (float) $purchase->total],
+        );
+
+        return to_route('purchasing.purchases.index')
+            ->with('success', 'Purchase order berhasil dikirim ke gudang.');
+    }
+
     public function cancel(Purchase $purchase): RedirectResponse
     {
         abort_unless(auth()->user()->role === 'purchasing', 403);
 
-        if ($purchase->status !== 'draft') {
+        if ($purchase->status !== 'draft' || $purchase->submitted_at !== null) {
             return to_route('purchasing.purchases.index')
                 ->with('error', 'Purchase order yang sudah diproses tidak dapat dibatalkan.');
         }
