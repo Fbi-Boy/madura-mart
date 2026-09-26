@@ -116,10 +116,12 @@ class DashboardController extends Controller
 
         $todayPurchases = (float) Purchase::query()
             ->whereDate('purchase_date', $today)
+            ->where('status', '!=', 'cancelled')
             ->sum('total');
 
         $todayTransactions = Purchase::query()
             ->whereDate('purchase_date', $today)
+            ->where('status', '!=', 'cancelled')
             ->count();
 
         $draftPurchases = Purchase::query()
@@ -161,6 +163,7 @@ class DashboardController extends Controller
             ]);
 
         $supplierPurchases = Purchase::query()
+            ->where('status', '!=', 'cancelled')
             ->with('supplier:id,name')
             ->selectRaw('supplier_id, COUNT(*) as transaction_count, SUM(total) as total_value')
             ->groupBy('supplier_id')
