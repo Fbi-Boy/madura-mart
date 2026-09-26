@@ -656,6 +656,35 @@ class DashboardTest extends TestCase
             ]);
     }
 
+    public function test_admin_dashboard_exposes_six_month_sales_trend(): void
+    {
+        $user = User::factory()->create(['role' => 'admin']);
+
+        Sale::factory()->create([
+            'status' => 'paid',
+            'total' => 125000,
+            'sale_date' => now()->startOfMonth(),
+        ]);
+
+        Sale::factory()->create([
+            'status' => 'cancelled',
+            'total' => 900000,
+            'sale_date' => now()->startOfMonth(),
+        ]);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('admin.dashboard')
+            ->assertViewHas('salesTrend', fn ($trend) =>
+                $trend->count() === 6
+                && (float) $trend->last()['value'] === 125000.0
+                && $trend->sum('value') === 125000.0
+            )
+            ->assertSee('Tren omzet')
+            ->assertSee('6 BULAN');
+    }
+
     public function test_dashboard_query_indexes_are_available(): void
     {
         $expectedIndexes = [
