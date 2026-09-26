@@ -66,6 +66,10 @@ class DashboardController extends Controller
             ->whereIn('status', ['pending', 'processing'])
             ->count();
 
+        $pendingPurchaseValue = (float) Purchase::query()
+            ->where('status', 'draft')
+            ->sum('total');
+
         $lowStockProducts = Product::query()
             ->where('is_active', true)
             ->where('stock', '<=', 10)
@@ -106,6 +110,7 @@ class DashboardController extends Controller
             'monthlyRevenue',
             'monthlyPurchases',
             'pendingOrders',
+            'pendingPurchaseValue',
             'lowStockProducts',
             'roleSummary',
             'recentUsers',
