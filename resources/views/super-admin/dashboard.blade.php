@@ -63,26 +63,26 @@
                 <div class="rounded-2xl border border-[#A8F23A]/40 bg-[#A8F23A]/10 p-5 dark:bg-[#A8F23A]/5">
                     <p class="text-sm text-gray-600 dark:text-gray-300">Perlu perhatian</p>
                     <div class="mt-2 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-                        <div>
+                        <a href="{{ route('admin.monitoring.pesanan') }}" class="group block rounded-xl p-2 -m-2 transition hover:bg-white/60 dark:hover:bg-gray-800/60">
                             <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $pendingOrders }}</p>
-                            <p class="text-xs text-gray-600 dark:text-gray-300">pesanan berjalan</p>
-                        </div>
-                        <div>
+                            <p class="text-xs text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">pesanan berjalan ↗</p>
+                        </a>
+                        <a href="{{ route('admin.report.pengiriman') }}" class="group block rounded-xl p-2 -m-2 transition hover:bg-white/60 dark:hover:bg-gray-800/60">
                             <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $activeDeliveries }}</p>
-                            <p class="text-xs text-gray-600 dark:text-gray-300">pengiriman aktif</p>
-                        </div>
-                        <div>
+                            <p class="text-xs text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">pengiriman aktif ↗</p>
+                        </a>
+                        <a href="{{ route('admin.monitoring.produk') }}" class="group block rounded-xl p-2 -m-2 transition hover:bg-white/60 dark:hover:bg-gray-800/60">
                             <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $lowStockProducts }}</p>
-                            <p class="text-xs text-gray-600 dark:text-gray-300">stok rendah</p>
-                        </div>
-                        <div>
+                            <p class="text-xs text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">stok rendah ↗</p>
+                        </a>
+                        <a href="{{ route('admin.monitoring.pembelian') }}" class="group block rounded-xl p-2 -m-2 transition hover:bg-white/60 dark:hover:bg-gray-800/60">
                             <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $pendingReceiving }}</p>
-                            <p class="text-xs text-gray-600 dark:text-gray-300">menunggu penerimaan</p>
-                        </div>
-                        <div>
+                            <p class="text-xs text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">menunggu penerimaan ↗</p>
+                        </a>
+                        <a href="{{ route('admin.monitoring.pembelian') }}" class="group block rounded-xl p-2 -m-2 transition hover:bg-white/60 dark:hover:bg-gray-800/60">
                             <p class="text-lg font-semibold text-gray-900 dark:text-white">Rp {{ number_format($pendingPurchaseValue, 0, ',', '.') }}</p>
-                            <p class="text-xs text-gray-600 dark:text-gray-300">nilai pembelian draft</p>
-                        </div>
+                            <p class="text-xs text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">nilai pembelian draft ↗</p>
+                        </a>
                     </div>
                 </div>
             </div>
