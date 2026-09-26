@@ -100,13 +100,19 @@ class PaymentVerificationTest extends TestCase
 
         $this->assertSame('paid', $order->fresh()->payment_status);
 
+        $rejectedOrder = Order::factory()->create([
+            'customer_id' => $customer->id,
+            'payment_status' => 'pending',
+            'payment_proof' => 'payment-proofs/rejected-proof.pdf',
+        ]);
+
         $this->actingAs($admin)
-            ->patch(route('admin.payment-verification.update', $order), [
+            ->patch(route('admin.payment-verification.update', $rejectedOrder), [
                 'payment_status' => 'rejected',
             ])
             ->assertRedirect();
 
-        $this->assertSame('rejected', $order->fresh()->payment_status);
+        $this->assertSame('rejected', $rejectedOrder->fresh()->payment_status);
     }
     public function test_payment_review_is_written_to_activity_log(): void
     {
@@ -142,6 +148,26 @@ class PaymentVerificationTest extends TestCase
         $this->assertSame('rejected', $activity->metadata['payment_status']);
         $this->assertSame('qris', $activity->metadata['payment_method']);
         $this->assertNotEmpty($activity->ip_address);
+    }
+
+    public function test_processed_payment_cannot_be_reviewed_again(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        [, $customer] = $this->customerUser();
+
+        $order = Order::factory()->create([
+            'customer_id' => $customer->id,
+            'payment_status' => 'paid',
+            'payment_proof' => 'payment-proofs/proof.pdf',
+        ]);
+
+        $this->actingAs($admin)
+            ->patch(route('admin.payment-verification.update', $order), [
+                'payment_status' => 'rejected',
+            ])
+            ->assertStatus(422);
+
+        $this->assertSame('paid', $order->fresh()->payment_status);
     }
 
 }
