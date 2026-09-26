@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\ActivityLog;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\User;
@@ -107,4 +108,40 @@ class PaymentVerificationTest extends TestCase
 
         $this->assertSame('rejected', $order->fresh()->payment_status);
     }
+    public function test_payment_review_is_written_to_activity_log(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        [, $customer] = $this->customerUser();
+
+        $order = Order::factory()->create([
+            'customer_id' => $customer->id,
+            'payment_status' => 'pending',
+            'payment_proof' => 'payment-proofs/proof.pdf',
+            'payment_method' => 'qris',
+        ]);
+
+        $this->actingAs($admin)
+            ->patch(route('admin.payment-verification.update', $order), [
+                'payment_status' => 'rejected',
+            ])
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('activity_logs', [
+            'user_id' => $admin->id,
+            'action' => 'payment.rejected',
+            'subject_type' => Order::class,
+            'subject_id' => $order->id,
+            'description' => "Bukti pembayaran order {$order->order_number} ditolak.",
+        ]);
+
+        $activity = ActivityLog::query()
+            ->where('action', 'payment.rejected')
+            ->where('subject_id', $order->id)
+            ->firstOrFail();
+
+        $this->assertSame('rejected', $activity->metadata['payment_status']);
+        $this->assertSame('qris', $activity->metadata['payment_method']);
+        $this->assertNotEmpty($activity->ip_address);
+    }
+
 }
