@@ -134,6 +134,36 @@ class DashboardTest extends TestCase
             ->assertDontSee('Aktivitas order lain.');
     }
 
+    public function test_kurir_dashboard_exposes_status_action_only_for_assigned_orders(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'kurir',
+            'email' => 'action@maduramart.test',
+        ]);
+
+        $courier = Courier::factory()->create([
+            'email' => 'action@maduramart.test',
+            'is_active' => true,
+        ]);
+
+        $assignedOrder = Order::factory()->create([
+            'courier_id' => $courier->id,
+            'status' => 'shipped',
+        ]);
+
+        $otherOrder = Order::factory()->create([
+            'status' => 'shipped',
+        ]);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('kurir.dashboard')
+            ->assertSee(route('kurir.pengiriman.status', $assignedOrder), false)
+            ->assertSee('name="status" value="delivered"', false)
+            ->assertDontSee(route('kurir.pengiriman.status', $otherOrder), false);
+    }
+
     public function test_purchasing_users_see_the_purchasing_dashboard(): void
     {
         $this->assertDashboardForRole('purchasing', 'purchasing.dashboard');

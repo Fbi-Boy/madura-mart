@@ -148,10 +148,7 @@
                         @endforeach
                     </div>
                 </section>
-            </div>
-        </div>
-
-        <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+            <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
             <div class="flex items-center justify-between gap-3">
                 <div>
                     <h3 class="font-semibold text-gray-900 dark:text-white">Aktivitas Status Terbaru</h3>
@@ -176,7 +173,8 @@
                     <p class="py-4 text-sm text-gray-400">Belum ada perubahan status pengiriman.</p>
                 @endforelse
             </div>
-        </section>
+            </section>
+        </div>
     </div>
 
 </x-app-layout>
