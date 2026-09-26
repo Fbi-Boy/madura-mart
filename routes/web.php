@@ -122,6 +122,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('purchasing')->name('purchasing.')->middleware('role:purchasing')->group(function () {
         Route::resource('purchases', PurchaseController::class)->only(['index', 'create', 'store']);
+        Route::patch('/purchases/{purchase}/submit', [PurchaseController::class, 'submit'])->name('purchases.submit');
         Route::patch('/purchases/{purchase}/cancel', [PurchaseController::class, 'cancel'])->name('purchases.cancel');
         Route::get('/suppliers', [PurchasingSupplierController::class, 'index'])->name('suppliers.index');
     });

@@ -17,6 +17,7 @@ class PurchaseReceivingController extends Controller
             ->with(['supplier:id,name', 'user:id,name'])
             ->withCount('items')
             ->where('status', 'draft')
+            ->whereNotNull('submitted_at')
             ->latest('purchase_date')
             ->paginate(10);
 
@@ -25,7 +26,7 @@ class PurchaseReceivingController extends Controller
 
     public function receive(Purchase $purchase): RedirectResponse
     {
-        if ($purchase->status !== 'draft') {
+        if ($purchase->status !== 'draft' || $purchase->submitted_at === null) {
             return to_route('gudang.penerimaan.index')
                 ->with('error', 'Purchase order sudah diproses dan tidak dapat diterima lagi.');
         }
@@ -36,7 +37,7 @@ class PurchaseReceivingController extends Controller
                 ->with('items')
                 ->findOrFail($purchase->id);
 
-            if ($lockedPurchase->status !== 'draft') {
+            if ($lockedPurchase->status !== 'draft' || $lockedPurchase->submitted_at === null) {
                 return;
             }
 

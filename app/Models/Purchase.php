@@ -9,11 +9,11 @@ class Purchase extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['invoice','supplier_id','user_id','purchase_date','total','status','notes'];
+    protected $fillable = ['invoice','supplier_id','user_id','purchase_date','total','status','notes','submitted_at'];
 
     protected function casts(): array
     {
-        return ['purchase_date'=>'date','total'=>'decimal:2'];
+        return ['purchase_date'=>'date','total'=>'decimal:2','submitted_at'=>'datetime'];
     }
 
     public function supplier() { return $this->belongsTo(Supplier::class); }
