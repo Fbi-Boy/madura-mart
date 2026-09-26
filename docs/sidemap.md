@@ -116,6 +116,7 @@ Fokus: Monitoring dan administrasi operasional.
 - Konfirmasi pembayaran
 - Tolak bukti pembayaran
 - Kelola status pending, paid, rejected
+- Catat keputusan verifikasi ke Activity Log
 
 ## 3.8 Laporan
 - Laporan Penjualan
