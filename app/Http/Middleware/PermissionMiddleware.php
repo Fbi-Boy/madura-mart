@@ -17,7 +17,7 @@ class PermissionMiddleware
         }
 
         foreach ($permissions as $permission) {
-            $allowedRoles = config("permissions.roles.{$permission}", []);
+            $allowedRoles = config('permissions.roles', [])[$permission] ?? [];
 
             if (in_array($user->role, $allowedRoles, true)) {
                 return $next($request);
