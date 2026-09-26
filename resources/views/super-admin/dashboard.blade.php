@@ -30,13 +30,14 @@
                 </div>
             </div>
 
-            <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
                 @php
                     $kpis = [
                         ['label' => 'Users', 'value' => $totalUsers, 'hint' => 'seluruh akun sistem'],
                         ['label' => 'Produk Aktif', 'value' => $activeProducts, 'hint' => 'siap digunakan'],
                         ['label' => 'Customer Aktif', 'value' => $activeCustomers, 'hint' => 'customer terdaftar'],
                         ['label' => 'Kurir Aktif', 'value' => $activeCouriers, 'hint' => 'siap menangani order'],
+                        ['label' => 'Nilai Draft', 'value' => 'Rp '.number_format($pendingPurchaseValue, 0, ',', '.'), 'hint' => 'pembelian belum diterima'],
                     ];
                 @endphp
 
