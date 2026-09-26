@@ -36,3 +36,16 @@ Table `activity_logs` stores important authenticated actions for administrative 
 - `ip_address` and `user_agent` preserve request context for operational review.
 
 The initial implementation records user lifecycle actions and exposes them to `admin` and `super-admin` through the Activity Log workspace.
+
+
+## Dashboard Query Indexes
+
+Operational dashboards and reports repeatedly filter transactional and inventory tables by status/date or active/stock state. The migration `2026_09_26_000000_add_dashboard_query_indexes.php` adds focused indexes for those access patterns:
+
+- `purchases(status, purchase_date)`
+- `sales(status, sale_date)`
+- `orders(status, order_date)`
+- `products(is_active, stock)`
+- `suppliers(is_active)`
+
+The migration checks existing index names before creating them and only removes the named indexes during rollback. This keeps the optimization isolated from business behavior while supporting both SQLite CI and MySQL deployments.
