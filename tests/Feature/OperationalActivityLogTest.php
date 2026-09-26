@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\ActivityLog;
 use App\Models\Courier;
 use App\Models\Customer;
 use App\Models\Order;
