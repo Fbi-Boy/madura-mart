@@ -150,6 +150,33 @@
                 </section>
             </div>
         </div>
+
+        <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+            <div class="flex items-center justify-between gap-3">
+                <div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white">Aktivitas Status Terbaru</h3>
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Perubahan status pada pesanan yang ditangani akun ini.</p>
+                </div>
+                <span class="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-300">{{ $recentDeliveryUpdates->count() }} aktivitas</span>
+            </div>
+
+            <div class="mt-5 space-y-3">
+                @forelse ($recentDeliveryUpdates as $activity)
+                    <div class="flex gap-3 rounded-xl bg-gray-50 p-3 dark:bg-gray-700/50">
+                        <div class="mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-[#A8F23A]"></div>
+                        <div class="min-w-0">
+                            <p class="text-sm text-gray-700 dark:text-gray-200">{{ $activity->description }}</p>
+                            <p class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                                {{ $activity->created_at?->format('d/m/Y H:i') }}
+                                · {{ $activity->user?->name ?? 'Sistem' }}
+                            </p>
+                        </div>
+                    </div>
+                @empty
+                    <p class="py-4 text-sm text-gray-400">Belum ada perubahan status pengiriman.</p>
+                @endforelse
+            </div>
+        </section>
     </div>
 
 </x-app-layout>

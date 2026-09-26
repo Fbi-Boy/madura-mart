@@ -85,6 +85,55 @@ class DashboardTest extends TestCase
             ]);
     }
 
+    public function test_courier_dashboard_shows_only_its_delivery_activity(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'kurir',
+            'email' => 'activity@maduramart.test',
+        ]);
+
+        $courier = Courier::factory()->create([
+            'email' => 'activity@maduramart.test',
+            'is_active' => true,
+        ]);
+
+        $assignedOrder = Order::factory()->create([
+            'courier_id' => $courier->id,
+            'status' => 'shipped',
+        ]);
+
+        $otherOrder = Order::factory()->create([
+            'status' => 'shipped',
+        ]);
+
+        ActivityLog::query()->create([
+            'user_id' => $user->id,
+            'action' => 'delivery.status_updated',
+            'subject_type' => Order::class,
+            'subject_id' => $assignedOrder->id,
+            'description' => 'Status pengiriman assigned berubah.',
+        ]);
+
+        ActivityLog::query()->create([
+            'user_id' => $user->id,
+            'action' => 'delivery.status_updated',
+            'subject_type' => Order::class,
+            'subject_id' => $otherOrder->id,
+            'description' => 'Aktivitas order lain.',
+        ]);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('kurir.dashboard')
+            ->assertViewHas('recentDeliveryUpdates', fn ($activities) =>
+                $activities->count() === 1
+                && $activities->first()->subject_id === $assignedOrder->id
+            )
+            ->assertSee('Status pengiriman assigned berubah.')
+            ->assertDontSee('Aktivitas order lain.');
+    }
+
     public function test_purchasing_users_see_the_purchasing_dashboard(): void
     {
         $this->assertDashboardForRole('purchasing', 'purchasing.dashboard');
