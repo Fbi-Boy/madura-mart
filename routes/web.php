@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AuditLogController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\CourierController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\PaymentVerificationController;
 use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Admin\PurchaseController;
@@ -117,6 +118,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('customers', CustomerController::class)->except(['show']);
         Route::resource('couriers', CourierController::class)->except(['show']);
         Route::resource('users', UserController::class)->except(['show']);
+        Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.index')->middleware('permission:role-management.view');
         Route::resource('units', UnitController::class)->except(['show']);
         Route::resource('purchases', PurchaseController::class)->only(['index','create','store']);
         Route::resource('distributors', DistributorController::class)->except(['show']);

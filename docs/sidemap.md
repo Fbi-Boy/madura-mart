@@ -552,8 +552,10 @@ Pengembangan Madura Mart dilakukan secara bertahap.
 ## PHASE 9 — SUPER ADMIN
 - [x] Dashboard Management & Analytics
 - [x] Manajemen User
-- [ ] Role
-- [ ] Permission
+- [x] Role & Permission workspace
+  - [x] Role catalog
+  - [x] Permission matrix
+  - [ ] Dynamic permission editing
 - [x] Pengaturan Sistem
 - [x] Activity Log
 - [x] Audit Log
@@ -573,6 +575,8 @@ Setiap fitur baru harus:
 6. Ditentukan migration.
 7. Ditentukan view.
 8. Ditentukan middleware / permission jika diperlukan.
+
+Role & Permission workspace saat ini bersifat read-only; perubahan hak akses tetap direview melalui config/permissions.php.
 
 Jangan membuat fitur yang berada di luar sitemap tanpa memperbarui
 dokumen ini terlebih dahulu.
