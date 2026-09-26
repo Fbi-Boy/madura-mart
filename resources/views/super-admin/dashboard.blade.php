@@ -62,14 +62,18 @@
                 </div>
                 <div class="rounded-2xl border border-[#A8F23A]/40 bg-[#A8F23A]/10 p-5 dark:bg-[#A8F23A]/5">
                     <p class="text-sm text-gray-600 dark:text-gray-300">Perlu perhatian</p>
-                    <div class="mt-2 flex items-end justify-between gap-4">
+                    <div class="mt-2 grid gap-4 sm:grid-cols-3">
                         <div>
                             <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $pendingOrders }}</p>
                             <p class="text-xs text-gray-600 dark:text-gray-300">pesanan berjalan</p>
                         </div>
-                        <div class="text-right">
+                        <div>
                             <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $lowStockProducts }}</p>
                             <p class="text-xs text-gray-600 dark:text-gray-300">stok rendah</p>
+                        </div>
+                        <div>
+                            <p class="text-lg font-semibold text-gray-900 dark:text-white">Rp {{ number_format($pendingPurchaseValue, 0, ',', '.') }}</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-300">nilai pembelian draft</p>
                         </div>
                     </div>
                 </div>
