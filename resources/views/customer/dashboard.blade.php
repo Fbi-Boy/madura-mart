@@ -139,6 +139,29 @@
                 </section>
             </div>
 
+            <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                <div class="flex items-start justify-between gap-4">
+                    <div>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Status Pembayaran</h3>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Pesanan yang masih membutuhkan perhatian pembayaran.</p>
+                    </div>
+                    <span class="rounded-full bg-[#A8F23A]/20 px-2.5 py-1 text-xs font-semibold text-gray-900 dark:text-[#A8F23A]">LIVE</span>
+                </div>
+
+                <div class="mt-4 grid gap-3 sm:grid-cols-2">
+                    <a href="{{ route('customer.orders.index') }}" class="rounded-2xl border border-gray-200 p-4 transition hover:border-[#A8F23A] hover:bg-[#A8F23A]/5 dark:border-gray-700 dark:hover:bg-[#A8F23A]/5">
+                        <p class="text-xs font-semibold uppercase tracking-[0.12em] text-gray-400">Belum Bayar</p>
+                        <p class="mt-2 text-2xl font-semibold text-gray-900 dark:text-white">{{ number_format($paymentAttention['unpaid'], 0, ',', '.') }}</p>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Belum mengirim bukti pembayaran.</p>
+                    </a>
+                    <a href="{{ route('customer.orders.index') }}" class="rounded-2xl border border-gray-200 p-4 transition hover:border-[#A8F23A] hover:bg-[#A8F23A]/5 dark:border-gray-700 dark:hover:bg-[#A8F23A]/5">
+                        <p class="text-xs font-semibold uppercase tracking-[0.12em] text-gray-400">Menunggu Verifikasi</p>
+                        <p class="mt-2 text-2xl font-semibold text-gray-900 dark:text-white">{{ number_format($paymentAttention['verification'], 0, ',', '.') }}</p>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Bukti pembayaran sudah dikirim.</p>
+                    </a>
+                </div>
+            </section>
+
             @if (!$customer)
                 <div class="rounded-2xl border border-yellow-200 bg-yellow-50 p-5 dark:border-yellow-900/40 dark:bg-yellow-900/10">
                     <h3 class="font-semibold text-yellow-900 dark:text-yellow-200">Profil customer belum terhubung</h3>
