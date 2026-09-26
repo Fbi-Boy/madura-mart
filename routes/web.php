@@ -104,9 +104,9 @@ Route::middleware('auth')->group(function () {
         });
 
     Route::prefix('admin')->name('admin.')->middleware('role:admin,super-admin')->group(function () {
-        Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
-        Route::get('/settings', [SystemSettingController::class, 'index'])->name('settings.index');
-        Route::patch('/settings', [SystemSettingController::class, 'update'])->name('settings.update');
+        Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index')->middleware('permission:activity-log.view');
+        Route::get('/settings', [SystemSettingController::class, 'index'])->name('settings.index')->middleware('permission:system-settings.view');
+        Route::patch('/settings', [SystemSettingController::class, 'update'])->name('settings.update')->middleware('permission:system-settings.update');
         Route::resource('categories', CategoryController::class)->except(['show']);
         Route::resource('products', ProductController::class)->except(['show']);
         Route::resource('suppliers', SupplierController::class)->except(['show']);

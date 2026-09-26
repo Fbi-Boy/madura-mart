@@ -483,7 +483,7 @@ Pengembangan Madura Mart dilakukan secara bertahap.
 
 ## PHASE 2 — MASTER DATA
 - [x] User
-- [ ] Role & Permission
+- [x] Role & Permission
 - [x] Kategori
 - [x] Produk
 - [x] Supplier
