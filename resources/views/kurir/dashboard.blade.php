@@ -150,7 +150,6 @@
                 </section>
             </div>
         </div>
-    </div>
 
         <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
             <div class="flex items-center justify-between gap-3">
@@ -178,5 +177,6 @@
                 @endforelse
             </div>
         </section>
+    </div>
 
 </x-app-layout>
