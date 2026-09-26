@@ -287,12 +287,24 @@ class DashboardController extends Controller
             ? Order::query()->where('courier_id', $courier->id)
             : Order::query()->whereRaw('1 = 0');
 
-        $todayOrders = (clone $baseOrders)->whereDate('order_date', $today)->count();
-        $pendingOrders = (clone $baseOrders)->whereIn('status', ['pending', 'processing'])->count();
-        $shippingOrders = (clone $baseOrders)->where('status', 'shipped')->count();
-        $deliveredToday = (clone $baseOrders)
-            ->where('status', 'delivered')
+        $todayOrders = (clone $baseOrders)
             ->whereDate('order_date', $today)
+            ->where('status', '!=', 'cancelled')
+            ->count();
+
+        $pendingOrders = (clone $baseOrders)
+            ->whereIn('status', ['pending', 'processing'])
+            ->count();
+
+        $shippingOrders = (clone $baseOrders)
+            ->where('status', 'shipped')
+            ->count();
+
+        // The order schema does not expose a delivered_at timestamp, so this metric
+        // intentionally reports total completed assignments instead of guessing a
+        // delivery date from order_date.
+        $deliveredOrders = (clone $baseOrders)
+            ->where('status', 'delivered')
             ->count();
 
         $activeDeliveryOrders = (clone $baseOrders)
@@ -302,8 +314,6 @@ class DashboardController extends Controller
         $deliveryBase = (clone $baseOrders)
             ->whereIn('status', ['pending', 'processing', 'shipped', 'delivered'])
             ->count();
-
-        $deliveredOrders = (clone $baseOrders)->where('status', 'delivered')->count();
 
         $deliveryRate = $deliveryBase > 0
             ? round($deliveredOrders / $deliveryBase * 100, 1)
@@ -360,7 +370,7 @@ class DashboardController extends Controller
             'todayOrders',
             'pendingOrders',
             'shippingOrders',
-            'deliveredToday',
+            'deliveredOrders',
             'activeDeliveryOrders',
             'deliveryRate',
             'priorityOrders',
