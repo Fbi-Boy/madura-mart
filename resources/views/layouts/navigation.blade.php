@@ -40,20 +40,36 @@
         @if($isAdmin)
 
             <div class="mt-3 space-y-0.5">
+                @if(auth()->user()->hasPermission('sales.manage'))
                 <a href="{{ route('admin.monitoring.penjualan') }}" class="menu-link">Penjualan</a>
+                @endif
+                @if(auth()->user()->hasPermission('purchases.manage'))
                 <a href="{{ route('admin.monitoring.pembelian') }}" class="menu-link">Pembelian</a>
+                @endif
+                @if(auth()->user()->hasPermission('orders.manage'))
                 <a href="{{ route('admin.monitoring.pesanan') }}" class="menu-link">Pesanan</a>
+                @endif
+                @if(auth()->user()->hasPermission('products.manage'))
                 <a href="{{ route('admin.monitoring.produk') }}" class="menu-link">Produk</a>
+                @endif
                 <a href="{{ route('admin.monitoring.distributor') }}" class="menu-link">Distributor</a>
                 <a href="{{ route('admin.monitoring.client') }}" class="menu-link">Client</a>
                 <a href="{{ route('admin.monitoring.kurir') }}" class="menu-link">Kurir</a>
                 <a href="{{ route('admin.monitoring.supplier') }}" class="menu-link">Supplier</a>
+                @if(auth()->user()->hasPermission('reports.view'))
                 <a href="{{ route('admin.report.penjualan') }}" class="menu-link">Laporan Penjualan</a>
+                @endif
+                @if(auth()->user()->hasPermission('reports.view'))
                 <a href="{{ route('admin.report.pembelian') }}" class="menu-link">Laporan Pembelian</a>
+                @endif
+                @if(auth()->user()->hasPermission('reports.view'))
                 <a href="{{ route('admin.report.stok') }}" class="menu-link">Stok</a>
+                @endif
                 <a href="{{ route('admin.categories.index') }}" class="menu-link">Kategori</a>
                 <a href="{{ route('admin.products.index') }}" class="menu-link">Produk Master</a>
+                @if(auth()->user()->hasPermission('suppliers.manage'))
                 <a href="{{ route('admin.suppliers.index') }}" class="menu-link">Supplier</a>
+                @endif
                 <a href="{{ route('admin.customers.index') }}" class="menu-link">Customer</a>
                 <a href="{{ route('admin.distributors.index') }}" class="menu-link">Distributor Master</a>
                 <a href="{{ route('admin.couriers.index') }}" class="menu-link">Kurir Master</a>
@@ -62,7 +78,9 @@
                     <a href="{{ route('admin.roles.index') }}" class="menu-link">Role & Permission</a>
                 @endif
                 <a href="{{ route('admin.units.index') }}" class="menu-link">Satuan</a>
+                @if(auth()->user()->hasPermission('purchases.manage'))
                 <a href="{{ route('admin.purchases.index') }}" class="menu-link">Pembelian</a>
+                @endif
             </div>
 
         @elseif(auth()->user()->role === 'kasir')
@@ -88,8 +106,12 @@
         @elseif(auth()->user()->role === 'purchasing')
 
             <div class="mt-3 space-y-0.5">
+                @if(auth()->user()->hasPermission('purchases.manage'))
                 <a href="{{ route('purchasing.purchases.index') }}" class="menu-link">Purchase Order</a>
+                @endif
+                @if(auth()->user()->hasPermission('suppliers.manage'))
                 <a href="{{ route('purchasing.suppliers.index') }}" class="menu-link">Supplier</a>
+                @endif
             </div>
 
         @elseif(auth()->user()->role === 'kurir')
