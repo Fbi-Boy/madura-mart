@@ -14,6 +14,9 @@ class CatalogController extends Controller
     {
         $search = trim((string) $request->query('q', ''));
         $category = trim((string) $request->query('category', ''));
+        $sort = (string) $request->query('sort', 'newest');
+        $allowedSorts = ['newest', 'price_asc', 'price_desc', 'name_asc'];
+        $sort = in_array($sort, $allowedSorts, true) ? $sort : 'newest';
 
         $products = Product::query()
             ->with('category:id,name,slug')
@@ -31,7 +34,10 @@ class CatalogController extends Controller
                     ->where('slug', $category)
                     ->where('is_active', true));
             })
-            ->latest('updated_at')
+            ->when($sort === 'price_asc', fn ($query) => $query->orderBy('price')->orderBy('name'))
+            ->when($sort === 'price_desc', fn ($query) => $query->orderByDesc('price')->orderBy('name'))
+            ->when($sort === 'name_asc', fn ($query) => $query->orderBy('name')->orderByDesc('updated_at'))
+            ->when($sort === 'newest', fn ($query) => $query->latest('updated_at'))
             ->paginate(12)
             ->withQueryString();
 
@@ -43,7 +49,7 @@ class CatalogController extends Controller
             ->orderBy('name')
             ->get(['id', 'name', 'slug']);
 
-        return view('customer.catalog.index', compact('products', 'categories', 'search', 'category'));
+        return view('customer.catalog.index', compact('products', 'categories', 'search', 'category', 'sort'));
     }
 
     public function show(string $slug): View
