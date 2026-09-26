@@ -344,6 +344,17 @@ class DashboardController extends Controller
                 'delivery_address',
             ]);
 
+        $courierOrderIds = (clone $baseOrders)->select('id');
+
+        $recentDeliveryUpdates = ActivityLog::query()
+            ->with('user:id,name')
+            ->where('action', 'delivery.status_updated')
+            ->where('subject_type', Order::class)
+            ->whereIn('subject_id', $courierOrderIds)
+            ->latest()
+            ->limit(6)
+            ->get(['id', 'user_id', 'subject_id', 'description', 'metadata', 'created_at']);
+
         return view('kurir.dashboard', compact(
             'courier',
             'todayOrders',
@@ -355,6 +366,7 @@ class DashboardController extends Controller
             'priorityOrders',
             'statusSummary',
             'recentOrders',
+            'recentDeliveryUpdates',
         ));
     }
 
