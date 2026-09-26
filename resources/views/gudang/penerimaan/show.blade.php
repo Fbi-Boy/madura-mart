@@ -3,7 +3,7 @@
         <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Review Penerimaan</h2>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Periksa detail PO sebelum stok masuk ke gudang.</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Periksa detail PO dan catat barang diterima/rusak sebelum stok masuk ke gudang.</p>
             </div>
             <a href="{{ route('gudang.penerimaan.index') }}"
                 class="inline-flex w-fit items-center rounded-xl border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 transition hover:border-[#A8F23A] hover:bg-[#A8F23A]/10 dark:border-gray-700 dark:text-gray-200">
@@ -46,12 +46,14 @@
                 </div>
 
                 <div class="overflow-x-auto">
-                    <table class="w-full min-w-[720px] text-left text-sm">
+                    <table class="w-full min-w-[900px] text-left text-sm">
                         <thead class="border-b border-gray-100 text-xs uppercase text-gray-400 dark:border-gray-700 dark:text-gray-500">
                             <tr>
                                 <th class="px-5 py-3">Produk</th>
                                 <th class="px-5 py-3">SKU</th>
-                                <th class="px-5 py-3">Qty</th>
+                                <th class="px-5 py-3">Qty PO</th>
+                                <th class="px-5 py-3">Diterima</th>
+                                <th class="px-5 py-3">Rusak</th>
                                 <th class="px-5 py-3">Unit</th>
                                 <th class="px-5 py-3 text-right">Harga Beli</th>
                                 <th class="px-5 py-3 text-right">Subtotal</th>
@@ -63,17 +65,23 @@
                                     <td class="px-5 py-4 font-medium text-gray-900 dark:text-white">{{ $item->product?->name ?? '-' }}</td>
                                     <td class="px-5 py-4 text-gray-500 dark:text-gray-400">{{ $item->product?->sku ?? '-' }}</td>
                                     <td class="px-5 py-4 font-semibold text-gray-900 dark:text-white">{{ number_format($item->quantity, 0, ',', '.') }}</td>
+                                    <td class="px-5 py-4">
+                                        <input form="receive-form" type="number" min="0" max="{{ $item->quantity }}" name="received[{{ $item->id }}]" value="{{ $item->received_quantity ?: $item->quantity }}" class="w-20 rounded-lg border-gray-300 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white" @disabled($purchase->status !== 'draft' || $purchase->submitted_at === null)>
+                                    </td>
+                                    <td class="px-5 py-4">
+                                        <input form="receive-form" type="number" min="0" max="{{ $item->quantity }}" name="damaged[{{ $item->id }}]" value="{{ $item->damaged_quantity }}" class="w-20 rounded-lg border-gray-300 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white" @disabled($purchase->status !== 'draft' || $purchase->submitted_at === null)>
+                                    </td>
                                     <td class="px-5 py-4 text-gray-500 dark:text-gray-400">{{ $item->product?->unit ?? '-' }}</td>
                                     <td class="px-5 py-4 text-right text-gray-600 dark:text-gray-300">Rp {{ number_format((float) $item->unit_price, 0, ',', '.') }}</td>
                                     <td class="px-5 py-4 text-right font-semibold text-gray-900 dark:text-white">Rp {{ number_format((float) $item->subtotal, 0, ',', '.') }}</td>
                                 </tr>
                             @empty
-                                <tr><td colspan="6" class="px-5 py-10 text-center text-gray-400">PO tidak memiliki item.</td></tr>
+                                <tr><td colspan="8" class="px-5 py-10 text-center text-gray-400">PO tidak memiliki item.</td></tr>
                             @endforelse
                         </tbody>
                         <tfoot class="border-t border-gray-100 dark:border-gray-700">
                             <tr>
-                                <td colspan="5" class="px-5 py-4 text-right font-semibold text-gray-600 dark:text-gray-300">Total PO</td>
+                                <td colspan="7" class="px-5 py-4 text-right font-semibold text-gray-600 dark:text-gray-300">Total PO</td>
                                 <td class="px-5 py-4 text-right text-lg font-bold text-gray-900 dark:text-white">Rp {{ number_format((float) $purchase->total, 0, ',', '.') }}</td>
                             </tr>
                         </tfoot>
@@ -92,9 +100,9 @@
 
                 <div class="rounded-2xl border border-[#A8F23A]/40 bg-[#A8F23A]/10 p-5 dark:bg-[#A8F23A]/5">
                     <h3 class="font-semibold text-gray-900 dark:text-white">Konfirmasi Penerimaan</h3>
-                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Konfirmasi hanya jika barang fisik sesuai dengan PO. Konfirmasi akan menambah stok dan mengubah status menjadi received.</p>
+                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Masukkan jumlah yang benar-benar diterima dan jumlah rusak. Barang rusak atau kurang tidak menambah stok; setelah konfirmasi PO selesai diproses.</p>
                     @if($purchase->status === 'draft' && $purchase->submitted_at !== null)
-                        <form method="POST" action="{{ route('gudang.penerimaan.receive', $purchase) }}" class="mt-4" onsubmit="return confirm('Konfirmasi seluruh item PO sudah diterima dan tambahkan stok?')">
+                        <form id="receive-form" method="POST" action="{{ route('gudang.penerimaan.receive', $purchase) }}" class="mt-4" onsubmit="return confirm('Konfirmasi seluruh item PO sudah diterima dan tambahkan stok?')">
                             @csrf
                             <button type="submit" class="inline-flex rounded-xl bg-[#A8F23A] px-4 py-2.5 text-sm font-semibold text-gray-900 transition hover:opacity-80">
                                 Terima & Tambah Stok
