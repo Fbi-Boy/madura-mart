@@ -24,7 +24,7 @@
                         </p>
                     </div>
                     <div class="rounded-2xl border border-white/10 bg-white/5 px-5 py-4">
-                        <p class="text-xs text-gray-400">Total belanja tercatat</p>
+                        <p class="text-xs text-gray-400">Total pembayaran terkonfirmasi</p>
                         <p class="mt-1 text-xl font-semibold">Rp {{ number_format($totalSpent, 0, ',', '.') }}</p>
                     </div>
                 </div>

@@ -235,7 +235,8 @@ class DashboardController extends Controller
             ->count();
 
         $totalSpent = (float) (clone $baseOrders)
-            ->whereIn('status', ['pending', 'processing', 'shipped', 'delivered'])
+            ->where('payment_status', 'paid')
+            ->where('status', '!=', 'cancelled')
             ->sum('total');
 
         $statusSummary = [

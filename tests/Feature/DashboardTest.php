@@ -424,6 +424,7 @@ class DashboardTest extends TestCase
             'customer_id' => $customer->id,
             'status' => 'delivered',
             'total' => 125000,
+            'payment_status' => 'paid',
             'order_date' => now(),
         ]);
 
@@ -431,12 +432,14 @@ class DashboardTest extends TestCase
             'customer_id' => $customer->id,
             'status' => 'shipped',
             'total' => 75000,
+            'payment_status' => 'pending',
             'order_date' => now(),
         ]);
 
         Order::factory()->create([
             'status' => 'delivered',
             'total' => 999999,
+            'payment_status' => 'paid',
             'order_date' => now(),
         ]);
 
@@ -448,7 +451,7 @@ class DashboardTest extends TestCase
             ->assertViewHas('activeOrders', 1)
             ->assertViewHas('completedOrders', 1)
             ->assertViewHas('cancelledOrders', 0)
-            ->assertViewHas('totalSpent', 200000.0)
+            ->assertViewHas('totalSpent', 125000.0)
             ->assertViewHas('statusSummary', [
                 'pending' => 0,
                 'processing' => 0,
