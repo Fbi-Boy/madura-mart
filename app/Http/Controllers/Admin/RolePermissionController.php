@@ -10,21 +10,33 @@ use Illuminate\View\View;
 
 class RolePermissionController
 {
-    public function index(): View
+    public function index(Request $request): View
     {
         $roles = config('permissions.role_labels', []);
         $descriptions = config('permissions.role_descriptions', []);
         $permissions = config('permissions.roles', []);
         $permissionLabels = config('permissions.permission_labels', []);
         $overrides = PermissionOverride::query()->get()->keyBy(fn ($item) => $item->role.'|'.$item->permission);
+        $permissionQuery = trim((string) $request->query('permission', ''));
 
-        $roleMatrix = collect($roles)->mapWithKeys(function (string $label, string $role) use ($descriptions, $permissions, $overrides) {
+        $roleMatrix = collect($roles)->mapWithKeys(function (string $label, string $role) use ($descriptions, $permissions, $permissionLabels, $overrides, $permissionQuery) {
             return [$role => [
                 'label' => $label,
                 'description' => $descriptions[$role] ?? '',
                 'permissions' => collect($permissions)
                     ->filter(fn (array $allowedRoles) => in_array($role, $allowedRoles, true))
                     ->keys()
+                    ->filter(function (string $permission) use ($permissionLabels, $permissionQuery): bool {
+                        if ($permissionQuery === '') {
+                            return true;
+                        }
+
+                        $label = $permissionLabels[$permission] ?? $permission;
+                        $needle = strtolower($permissionQuery);
+
+                        return str_contains(strtolower($permission), $needle)
+                            || str_contains(strtolower($label), $needle);
+                    })
                     ->values(),
                 'overrides' => $overrides->filter(fn ($override) => $override->role === $role),
             ]];
@@ -35,6 +47,7 @@ class RolePermissionController
             'permissions' => $permissionLabels,
             'configuredPermissions' => array_keys($permissions),
             'overrides' => $overrides,
+            'permissionQuery' => $permissionQuery,
         ]);
     }
 

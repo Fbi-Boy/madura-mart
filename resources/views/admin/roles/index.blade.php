@@ -25,6 +25,19 @@
             </p>
         </div>
 
+        <form method="GET" action="{{ route('admin.roles.index') }}" class="flex flex-col gap-3 rounded-2xl border border-black/[0.06] bg-white p-4 shadow-sm dark:border-white/[0.08] dark:bg-white/[0.04] sm:flex-row sm:items-end">
+            <div class="min-w-0 flex-1">
+                <label for="permission" class="text-xs font-semibold text-[#171719] dark:text-white">Cari permission</label>
+                <input id="permission" name="permission" value="{{ $permissionQuery }}" placeholder="contoh: laporan, stock, purchases.manage" class="mt-2 w-full rounded-xl border-black/[0.08] bg-transparent text-sm dark:border-white/[0.1] dark:text-white">
+            </div>
+            <div class="flex gap-2">
+                <button type="submit" class="rounded-xl bg-[#A8F23A] px-4 py-2.5 text-sm font-semibold text-gray-900">Cari</button>
+                @if($permissionQuery !== '')
+                    <a href="{{ route('admin.roles.index') }}" class="rounded-xl border border-black/[0.08] px-4 py-2.5 text-sm font-semibold text-black/65 dark:border-white/[0.1] dark:text-white/70">Reset</a>
+                @endif
+            </div>
+        </form>
+
         <form method="POST" action="{{ route('admin.roles.update') }}" class="space-y-4">
             @csrf
             @method('PATCH')
@@ -42,8 +55,9 @@
                     </div>
 
                     <div class="mt-5 grid gap-2 md:grid-cols-2">
-                        @foreach($permissions as $permission => $label)
+                        @forelse($data['permissions'] as $permission)
                             @php
+                                $label = $permissions[$permission] ?? $permission;
                                 $defaultEnabled = $data['permissions']->contains($permission);
                                 $override = $overrides[$role.'|'.$permission] ?? null;
                                 $enabled = $override ? $override->enabled : $defaultEnabled;
@@ -69,7 +83,9 @@
                                     <span class="ml-auto shrink-0 rounded-full bg-yellow-50 px-2 py-1 text-[9px] font-semibold text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-300">override</span>
                                 @endif
                             </label>
-                        @endforeach
+                        @empty
+                            <p class="md:col-span-2 rounded-xl border border-dashed border-black/[0.08] p-4 text-xs text-black/45 dark:border-white/[0.1] dark:text-white/45">Tidak ada permission yang cocok dengan pencarian.</p>
+                        @endforelse
                     </div>
                 </section>
             @endforeach
