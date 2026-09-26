@@ -48,4 +48,35 @@ class RolePermissionTest extends TestCase
                 && ! $roles['customer']['permissions']->contains('audit-log.view')
             );
     }
+
+    public function test_role_permission_workspace_can_filter_by_permission_name_or_label(): void
+    {
+        $user = User::factory()->create(['role' => 'super-admin']);
+
+        $this->actingAs($user)
+            ->get(route('admin.roles.index', ['permission' => 'supplier']))
+            ->assertOk()
+            ->assertViewHas('permissionQuery', 'supplier')
+            ->assertViewHas('roles', fn ($roles) =>
+                $roles['purchasing']['permissions']->contains('suppliers.manage')
+                && $roles['admin']['permissions']->contains('suppliers.manage')
+                && ! $roles['purchasing']['permissions']->contains('stock.manage')
+                && ! $roles['customer']['permissions']->contains('suppliers.manage')
+            )
+            ->assertSee('Filter aktif:');
+    }
+
+    public function test_role_permission_workspace_search_matches_permission_key(): void
+    {
+        $user = User::factory()->create(['role' => 'super-admin']);
+
+        $this->actingAs($user)
+            ->get(route('admin.roles.index', ['permission' => 'role-management']))
+            ->assertOk()
+            ->assertViewHas('roles', fn ($roles) =>
+                $roles['super-admin']['permissions']->contains('role-management.view')
+                && $roles['admin']['permissions']->isEmpty()
+            );
+    }
+
 }
