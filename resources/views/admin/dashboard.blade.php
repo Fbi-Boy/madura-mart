@@ -195,6 +195,7 @@
                     <div class="rounded-xl bg-black/[0.025] p-3 dark:bg-white/[0.035]">
                         <p class="text-[10px] uppercase tracking-[0.07em] text-black/35 dark:text-white/35">Pembelian draft</p>
                         <p class="mt-1 text-xl font-semibold text-[#171719] dark:text-white">{{ number_format($pendingPurchases) }}</p>
+                        <p class="mt-1 text-[10px] text-black/35 dark:text-white/35">Rp {{ number_format($pendingPurchaseValue, 0, ',', '.') }}</p>
                     </div>
                 </div>
 

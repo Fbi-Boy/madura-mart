@@ -531,6 +531,10 @@ class DashboardController extends Controller
             ->where('status', 'draft')
             ->count();
 
+        $pendingPurchaseValue = Purchase::query()
+            ->where('status', 'draft')
+            ->sum('total');
+
         $activeCustomers = Customer::query()
             ->where('is_active', true)
             ->count();
@@ -578,6 +582,7 @@ class DashboardController extends Controller
             'lowStockProducts',
             'pendingOrders',
             'pendingPurchases',
+            'pendingPurchaseValue',
             'activeCustomers',
             'activeCouriers',
             'recentSales',
