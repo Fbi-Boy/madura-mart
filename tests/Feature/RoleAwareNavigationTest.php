@@ -30,6 +30,14 @@ class RoleAwareNavigationTest extends TestCase
             ->assertSee(route('purchasing.suppliers.index'), false);
     }
 
+    public function test_kurir_navigation_exposes_delivery_history(): void
+    {
+        $this->actingAs(User::factory()->create(['role' => 'kurir']))
+            ->get(route('dashboard'))
+            ->assertOk()
+            ->assertSee(route('kurir.pengiriman.riwayat'), false);
+    }
+
     public function test_customer_navigation_exposes_shopping_workspaces(): void
     {
         $this->actingAs(User::factory()->create(['role' => 'customer']))
