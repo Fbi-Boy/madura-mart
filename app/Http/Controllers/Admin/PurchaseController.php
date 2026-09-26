@@ -65,7 +65,7 @@ class PurchaseController extends Controller
             'items.*.unit_price' => ['required','numeric','min:0'],
         ]);
 
-        DB::transaction(function () use ($data, $request) {
+        $purchase = DB::transaction(function () use ($data, $request) {
             $purchase = Purchase::create([
                 'invoice' => $data['invoice'],
                 'supplier_id' => $data['supplier_id'],
@@ -95,6 +95,8 @@ class PurchaseController extends Controller
             }
 
             $purchase->update(['total' => $total]);
+
+            return $purchase;
         });
 
         ActivityLogService::record(
