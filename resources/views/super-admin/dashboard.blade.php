@@ -117,6 +117,32 @@
             </div>
 
             <section class="rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                <div class="flex flex-col gap-3 border-b border-gray-100 px-5 py-4 dark:border-gray-700 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Aktivitas Sistem Terbaru</h3>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Jejak aktivitas terakhir yang tercatat di sistem.</p>
+                    </div>
+                    <a href="{{ route('admin.activity-logs.index') }}" class="w-fit rounded-lg bg-[#A8F23A] px-3 py-1.5 text-xs font-semibold text-gray-900 transition hover:brightness-95">Buka Audit Log</a>
+                </div>
+                <div class="divide-y divide-gray-100 dark:divide-gray-700">
+                    @forelse ($recentActivities as $activity)
+                        <div class="flex flex-col gap-2 px-5 py-4 sm:flex-row sm:items-start sm:justify-between">
+                            <div class="min-w-0">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="rounded-full bg-[#A8F23A]/20 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-gray-700 dark:text-[#A8F23A]">{{ $activity->action }}</span>
+                                    <span class="text-xs text-gray-400 dark:text-gray-500">{{ $activity->user?->name ?? 'System' }}</span>
+                                </div>
+                                <p class="mt-2 text-sm text-gray-700 dark:text-gray-200">{{ $activity->description }}</p>
+                            </div>
+                            <time class="shrink-0 text-xs text-gray-400 dark:text-gray-500">{{ $activity->created_at?->format('d/m/Y H:i') }}</time>
+                        </div>
+                    @empty
+                        <p class="px-5 py-10 text-center text-sm text-gray-400">Belum ada aktivitas tercatat.</p>
+                    @endforelse
+                </div>
+            </section>
+
+            <section class="rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
                 <div class="border-b border-gray-100 px-5 py-4 dark:border-gray-700">
                     <h3 class="font-semibold text-gray-900 dark:text-white">Akun Terbaru</h3>
                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Aktivitas pendaftaran akun terbaru.</p>
