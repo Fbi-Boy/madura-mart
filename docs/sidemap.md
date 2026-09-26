@@ -503,7 +503,9 @@ Pengembangan Madura Mart dilakukan secara bertahap.
 
 ## PHASE 4 — PURCHASING
 - [x] Supplier
-- [ ] Purchase Order (draft creation tersedia untuk role purchasing)
+- [x] Purchase Order
+  - [x] Buat PO draft
+  - [x] Kirim / submit PO
   - [x] Batalkan PO draft sebelum diterima gudang
 - [x] Pembelian
 - [x] Penerimaan Barang
@@ -517,8 +519,8 @@ Pengembangan Madura Mart dilakukan secara bertahap.
 - [x] Retur
 
 ## PHASE 6 — CUSTOMER
-- [ ] Produk
-- [ ] Keranjang
+- [x] Produk
+- [x] Keranjang
 - [x] Checkout
 - [x] Pembayaran
 - [x] Pesanan Monitoring
