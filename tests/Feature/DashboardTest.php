@@ -163,7 +163,7 @@ class DashboardTest extends TestCase
             'supplier_id' => $supplier->id,
             'status' => 'cancelled',
             'total' => 50000,
-            'purchase_date' => now()->subDay(),
+            'purchase_date' => now(),
         ]);
 
         $this->actingAs($user)
