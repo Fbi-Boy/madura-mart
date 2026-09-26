@@ -58,6 +58,9 @@
                 <a href="{{ route('admin.distributors.index') }}" class="menu-link">Distributor Master</a>
                 <a href="{{ route('admin.couriers.index') }}" class="menu-link">Kurir Master</a>
                 <a href="{{ route('admin.users.index') }}" class="menu-link">User & Staff</a>
+                @if(auth()->user()->role === 'super-admin')
+                    <a href="{{ route('admin.roles.index') }}" class="menu-link">Role & Permission</a>
+                @endif
                 <a href="{{ route('admin.units.index') }}" class="menu-link">Satuan</a>
                 <a href="{{ route('admin.purchases.index') }}" class="menu-link">Pembelian</a>
             </div>
