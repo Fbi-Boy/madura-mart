@@ -73,6 +73,16 @@ class PurchaseOrderSubmissionTest extends TestCase
             ->assertDontSee($draft->invoice);
     }
 
+    public function test_warehouse_users_cannot_submit_purchase_orders(): void
+    {
+        $warehouse = User::factory()->create(['role' => 'gudang']);
+        $purchase = Purchase::factory()->create(['status' => 'draft']);
+
+        $this->actingAs($warehouse)
+            ->patch(route('purchasing.purchases.submit', $purchase))
+            ->assertForbidden();
+    }
+
     public function test_non_purchasing_users_cannot_submit_purchase_orders(): void
     {
         $admin = User::factory()->create(['role' => 'admin']);
