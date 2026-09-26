@@ -48,4 +48,27 @@ class RoleAwareNavigationTest extends TestCase
             ->assertSee(route('customer.orders.index'), false)
             ->assertSee(route('customer.address.edit'), false);
     }
+
+    public function test_admin_navigation_hides_a_permission_overridden_link(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        $this->actingAs($admin)
+            ->get(route('dashboard'))
+            ->assertOk()
+            ->assertSee(route('admin.monitoring.penjualan'), false);
+
+        \App\Models\PermissionOverride::query()->create([
+            'role' => 'admin',
+            'permission' => 'sales.manage',
+            'enabled' => false,
+            'updated_by' => $admin->id,
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('dashboard'))
+            ->assertOk()
+            ->assertDontSee(route('admin.monitoring.penjualan'), false);
+    }
+
 }
