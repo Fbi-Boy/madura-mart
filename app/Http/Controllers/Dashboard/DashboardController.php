@@ -134,6 +134,12 @@ class DashboardController extends Controller
 
         $draftPurchases = Purchase::query()
             ->where('status', 'draft')
+            ->whereNull('submitted_at')
+            ->count();
+
+        $submittedPurchases = Purchase::query()
+            ->where('status', 'draft')
+            ->whereNotNull('submitted_at')
             ->count();
 
         $receivedToday = Purchase::query()
@@ -148,10 +154,17 @@ class DashboardController extends Controller
 
         $draftPurchaseValue = (float) Purchase::query()
             ->where('status', 'draft')
+            ->whereNull('submitted_at')
+            ->sum('total');
+
+        $submittedPurchaseValue = (float) Purchase::query()
+            ->where('status', 'draft')
+            ->whereNotNull('submitted_at')
             ->sum('total');
 
         $statusSummary = [
-            'draft' => Purchase::query()->where('status', 'draft')->count(),
+            'draft' => $draftPurchases,
+            'submitted' => $submittedPurchases,
             'received' => Purchase::query()->where('status', 'received')->count(),
             'cancelled' => Purchase::query()->where('status', 'cancelled')->count(),
         ];
@@ -199,9 +212,11 @@ class DashboardController extends Controller
             'todayPurchases',
             'todayTransactions',
             'draftPurchases',
+            'submittedPurchases',
             'receivedToday',
             'receivedValueToday',
             'draftPurchaseValue',
+            'submittedPurchaseValue',
             'statusSummary',
             'recentPurchases',
             'supplierPurchases',

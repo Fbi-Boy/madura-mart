@@ -19,7 +19,8 @@
                     $kpis = [
                         ['label' => 'Supplier Aktif', 'value' => number_format($activeSuppliers, 0, ',', '.'), 'hint' => 'supplier yang tersedia', 'icon' => 'S'],
                         ['label' => 'Pembelian Hari Ini', 'value' => 'Rp '.number_format($todayPurchases, 0, ',', '.'), 'hint' => $todayTransactions.' transaksi', 'icon' => 'Rp'],
-                        ['label' => 'Draft Menunggu', 'value' => number_format($draftPurchases, 0, ',', '.'), 'hint' => 'perlu ditindaklanjuti', 'icon' => 'D'],
+                        ['label' => 'Draft Belum Dikirim', 'value' => number_format($draftPurchases, 0, ',', '.'), 'hint' => 'siap dikirim ke gudang', 'icon' => 'D'],
+                        ['label' => 'Menunggu Penerimaan', 'value' => number_format($submittedPurchases, 0, ',', '.'), 'hint' => 'sudah dikirim ke gudang', 'icon' => 'G'],
                         ['label' => 'Diterima Hari Ini', 'value' => number_format($receivedToday, 0, ',', '.'), 'hint' => 'transaksi berstatus received', 'icon' => 'R'],
                     ];
                 @endphp
@@ -77,7 +78,7 @@
                         <h3 class="font-semibold text-gray-900 dark:text-white">Status Pembelian</h3>
                         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Ringkasan seluruh transaksi.</p>
                         <div class="mt-5 space-y-3">
-                            @foreach (['draft' => 'Draft', 'received' => 'Received', 'cancelled' => 'Cancelled'] as $key => $label)
+                            @foreach (['draft' => 'Draft', 'submitted' => 'Menunggu Penerimaan', 'received' => 'Received', 'cancelled' => 'Cancelled'] as $key => $label)
                                 <div class="flex items-center justify-between rounded-xl bg-gray-50 px-4 py-3 dark:bg-gray-700/50">
                                     <span class="text-sm text-gray-600 dark:text-gray-300">{{ $label }}</span>
                                     <span class="font-semibold text-gray-900 dark:text-white">{{ number_format($statusSummary[$key], 0, ',', '.') }}</span>
@@ -111,12 +112,22 @@
                     <div class="flex items-start justify-between gap-4">
                         <div>
                             <h3 class="font-semibold text-gray-900 dark:text-white">Nilai Procurement</h3>
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Pisahkan nilai barang yang sudah diterima dan draft yang masih tertunda.</p>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Pisahkan PO yang belum dikirim, sudah dikirim ke gudang, dan yang telah diterima.</p>
                         </div>
                         <span class="rounded-full bg-[#A8F23A]/20 px-2.5 py-1 text-[10px] font-bold text-gray-800 dark:text-[#A8F23A]">LIVE</span>
                     </div>
 
-                    <div class="mt-5 grid gap-3 sm:grid-cols-2">
+                    <div class="mt-5 grid gap-3 sm:grid-cols-3">
+                        <div class="rounded-xl bg-gray-50 p-4 dark:bg-gray-700/50">
+                            <p class="text-[10px] font-semibold uppercase tracking-[0.08em] text-gray-500 dark:text-gray-400">Draft belum dikirim</p>
+                            <p class="mt-2 text-xl font-semibold text-gray-900 dark:text-white">Rp {{ number_format($draftPurchaseValue, 0, ',', '.') }}</p>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ $draftPurchases }} transaksi</p>
+                        </div>
+                        <div class="rounded-xl bg-yellow-50 p-4 dark:bg-yellow-900/10">
+                            <p class="text-[10px] font-semibold uppercase tracking-[0.08em] text-yellow-700 dark:text-yellow-300">Menunggu penerimaan</p>
+                            <p class="mt-2 text-xl font-semibold text-gray-900 dark:text-white">Rp {{ number_format($submittedPurchaseValue, 0, ',', '.') }}</p>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ $submittedPurchases }} transaksi</p>
+                        </div>
                         <div class="rounded-xl bg-[#A8F23A]/10 p-4">
                             <p class="text-[10px] font-semibold uppercase tracking-[0.08em] text-[#4d6800] dark:text-[#A8F23A]">Received hari ini</p>
                             <p class="mt-2 text-xl font-semibold text-gray-900 dark:text-white">Rp {{ number_format($receivedValueToday, 0, ',', '.') }}</p>
@@ -136,7 +147,8 @@
 
                     <div class="mt-5 space-y-3">
                         @foreach ([
-                            ['label' => 'Draft', 'value' => $statusSummary['draft'], 'tone' => 'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-300'],
+                            ['label' => 'Draft', 'value' => $statusSummary['draft'], 'tone' => 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200'],
+                            ['label' => 'Menunggu Penerimaan', 'value' => $statusSummary['submitted'], 'tone' => 'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-300'],
                             ['label' => 'Received', 'value' => $statusSummary['received'], 'tone' => 'bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-300'],
                             ['label' => 'Cancelled', 'value' => $statusSummary['cancelled'], 'tone' => 'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-300'],
                         ] as $step)
@@ -201,7 +213,7 @@
                 <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h3 class="font-semibold text-gray-900 dark:text-white">Fokus Operasional</h3>
-                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Prioritaskan {{ $draftPurchases }} transaksi draft yang masih menunggu proses.</p>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Prioritaskan {{ $submittedPurchases }} PO yang sudah dikirim ke gudang dan {{ $draftPurchases }} draft yang belum disubmit.</p>
                     </div>
                     <a href="{{ route('purchasing.purchases.index') }}" class="inline-flex w-fit rounded-full bg-[#A8F23A] px-3 py-1.5 text-xs font-semibold text-gray-900 transition hover:opacity-80">Buka Purchase Order</a>
                 </div>
