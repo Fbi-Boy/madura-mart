@@ -77,6 +77,12 @@ class DashboardTest extends TestCase
         ]);
 
         Order::factory()->create([
+            'courier_id' => $courier->id,
+            'status' => 'shipped',
+            'order_date' => now()->subDays(3),
+        ]);
+
+        Order::factory()->create([
             'courier_id' => null,
             'status' => 'pending',
             'order_date' => now(),
@@ -89,8 +95,9 @@ class DashboardTest extends TestCase
             ->assertViewHas('todayOrders', 2)
             ->assertViewHas('pendingOrders', 0)
             ->assertViewHas('shippingOrders', 1)
-            ->assertViewHas('activeDeliveryOrders', 1)
-            ->assertViewHas('deliveryRate', 50.0)
+            ->assertViewHas('activeDeliveryOrders', 2)
+            ->assertViewHas('staleShipments', 1)
+            ->assertViewHas('deliveryRate', 66.7)
             ->assertViewHas('priorityOrders', fn ($orders) => $orders->count() === 1)
             ->assertViewHas('deliveredOrders', 1)
             ->assertViewHas('statusSummary', [
