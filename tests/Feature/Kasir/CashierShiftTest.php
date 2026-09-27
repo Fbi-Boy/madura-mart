@@ -29,6 +29,7 @@ class CashierShiftTest extends TestCase
             'invoice' => 'INV-SHIFT-1',
             'sale_date' => '2026-09-24 22:10',
             'payment_method' => 'cash',
+            'paid_amount' => 125000,
             'items' => [['product_id' => $product->id, 'quantity' => 2]],
         ])->assertRedirect();
 
