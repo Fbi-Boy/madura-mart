@@ -116,6 +116,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('customers', CustomerController::class)->except(['show']);
         Route::resource('couriers', CourierController::class)->except(['show']);
         Route::resource('users', UserController::class)->except(['show']);
+        Route::patch('/users/{user}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggle-active');
+        Route::post('/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
         Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.index')->middleware('permission:role-management.view');
         Route::patch('/roles', [RolePermissionController::class, 'update'])->name('roles.update')->middleware('permission:role-management.view');
         Route::resource('units', UnitController::class)->except(['show']);
