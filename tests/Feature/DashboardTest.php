@@ -103,7 +103,7 @@ class DashboardTest extends TestCase
             ->assertViewHas('statusSummary', [
                 'pending' => 0,
                 'processing' => 0,
-                'shipped' => 1,
+                'shipped' => 2,
                 'delivered' => 1,
             ]);
     }
