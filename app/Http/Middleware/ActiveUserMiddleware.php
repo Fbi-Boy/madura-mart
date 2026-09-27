@@ -10,7 +10,7 @@ class ActiveUserMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (! $request->user()?->is_active) {
+        if ($request->user()?->is_active === false) {
             abort(403, 'Akun Anda sedang dinonaktifkan.');
         }
 
