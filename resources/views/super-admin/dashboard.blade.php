@@ -87,6 +87,40 @@
                 </div>
             </div>
 
+            <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">System Health</h3>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Status dasar lingkungan aplikasi tanpa menampilkan konfigurasi rahasia.</p>
+                    </div>
+                    <span class="inline-flex w-fit items-center rounded-full px-3 py-1 text-xs font-semibold {{ $systemHealth['database'] && $systemHealth['storage'] ? 'bg-[#A8F23A]/20 text-gray-800 dark:text-[#A8F23A]' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' }}">
+                        {{ $systemHealth['database'] && $systemHealth['storage'] ? 'Operational' : 'Attention Required' }}
+                    </span>
+                </div>
+                <div class="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                    <div class="rounded-xl bg-gray-50 p-4 dark:bg-gray-700/50">
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Database</p>
+                        <p class="mt-2 text-sm font-semibold {{ $systemHealth['database'] ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">
+                            {{ $systemHealth['database'] ? 'Connected' : 'Unavailable' }}
+                        </p>
+                    </div>
+                    <div class="rounded-xl bg-gray-50 p-4 dark:bg-gray-700/50">
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Storage</p>
+                        <p class="mt-2 text-sm font-semibold {{ $systemHealth['storage'] ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">
+                            {{ $systemHealth['storage'] ? 'Writable' : 'Read-only' }}
+                        </p>
+                    </div>
+                    <div class="rounded-xl bg-gray-50 p-4 dark:bg-gray-700/50">
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Cache</p>
+                        <p class="mt-2 text-sm font-semibold text-gray-900 dark:text-white">{{ $systemHealth['cache_driver'] }}</p>
+                    </div>
+                    <div class="rounded-xl bg-gray-50 p-4 dark:bg-gray-700/50">
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Queue</p>
+                        <p class="mt-2 text-sm font-semibold text-gray-900 dark:text-white">{{ $systemHealth['queue_driver'] }}</p>
+                    </div>
+                </div>
+            </section>
+
             <div class="grid gap-6 xl:grid-cols-[1fr_1.5fr]">
                 <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
                     <h3 class="font-semibold text-gray-900 dark:text-white">Distribusi Role</h3>
