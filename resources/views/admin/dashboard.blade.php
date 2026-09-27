@@ -137,6 +137,27 @@
             </section>
         </div>
 
+        <section class="rounded-2xl border border-black/[0.06] bg-white p-5 dark:border-white/[0.08] dark:bg-white/[0.04]">
+            <div class="flex items-center justify-between gap-3">
+                <div>
+                    <h2 class="text-sm font-semibold text-[#171719] dark:text-white">Tren omzet</h2>
+                    <p class="mt-1 text-xs text-black/40 dark:text-white/40">Penjualan berstatus paid selama enam bulan terakhir.</p>
+                </div>
+                <span class="rounded-full bg-[#A8F23A]/20 px-2.5 py-1 text-[10px] font-bold text-[#365500] dark:text-[#A8F23A]">6 BULAN</span>
+            </div>
+            <div class="mt-6 flex h-44 items-end gap-3">
+                @php($maxSalesTrend = max((float) $salesTrend->max('value'), 1))
+                @foreach ($salesTrend as $point)
+                    @php($height = max(8, (int) (($point['value'] / $maxSalesTrend) * 100)))
+                    <div class="flex min-w-0 flex-1 flex-col items-center justify-end gap-2">
+                        <span class="text-[10px] font-medium text-black/35 dark:text-white/35">Rp {{ number_format($point['value'] / 1000, 0, ',', '.') }}k</span>
+                        <div class="w-full max-w-14 rounded-t-lg bg-[#A8F23A]/25 dark:bg-[#A8F23A]/15" style="height: {{ $height }}%"></div>
+                        <span class="text-[10px] font-semibold text-black/45 dark:text-white/45">{{ $point['label'] }}</span>
+                    </div>
+                @endforeach
+            </div>
+        </section>
+
         <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <section class="rounded-2xl border border-black/[0.06] bg-white p-5 dark:border-white/[0.08] dark:bg-white/[0.04]">
                 <div class="flex items-center justify-between">
