@@ -28,6 +28,7 @@ class SaleTransactionTest extends TestCase
                 'invoice' => 'INV-0001',
                 'sale_date' => '2026-09-24 22:00',
                 'payment_method' => 'cash',
+                'paid_amount' => 37500,
                 'items' => [
                     ['product_id' => $product->id, 'quantity' => 3],
                 ],
@@ -66,6 +67,7 @@ class SaleTransactionTest extends TestCase
                 'invoice' => 'INV-0002',
                 'sale_date' => '2026-09-24 22:00',
                 'payment_method' => 'cash',
+                'paid_amount' => 12500,
                 'items' => [
                     ['product_id' => $product->id, 'quantity' => 1],
                 ],
@@ -87,6 +89,7 @@ class SaleTransactionTest extends TestCase
                 'invoice' => 'INV-0003',
                 'sale_date' => '2026-09-24 22:00',
                 'payment_method' => 'cash',
+                'paid_amount' => 37500,
                 'items' => [
                     ['product_id' => $product->id, 'quantity' => 3],
                 ],

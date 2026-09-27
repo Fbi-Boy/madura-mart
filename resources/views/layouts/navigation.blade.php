@@ -61,16 +61,11 @@
                 @endif
                 @if(auth()->user()->hasPermission('reports.view'))
                 <a href="{{ route('admin.report.penjualan') }}" class="menu-link">Laporan Penjualan</a>
-                @endif
-                @if(auth()->user()->hasPermission('reports.view'))
                 <a href="{{ route('admin.report.pembelian') }}" class="menu-link">Laporan Pembelian</a>
-                @endif
-                @if(auth()->user()->hasPermission('reports.view'))
-                <a href="{{ route('admin.report.stok') }}" class="menu-link">Stok</a>
-                @if(auth()->user()->hasPermission('reports.view'))
+                <a href="{{ route('admin.report.stok') }}" class="menu-link">Laporan Stok</a>
+                <a href="{{ route('admin.report.transaksi') }}" class="menu-link">Laporan Transaksi</a>
                 <a href="{{ route('admin.report.pengiriman') }}" class="menu-link">Laporan Pengiriman</a>
                 <a href="{{ route('admin.report.pelanggan') }}" class="menu-link">Laporan Pelanggan</a>
-                @endif
                 @endif
                 <a href="{{ route('admin.categories.index') }}" class="menu-link">Kategori</a>
                 <a href="{{ route('admin.products.index') }}" class="menu-link">Produk Master</a>
