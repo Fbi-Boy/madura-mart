@@ -651,6 +651,26 @@ class DashboardController extends Controller
             ->where('status', 'draft')
             ->sum('total');
 
+        $submittedPurchases = Purchase::query()
+            ->where('status', 'draft')
+            ->whereNotNull('submitted_at')
+            ->count();
+
+        $submittedPurchaseValue = (float) Purchase::query()
+            ->where('status', 'draft')
+            ->whereNotNull('submitted_at')
+            ->sum('total');
+
+        $receivedPurchasesToday = Purchase::query()
+            ->where('status', 'received')
+            ->whereDate('purchase_date', $today)
+            ->count();
+
+        $receivedPurchaseValueToday = (float) Purchase::query()
+            ->where('status', 'received')
+            ->whereDate('purchase_date', $today)
+            ->sum('total');
+
         $activeCustomers = Customer::query()
             ->where('is_active', true)
             ->count();
@@ -723,6 +743,10 @@ class DashboardController extends Controller
             'pendingOrders',
             'pendingPurchases',
             'pendingPurchaseValue',
+            'submittedPurchases',
+            'submittedPurchaseValue',
+            'receivedPurchasesToday',
+            'receivedPurchaseValueToday',
             'activeCustomers',
             'activeCouriers',
             'recentSales',
