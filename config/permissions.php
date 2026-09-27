@@ -44,7 +44,7 @@ return [
         'activity-log.view' => ['admin', 'super-admin'],
         'audit-log.view' => ['super-admin'],
         'system-settings.view' => ['admin', 'super-admin'],
-        'system-settings.update' => ['admin', 'super-admin'],
+        'system-settings.update' => ['super-admin'],
         'system-monitoring.view' => ['admin', 'super-admin'],
         'reports.view' => ['admin', 'super-admin'],
         'payments.verify' => ['admin', 'super-admin'],
