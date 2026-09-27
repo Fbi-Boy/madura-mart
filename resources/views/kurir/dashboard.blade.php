@@ -35,6 +35,16 @@
                 </div>
             </div>
 
+            <div class="rounded-2xl border border-orange-200 bg-orange-50 p-5 dark:border-orange-900/50 dark:bg-orange-900/10">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Pengiriman Perlu Perhatian</h3>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">{{ $staleShipments }} pesanan berstatus shipped sejak 2 hari lalu atau lebih.</p>
+                    </div>
+                    <a href="{{ route('kurir.pengiriman.riwayat') }}" class="inline-flex w-fit rounded-full border border-orange-300 bg-white px-3 py-1.5 text-xs font-semibold text-orange-700 transition hover:bg-orange-100 dark:border-orange-800 dark:bg-gray-800 dark:text-orange-300">Buka Riwayat</a>
+                </div>
+            </div>
+
             <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
                 @php
                     $kpis = [
