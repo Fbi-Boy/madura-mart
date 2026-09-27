@@ -188,6 +188,12 @@ class DashboardController extends Controller
             ->whereDate('purchase_date', $today)
             ->sum('total');
 
+        $overdueReceiving = Purchase::query()
+            ->where('status', 'draft')
+            ->whereNotNull('submitted_at')
+            ->where('submitted_at', '<=', Carbon::now()->subDays(3))
+            ->count();
+
         $draftPurchaseValue = (float) Purchase::query()
             ->where('status', 'draft')
             ->whereNull('submitted_at')
@@ -260,6 +266,7 @@ class DashboardController extends Controller
             'submittedPurchases',
             'receivedToday',
             'receivedValueToday',
+            'overdueReceiving',
             'draftPurchaseValue',
             'submittedPurchaseValue',
             'statusSummary',
