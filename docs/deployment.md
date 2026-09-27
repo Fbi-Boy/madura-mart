@@ -40,3 +40,4 @@ The Laravel Quality workflow validates the same cache-building commands used dur
 - Run migrations with `--force` only in the intended production deployment step.
 - Keep dependencies updated and review security advisories before release.
 - Back up the production database before destructive or irreversible migrations.
+
