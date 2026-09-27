@@ -266,7 +266,11 @@ class DashboardTest extends TestCase
             ->assertViewHas('pendingReceiving', 1)
             ->assertViewHas('activeDeliveries', 1)
             ->assertViewHas('lowStockProducts', 1)
-            ->assertViewHas('roleSummary', fn ($summary) => $summary['super-admin'] >= 1 && $summary['kasir'] >= 2);
+            ->assertViewHas('roleSummary', fn ($summary) => $summary['super-admin'] >= 1 && $summary['kasir'] >= 2)
+            ->assertSee(route('admin.monitoring.pesanan'), false)
+            ->assertSee(route('admin.report.pengiriman'), false)
+            ->assertSee(route('admin.monitoring.produk'), false)
+            ->assertSee(route('admin.monitoring.pembelian'), false);
     }
 
     public function test_purchasing_dashboard_uses_procurement_metrics(): void
