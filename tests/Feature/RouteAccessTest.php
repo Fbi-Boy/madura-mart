@@ -200,4 +200,25 @@ class RouteAccessTest extends TestCase
             ->assertDontSee('Admin Stores');
     }
 
+
+    public function test_customer_report_is_limited_to_administrative_roles(): void
+    {
+        foreach (['gudang', 'kasir', 'purchasing', 'kurir', 'customer'] as $role) {
+            $user = User::factory()->create(['role' => $role]);
+
+            $this->actingAs($user)
+                ->get('/admin/report/pelanggan')
+                ->assertForbidden();
+        }
+
+        foreach (['admin', 'super-admin'] as $role) {
+            $user = User::factory()->create(['role' => $role]);
+
+            $this->actingAs($user)
+                ->get('/admin/report/pelanggan')
+                ->assertOk()
+                ->assertSee('Laporan Pelanggan');
+        }
+    }
+
 }

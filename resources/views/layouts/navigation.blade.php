@@ -69,6 +69,7 @@
                 <a href="{{ route('admin.report.stok') }}" class="menu-link">Stok</a>
                 @if(auth()->user()->hasPermission('reports.view'))
                 <a href="{{ route('admin.report.pengiriman') }}" class="menu-link">Laporan Pengiriman</a>
+                <a href="{{ route('admin.report.pelanggan') }}" class="menu-link">Laporan Pelanggan</a>
                 @endif
                 @endif
                 <a href="{{ route('admin.categories.index') }}" class="menu-link">Kategori</a>
