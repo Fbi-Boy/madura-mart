@@ -58,14 +58,14 @@ class PermissionMiddlewareTest extends TestCase
         );
     }
 
-    public function test_system_settings_update_remains_admin_only(): void
+    public function test_system_settings_update_remains_super_admin_only(): void
     {
         $customer = User::factory()->create(['role' => 'customer']);
         $this->actingAs($customer)
             ->patch(route('admin.settings.update'), ['store_name' => 'Blocked'])
             ->assertForbidden();
 
-        $admin = User::factory()->create(['role' => 'admin']);
+        $admin = User::factory()->create(['role' => 'super-admin']);
         $this->actingAs($admin)
             ->patch(route('admin.settings.update'), [
                 'store_name' => 'Allowed',
