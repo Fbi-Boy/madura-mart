@@ -219,10 +219,10 @@ Route::middleware('auth')->group(function () {
         ->group(function () {
             Route::get('/pengiriman', [DeliveryTaskController::class, 'index'])
                 ->name('pengiriman.index');
-            Route::get('/pengiriman/{order}', [DeliveryTaskController::class, 'show'])
-                ->name('pengiriman.show');
             Route::get('/pengiriman/riwayat', [DeliveryHistoryController::class, 'index'])
                 ->name('pengiriman.riwayat');
+            Route::get('/pengiriman/{order}', [DeliveryTaskController::class, 'show'])
+                ->name('pengiriman.show');
 
             Route::patch('/pengiriman/{order}/status', [DeliveryStatusController::class, 'update'])
                 ->name('pengiriman.status');
