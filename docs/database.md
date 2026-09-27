@@ -49,3 +49,24 @@ Operational dashboards and reports repeatedly filter transactional and inventory
 - `suppliers(is_active)`
 
 The migration checks existing index names before creating them and only removes the named indexes during rollback. This keeps the optimization isolated from business behavior while supporting both SQLite CI and MySQL deployments.
+
+## Core Entity Map
+
+The current transactional model is organized around these relationships:
+
+| Area | Core entities | Relationship / responsibility |
+|---|---|---|
+| Catalog | Category, Product, Unit | A product belongs to a category and unit; product state controls whether it is operational. |
+| Procurement | Supplier, Purchase, PurchaseItem | A purchase belongs to a supplier and contains product line items; submitted purchases form the receiving boundary for Gudang. |
+| Sales POS | Sale, SaleItem, CashierShift | A paid sale contains line items and may be attached to the cashier shift that handled it. |
+| Online orders | Customer, Order, OrderItem | Customer-owned orders contain product items and progress through payment and delivery states. |
+| Delivery | Courier, Order | A courier can be assigned to orders and updates delivery status within the courier workflow. |
+| Stock | Product, StockMovement | Product stock is the current quantity; stock movements provide the signed operational ledger. |
+| Administration | User, ActivityLog | Users own authenticated actions; activity logs preserve operational and audit context. |
+
+### Cross-module boundaries
+
+- **Purchasing → Gudang:** Purchasing creates and submits procurement records; Gudang reviews receiving and updates physical stock.
+- **Kasir → Stock:** Paid POS sales reduce stock through the existing transaction workflow; returns restore eligible quantities.
+- **Customer → Kurir:** Customer orders carry delivery state; assigned couriers operate only on their own delivery assignments.
+- **Admin / Super Admin:** Monitoring reads operational data but should not bypass the domain rules owned by the operational role.
