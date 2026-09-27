@@ -93,6 +93,14 @@ class UserController extends Controller
             ]);
         }
 
+        if ($user->role === 'super-admin' && $data['role'] !== 'super-admin'
+            && $user->is_active
+            && User::query()->where('role', 'super-admin')->where('is_active', true)->count() <= 1) {
+            return back()->withInput()->withErrors([
+                'role' => 'Minimal satu Super Admin aktif harus tetap tersedia.',
+            ]);
+        }
+
         $user->update($data);
 
         ActivityLogService::record(
@@ -113,6 +121,13 @@ class UserController extends Controller
     public function toggleStatus(Request $request, User $user): RedirectResponse
     {
         abort_if($request->user()->is($user), 422, 'Akun yang sedang digunakan tidak dapat dinonaktifkan.');
+
+        if ($user->role === 'super-admin' && $user->is_active
+            && User::query()->where('role', 'super-admin')->where('is_active', true)->count() <= 1) {
+            return back()->withErrors([
+                'user' => 'Minimal satu Super Admin aktif harus tetap tersedia.',
+            ]);
+        }
 
         $user->update(['is_active' => ! $user->is_active]);
 
