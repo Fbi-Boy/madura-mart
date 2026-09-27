@@ -317,7 +317,7 @@ class DashboardTest extends TestCase
             ->assertViewHas('draftPurchaseValue', 150000.0)
             ->assertViewHas('statusSummary', [
                 'draft' => 1,
-                'submitted' => 0,
+                'submitted' => 1,
                 'received' => 1,
                 'cancelled' => 1,
             ])
