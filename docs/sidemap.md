@@ -123,6 +123,8 @@ Fokus: Monitoring dan administrasi operasional.
 - Laporan Pembelian
 - Laporan Stok
 - Laporan Transaksi
+- Laporan Pelanggan
+- Laporan Pengiriman
 
 
 # 4. GUDANG
@@ -550,6 +552,8 @@ Pengembangan Madura Mart dilakukan secara bertahap.
 - [x] Laporan Penjualan
 - [x] Laporan Pembelian
 - [x] Laporan Stok
+- [x] Laporan Transaksi
+- [x] Laporan Pelanggan
 - [x] Laporan Pengiriman
 
 ## PHASE 9 — SUPER ADMIN
