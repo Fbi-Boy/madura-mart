@@ -521,6 +521,7 @@ class DashboardController extends Controller
             'cash' => (clone $todaySales)->where('payment_method', 'cash')->sum('total'),
             'transfer' => (clone $todaySales)->where('payment_method', 'transfer')->sum('total'),
             'qris' => (clone $todaySales)->where('payment_method', 'qris')->sum('total'),
+            'debit' => (clone $todaySales)->where('payment_method', 'debit')->sum('total'),
         ];
 
         $shiftCashSales = $openShift
