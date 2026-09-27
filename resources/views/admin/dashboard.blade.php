@@ -168,9 +168,9 @@
             </div>
             <div class="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div class="rounded-xl bg-black/[0.025] p-4 dark:bg-white/[0.035]">
-                    <p class="text-[10px] uppercase tracking-[0.07em] text-black/35 dark:text-white/35">Draft</p>
+                    <p class="text-[10px] uppercase tracking-[0.07em] text-black/35 dark:text-white/35" >Total PO draft</p>
                     <p class="mt-1 text-xl font-semibold text-[#171719] dark:text-white">{{ number_format($pendingPurchases) }}</p>
-                    <p class="mt-1 text-xs text-black/40 dark:text-white/40">Rp {{ number_format($pendingPurchaseValue, 0, ',', '.') }}</p>
+                    <p class="mt-1 text-xs text-black/40 dark:text-white/40" >Rp {{ number_format($pendingPurchaseValue, 0, ',', '.') }}</p>
                 </div>
                 <div class="rounded-xl bg-amber-50 p-4 dark:bg-amber-500/10">
                     <p class="text-[10px] uppercase tracking-[0.07em] text-amber-700 dark:text-amber-300">Menunggu penerimaan</p>
