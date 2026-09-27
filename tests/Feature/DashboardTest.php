@@ -887,4 +887,102 @@ class DashboardTest extends TestCase
             );
         }
     }
+
+    public function test_cashier_can_record_cash_payment_and_change(): void
+    {
+        $user = User::factory()->create(['role' => 'kasir']);
+        $shift = \App\Models\CashierShift::factory()->create([
+            'user_id' => $user->id,
+            'status' => 'open',
+            'opening_cash' => 100000,
+        ]);
+        $product = Product::factory()->create([
+            'price' => 75000,
+            'stock' => 10,
+            'is_active' => true,
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('kasir.transaksi-baru.store'), [
+                'invoice' => 'INV-PAYMENT-001',
+                'sale_date' => now()->format('Y-m-d H:i:s'),
+                'payment_method' => 'cash',
+                'paid_amount' => 100000,
+                'items' => [
+                    ['product_id' => $product->id, 'quantity' => 1],
+                ],
+            ])
+            ->assertRedirect(route('kasir.riwayat-transaksi'));
+
+        $sale = Sale::query()->where('invoice', 'INV-PAYMENT-001')->firstOrFail();
+
+        $this->assertSame(75000.0, (float) $sale->total);
+        $this->assertSame(100000.0, (float) $sale->paid_amount);
+        $this->assertSame(25000.0, (float) $sale->change_amount);
+        $this->assertSame(9, $product->fresh()->stock);
+        $this->assertSame($shift->id, $sale->shift_id);
+    }
+
+    public function test_cashier_can_record_debit_payment_without_cash_change(): void
+    {
+        $user = User::factory()->create(['role' => 'kasir']);
+        CashierShift::factory()->create([
+            'user_id' => $user->id,
+            'status' => 'open',
+            'opening_cash' => 100000,
+        ]);
+        $product = Product::factory()->create([
+            'price' => 50000,
+            'stock' => 5,
+            'is_active' => true,
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('kasir.transaksi-baru.store'), [
+                'invoice' => 'INV-PAYMENT-002',
+                'sale_date' => now()->format('Y-m-d H:i:s'),
+                'payment_method' => 'debit',
+                'paid_amount' => 50000,
+                'items' => [
+                    ['product_id' => $product->id, 'quantity' => 1],
+                ],
+            ])
+            ->assertRedirect(route('kasir.riwayat-transaksi'));
+
+        $sale = Sale::query()->where('invoice', 'INV-PAYMENT-002')->firstOrFail();
+
+        $this->assertSame('debit', $sale->payment_method);
+        $this->assertSame(50000.0, (float) $sale->paid_amount);
+        $this->assertSame(0.0, (float) $sale->change_amount);
+    }
+
+    public function test_cashier_rejects_insufficient_cash_payment(): void
+    {
+        $user = User::factory()->create(['role' => 'kasir']);
+        CashierShift::factory()->create([
+            'user_id' => $user->id,
+            'status' => 'open',
+        ]);
+        $product = Product::factory()->create([
+            'price' => 100000,
+            'stock' => 5,
+            'is_active' => true,
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('kasir.transaksi-baru.store'), [
+                'invoice' => 'INV-PAYMENT-003',
+                'sale_date' => now()->format('Y-m-d H:i:s'),
+                'payment_method' => 'cash',
+                'paid_amount' => 50000,
+                'items' => [
+                    ['product_id' => $product->id, 'quantity' => 1],
+                ],
+            ])
+            ->assertStatus(422);
+
+        $this->assertDatabaseMissing('sales', ['invoice' => 'INV-PAYMENT-003']);
+        $this->assertSame(5, $product->fresh()->stock);
+    }
+
 }
