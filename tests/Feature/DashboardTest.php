@@ -986,4 +986,83 @@ class DashboardTest extends TestCase
         $this->assertSame(5, $product->fresh()->stock);
     }
 
+    public function test_courier_can_mark_owned_delivery_as_failed_with_reason(): void
+    {
+        $user = User::factory()->create(['role' => 'kurir']);
+        $courier = Courier::factory()->create([
+            'email' => $user->email,
+            'is_active' => true,
+        ]);
+
+        $order = Order::factory()->create([
+            'courier_id' => $courier->id,
+            'status' => 'shipped',
+        ]);
+
+        $this->actingAs($user)
+            ->patch(route('kurir.pengiriman.status', $order), [
+                'status' => 'failed',
+                'failure_reason' => 'Penerima tidak dapat dihubungi.',
+            ])
+            ->assertRedirect(route('dashboard'));
+
+        $order->refresh();
+
+        $this->assertSame('failed', $order->status);
+        $this->assertSame('Penerima tidak dapat dihubungi.', $order->delivery_failure_reason);
+        $this->assertDatabaseHas('activity_logs', [
+            'action' => 'delivery.status_updated',
+            'subject_type' => Order::class,
+            'subject_id' => $order->id,
+        ]);
+    }
+
+    public function test_courier_must_provide_reason_for_failed_delivery(): void
+    {
+        $user = User::factory()->create(['role' => 'kurir']);
+        $courier = Courier::factory()->create([
+            'email' => $user->email,
+            'is_active' => true,
+        ]);
+
+        $order = Order::factory()->create([
+            'courier_id' => $courier->id,
+            'status' => 'processing',
+        ]);
+
+        $this->actingAs($user)
+            ->patch(route('kurir.pengiriman.status', $order), [
+                'status' => 'failed',
+            ])
+            ->assertSessionHasErrors('failure_reason');
+
+        $this->assertSame('processing', $order->fresh()->status);
+    }
+
+    public function test_failed_delivery_is_scoped_to_the_assigned_courier(): void
+    {
+        $user = User::factory()->create(['role' => 'kurir']);
+        $otherCourier = Courier::factory()->create(['is_active' => true]);
+
+        $order = Order::factory()->create([
+            'courier_id' => $otherCourier->id,
+            'status' => 'shipped',
+        ]);
+
+        Courier::factory()->create([
+            'email' => $user->email,
+            'is_active' => true,
+        ]);
+
+        $this->actingAs($user)
+            ->patch(route('kurir.pengiriman.status', $order), [
+                'status' => 'failed',
+                'failure_reason' => 'Tidak ada penerima.',
+            ])
+            ->assertForbidden();
+
+        $this->assertSame('shipped', $order->fresh()->status);
+    }
+
+
 }
