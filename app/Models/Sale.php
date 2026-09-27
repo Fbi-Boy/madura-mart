@@ -19,6 +19,8 @@ class Sale extends Model
         'sale_date',
         'total',
         'payment_method',
+        'paid_amount',
+        'change_amount',
         'status',
         'notes',
     ];
@@ -28,6 +30,8 @@ class Sale extends Model
         return [
             'sale_date' => 'datetime',
             'total' => 'decimal:2',
+            'paid_amount' => 'decimal:2',
+            'change_amount' => 'decimal:2',
         ];
     }
 
