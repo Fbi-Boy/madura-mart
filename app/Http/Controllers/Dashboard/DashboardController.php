@@ -704,6 +704,17 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
+        $topCustomers = Sale::query()
+            ->where('status', 'paid')
+            ->whereBetween('sale_date', [$monthStart, Carbon::now()])
+            ->whereNotNull('customer_id')
+            ->with('customer:id,name')
+            ->selectRaw('customer_id, COUNT(*) as transaction_count, SUM(total) as total_spent')
+            ->groupBy('customer_id')
+            ->orderByDesc('total_spent')
+            ->limit(5)
+            ->get();
+
         $stockAlerts = Product::query()
             ->where('is_active', true)
             ->where('stock', '<=', 10)
@@ -753,6 +764,7 @@ class DashboardController extends Controller
             'recentOrders',
             'topProducts',
             'stockAlerts',
+            'topCustomers',
             'salesTrend',
         ));
     }
