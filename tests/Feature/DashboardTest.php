@@ -397,6 +397,27 @@ class DashboardTest extends TestCase
             ->assertSee('Menunggu Penerimaan');
     }
 
+    public function test_admin_dashboard_exposes_purchase_pipeline_metrics(): void
+    {
+        $user = User::factory()->create(['role' => 'admin']);
+
+        Purchase::factory()->create(['status' => 'draft', 'submitted_at' => null, 'total' => 100000]);
+        Purchase::factory()->create(['status' => 'draft', 'submitted_at' => now(), 'total' => 250000]);
+        Purchase::factory()->create(['status' => 'received', 'purchase_date' => now(), 'total' => 175000]);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('admin.dashboard')
+            ->assertViewHas('pendingPurchases', 2)
+            ->assertViewHas('pendingPurchaseValue', 350000.0)
+            ->assertViewHas('submittedPurchases', 1)
+            ->assertViewHas('submittedPurchaseValue', 250000.0)
+            ->assertViewHas('receivedPurchasesToday', 1)
+            ->assertViewHas('receivedPurchaseValueToday', 175000.0)
+            ->assertSee('Pipeline pembelian');
+    }
+
     public function test_admin_dashboard_uses_operational_database_metrics(): void
     {
         $user = User::factory()->create(['role' => 'admin']);

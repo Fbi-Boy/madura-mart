@@ -158,6 +158,33 @@
             </div>
         </section>
 
+        <section class="rounded-2xl border border-black/[0.06] bg-white p-5 dark:border-white/[0.08] dark:bg-white/[0.04]">
+            <div class="flex items-center justify-between gap-3">
+                <div>
+                    <h2 class="text-sm font-semibold text-[#171719] dark:text-white">Pipeline pembelian</h2>
+                    <p class="mt-1 text-xs text-black/40 dark:text-white/40">Ringkasan procurement yang perlu dipantau admin.</p>
+                </div>
+                <a href="{{ route('admin.monitoring.pembelian') }}" class="text-xs font-semibold text-[#4d6800] hover:underline dark:text-[#A8F23A]">Monitoring</a>
+            </div>
+            <div class="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <div class="rounded-xl bg-black/[0.025] p-4 dark:bg-white/[0.035]">
+                    <p class="text-[10px] uppercase tracking-[0.07em] text-black/35 dark:text-white/35" >Total PO draft</p>
+                    <p class="mt-1 text-xl font-semibold text-[#171719] dark:text-white">{{ number_format($pendingPurchases) }}</p>
+                    <p class="mt-1 text-xs text-black/40 dark:text-white/40" >Rp {{ number_format($pendingPurchaseValue, 0, ',', '.') }}</p>
+                </div>
+                <div class="rounded-xl bg-amber-50 p-4 dark:bg-amber-500/10">
+                    <p class="text-[10px] uppercase tracking-[0.07em] text-amber-700 dark:text-amber-300">Menunggu penerimaan</p>
+                    <p class="mt-1 text-xl font-semibold text-[#171719] dark:text-white">{{ number_format($submittedPurchases) }}</p>
+                    <p class="mt-1 text-xs text-black/40 dark:text-white/40">Rp {{ number_format($submittedPurchaseValue, 0, ',', '.') }}</p>
+                </div>
+                <div class="rounded-xl bg-[#A8F23A]/10 p-4">
+                    <p class="text-[10px] uppercase tracking-[0.07em] text-[#4d6800] dark:text-[#A8F23A]">Diterima hari ini</p>
+                    <p class="mt-1 text-xl font-semibold text-[#171719] dark:text-white">{{ number_format($receivedPurchasesToday) }}</p>
+                    <p class="mt-1 text-xs text-black/40 dark:text-white/40">Rp {{ number_format($receivedPurchaseValueToday, 0, ',', '.') }}</p>
+                </div>
+            </div>
+        </section>
+
         <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <section class="rounded-2xl border border-black/[0.06] bg-white p-5 dark:border-white/[0.08] dark:bg-white/[0.04]">
                 <div class="flex items-center justify-between">
