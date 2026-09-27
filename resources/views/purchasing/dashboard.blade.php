@@ -118,6 +118,31 @@
                 </section>
             </div>
 
+            <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Usia Receiving</h3>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Distribusi PO yang sudah disubmit dan masih menunggu penerimaan.</p>
+                    </div>
+                    <span class="rounded-full bg-[#A8F23A]/20 px-2.5 py-1 text-[10px] font-bold text-gray-800 dark:text-[#A8F23A]">AGING</span>
+                </div>
+                <div class="mt-5 grid gap-3 sm:grid-cols-3">
+                    @foreach ([
+                        ['label' => 'Hari ini', 'value' => $receivingAging['today']],
+                        ['label' => '1–3 hari', 'value' => $receivingAging['1_3_days']],
+                        ['label' => '> 3 hari', 'value' => $receivingAging['over_3_days']],
+                    ] as $age)
+                        <div class="rounded-xl bg-gray-50 p-4 dark:bg-gray-700/50">
+                            <p class="text-xs text-gray-500 dark:text-gray-400">{{ $age['label'] }}</p>
+                            <p class="mt-2 text-2xl font-semibold text-gray-900 dark:text-white">{{ number_format($age['value'], 0, ',', '.') }}</p>
+                            <div class="mt-3 h-1.5 rounded-full bg-gray-200 dark:bg-gray-600">
+                                <div class="h-1.5 rounded-full bg-[#A8F23A]" style="width: {{ $submittedPurchases > 0 ? min(100, ($age['value'] / $submittedPurchases) * 100) : 0 }}%"></div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
+
             <div class="grid gap-4 lg:grid-cols-2">
                 <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
                     <div class="flex items-start justify-between gap-4">

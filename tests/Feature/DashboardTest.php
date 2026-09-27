@@ -332,6 +332,43 @@ class DashboardTest extends TestCase
             ->assertSee(route('admin.monitoring.pembelian'), false);
     }
 
+
+    public function test_purchasing_dashboard_exposes_receiving_aging_buckets(): void
+    {
+        $user = User::factory()->create(['role' => 'purchasing']);
+        $supplier = Supplier::factory()->create(['is_active' => true]);
+
+        Purchase::factory()->create([
+            'supplier_id' => $supplier->id,
+            'status' => 'draft',
+            'submitted_at' => now(),
+        ]);
+
+        Purchase::factory()->create([
+            'supplier_id' => $supplier->id,
+            'status' => 'draft',
+            'submitted_at' => now()->subDays(2),
+        ]);
+
+        Purchase::factory()->create([
+            'supplier_id' => $supplier->id,
+            'status' => 'draft',
+            'submitted_at' => now()->subDays(5),
+        ]);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('purchasing.dashboard')
+            ->assertViewHas('receivingAging', [
+                'today' => 1,
+                '1_3_days' => 1,
+                'over_3_days' => 1,
+            ])
+            ->assertSee('Usia Receiving')
+            ->assertSee('1–3 hari');
+    }
+
     public function test_purchasing_dashboard_excludes_cancelled_purchases_from_today_totals(): void
     {
         $user = User::factory()->create(['role' => 'purchasing']);

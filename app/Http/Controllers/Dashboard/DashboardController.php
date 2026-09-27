@@ -194,6 +194,18 @@ class DashboardController extends Controller
             ->where('submitted_at', '<=', Carbon::now()->subDays(3))
             ->count();
 
+        $submittedReceiving = Purchase::query()
+            ->where('status', 'draft')
+            ->whereNotNull('submitted_at');
+
+        $receivingAging = [
+            'today' => (clone $submittedReceiving)->where('submitted_at', '>=', Carbon::today())->count(),
+            '1_3_days' => (clone $submittedReceiving)
+                ->whereBetween('submitted_at', [Carbon::now()->subDays(3), Carbon::now()->startOfDay()->subSecond()])
+                ->count(),
+            'over_3_days' => $overdueReceiving,
+        ];
+
         $draftPurchaseValue = (float) Purchase::query()
             ->where('status', 'draft')
             ->whereNull('submitted_at')
@@ -267,6 +279,7 @@ class DashboardController extends Controller
             'receivedToday',
             'receivedValueToday',
             'overdueReceiving',
+            'receivingAging',
             'draftPurchaseValue',
             'submittedPurchaseValue',
             'statusSummary',
