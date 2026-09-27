@@ -284,10 +284,12 @@ Fokus: Pengiriman pesanan.
 
 ## 7.2 Pengiriman
 - Lihat Tugas Pengiriman
+- Filter tugas berdasarkan status
 - Detail Pesanan
 - Informasi Penerima
 - Alamat Pengiriman
 - Nomor Kontak Penerima
+- Aksi status dari halaman tugas dan detail
 
 ## 7.3 Update Status Pengiriman
 
