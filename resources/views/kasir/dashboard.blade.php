@@ -66,10 +66,10 @@
             <div class="rounded-2xl border border-black/[0.06] bg-white p-4 shadow-[0_8px_24px_rgba(0,0,0,0.035)] dark:border-white/[0.08] dark:bg-white/[0.04] dark:shadow-none">
                 <p class="text-[10px] font-semibold uppercase tracking-[0.08em] text-black/40 dark:text-white/40">Non-cash</p>
                 <p class="mt-2 text-2xl font-semibold tracking-[-0.035em] text-[#171719] dark:text-white">
-                    Rp {{ number_format($paymentSummary['transfer'] + $paymentSummary['qris'], 0, ',', '.') }}
+                    Rp {{ number_format($paymentSummary['transfer'] + $paymentSummary['qris'] + $paymentSummary['debit'], 0, ',', '.') }}
                 </p>
                 <p class="mt-1 text-xs text-black/40 dark:text-white/40">
-                    Transfer + QRIS
+                    Transfer + QRIS + Debit
                 </p>
             </div>
         </div>
@@ -138,6 +138,7 @@
                         ['label' => 'Cash', 'value' => $paymentSummary['cash']],
                         ['label' => 'QRIS', 'value' => $paymentSummary['qris']],
                         ['label' => 'Transfer', 'value' => $paymentSummary['transfer']],
+                        ['label' => 'Debit / Kartu', 'value' => $paymentSummary['debit']],
                     ] as $payment)
                         <div class="rounded-xl bg-black/[0.025] p-3 dark:bg-white/[0.035]">
                             <div class="flex items-center justify-between gap-3">
