@@ -364,6 +364,39 @@ class DashboardTest extends TestCase
             );
     }
 
+    public function test_purchasing_dashboard_flags_submitted_purchases_older_than_three_days(): void
+    {
+        $user = User::factory()->create(['role' => 'purchasing']);
+        $supplier = Supplier::factory()->create(['is_active' => true]);
+
+        Purchase::factory()->create([
+            'supplier_id' => $supplier->id,
+            'status' => 'draft',
+            'submitted_at' => now()->subDays(4),
+            'purchase_date' => now()->subDays(4),
+        ]);
+
+        Purchase::factory()->create([
+            'supplier_id' => $supplier->id,
+            'status' => 'draft',
+            'submitted_at' => now()->subDays(2),
+            'purchase_date' => now()->subDays(2),
+        ]);
+
+        Purchase::factory()->create([
+            'supplier_id' => $supplier->id,
+            'status' => 'received',
+            'submitted_at' => now()->subDays(5),
+            'purchase_date' => now()->subDays(5),
+        ]);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('purchasing.dashboard')
+            ->assertViewHas('overdueReceiving', 1);
+    }
+
     public function test_purchasing_dashboard_separates_draft_and_submitted_purchase_orders(): void
     {
         $user = User::factory()->create(['role' => 'purchasing']);
