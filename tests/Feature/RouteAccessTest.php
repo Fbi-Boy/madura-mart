@@ -124,6 +124,26 @@ class RouteAccessTest extends TestCase
         $this->patch('/profile', [])->assertRedirect('/login');
     }
 
+
+    public function test_payment_verification_is_limited_to_authorized_admin_roles(): void
+    {
+        foreach (['gudang', 'kasir', 'purchasing', 'kurir', 'customer'] as $role) {
+            $user = User::factory()->create(['role' => $role]);
+
+            $this->actingAs($user)
+                ->get('/admin/payment-verification')
+                ->assertForbidden();
+        }
+
+        foreach (['admin', 'super-admin'] as $role) {
+            $user = User::factory()->create(['role' => $role]);
+
+            $this->actingAs($user)
+                ->get('/admin/payment-verification')
+                ->assertOk();
+        }
+    }
+
     public function test_role_dashboards_expose_their_primary_navigation_workspaces(): void
     {
         $cases = [
