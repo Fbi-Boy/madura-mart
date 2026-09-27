@@ -2,13 +2,25 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class RouteAccessTest extends TestCase
 {
+    use RefreshDatabase;
     public function test_guest_is_redirected_to_login_from_the_application_root(): void
     {
         $this->get('/')->assertRedirect('/login');
+    }
+
+    public function test_authenticated_user_is_redirected_to_the_dashboard_from_the_application_root(): void
+    {
+        $user = User::factory()->create(['role' => 'admin']);
+
+        $this->actingAs($user)
+            ->get('/')
+            ->assertRedirect(route('dashboard'));
     }
 
     public function test_guest_cannot_access_the_dashboard(): void

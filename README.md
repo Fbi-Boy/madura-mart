@@ -91,6 +91,7 @@ Project notes and development documentation live in the `docs/` directory:
 - [Project sitemap](docs/sidemap.md)
 - [Development roadmap](docs/to-do.md)
 - [Dashboard design system](docs/dashboard-design.md)
+- [Production deployment](docs/deployment.md)
 
 ## Contributing
 
