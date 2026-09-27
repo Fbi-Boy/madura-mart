@@ -7,6 +7,9 @@
                 <p class="text-sm text-gray-500 dark:text-gray-400">Logistics Operations · Pantau tugas pengiriman dan status pesanan.</p>
             </div>
             <div class="flex items-center gap-2">
+                <a href="{{ route('kurir.pengiriman.index') }}" class="rounded-xl bg-[#A8F23A] px-3 py-2 text-xs font-semibold text-gray-900 transition hover:brightness-95">
+                    Tugas
+                </a>
                 <a href="{{ route('kurir.pengiriman.riwayat') }}" class="rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-gray-700 transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">
                     Riwayat
                 </a>
