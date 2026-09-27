@@ -89,9 +89,9 @@ Route::middleware('auth')->group(function () {
         ->name('admin.payment-verification.')
         ->middleware('role:admin,super-admin')
         ->group(function () {
-            Route::get('/', [PaymentVerificationController::class, 'index'])->name('index');
-            Route::get('/{order}/proof', [PaymentVerificationController::class, 'downloadProof'])->name('proof');
-            Route::patch('/{order}', [PaymentVerificationController::class, 'update'])->name('update');
+            Route::get('/', [PaymentVerificationController::class, 'index'])->name('index')->middleware('permission:payments.verify');
+            Route::get('/{order}/proof', [PaymentVerificationController::class, 'downloadProof'])->name('proof')->middleware('permission:payments.verify');
+            Route::patch('/{order}', [PaymentVerificationController::class, 'update'])->name('update')->middleware('permission:payments.verify');
         });
 
     Route::prefix('admin/report')

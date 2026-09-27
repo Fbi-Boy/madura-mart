@@ -56,6 +56,9 @@
                 <a href="{{ route('admin.monitoring.client') }}" class="menu-link">Client</a>
                 <a href="{{ route('admin.monitoring.kurir') }}" class="menu-link">Kurir</a>
                 <a href="{{ route('admin.monitoring.supplier') }}" class="menu-link">Supplier</a>
+                @if(auth()->user()->hasPermission('payments.verify'))
+                <a href="{{ route('admin.payment-verification.index') }}" class="menu-link">Verifikasi Pembayaran</a>
+                @endif
                 @if(auth()->user()->hasPermission('reports.view'))
                 <a href="{{ route('admin.report.penjualan') }}" class="menu-link">Laporan Penjualan</a>
                 @endif
@@ -64,6 +67,9 @@
                 @endif
                 @if(auth()->user()->hasPermission('reports.view'))
                 <a href="{{ route('admin.report.stok') }}" class="menu-link">Stok</a>
+                @if(auth()->user()->hasPermission('reports.view'))
+                <a href="{{ route('admin.report.pengiriman') }}" class="menu-link">Laporan Pengiriman</a>
+                @endif
                 @endif
                 <a href="{{ route('admin.categories.index') }}" class="menu-link">Kategori</a>
                 <a href="{{ route('admin.products.index') }}" class="menu-link">Produk Master</a>
@@ -76,6 +82,10 @@
                 <a href="{{ route('admin.users.index') }}" class="menu-link">User & Staff</a>
                 @if(auth()->user()->role === 'super-admin')
                     <a href="{{ route('admin.roles.index') }}" class="menu-link">Role & Permission</a>
+                    <a href="{{ route('admin.settings.index') }}" class="menu-link">Pengaturan Sistem</a>
+                    <a href="{{ route('admin.activity-logs.index') }}" class="menu-link">Activity Log</a>
+                    <a href="{{ route('admin.audit-logs.index') }}" class="menu-link">Audit Log</a>
+                    <a href="{{ route('admin.system-monitoring.index') }}" class="menu-link">System Monitoring</a>
                 @endif
                 <a href="{{ route('admin.units.index') }}" class="menu-link">Satuan</a>
                 @if(auth()->user()->hasPermission('purchases.manage'))
@@ -117,6 +127,7 @@
         @elseif(auth()->user()->role === 'kurir')
 
             <div class="mt-3 space-y-0.5">
+                <a href="{{ route('kurir.pengiriman.index') }}" class="menu-link">Tugas Pengiriman</a>
                 <a href="{{ route('kurir.pengiriman.riwayat') }}" class="menu-link">Riwayat Pengiriman</a>
             </div>
 
@@ -193,5 +204,11 @@
     .dark .menu-link:hover {
         background: rgb(0 0 0 / 0.04);
         color: black;
+    }
+
+    .menu-link.active {
+        background: #A8F23A;
+        color: #171719;
+        font-weight: 600;
     }
 </style>

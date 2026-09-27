@@ -38,8 +38,8 @@
                             Selamat Datang Kembali
                         </p>
 
-                        <p class="mt-1 text-[14px] font-bold text-[#171719] dark:text-white">
-                            Admin Stores
+                        <p class="mt-1 text-[14px] font-semibold text-[#171719] dark:text-white">
+                            {{ auth()->user()->name }}
                         </p>
 
                     </div>
@@ -81,35 +81,20 @@
                 <div class="flex items-center gap-2 shrink-0">
 
                     {{-- SETTINGS --}}
-                    <button
-                        type="button"
+                    <a
+                        href="{{ in_array(auth()->user()->role, ['admin', 'super-admin'], true) && auth()->user()->hasPermission('system-settings.view') ? route('admin.settings.index') : route('profile.edit') }}"
                         class="w-[38px] h-[38px] flex items-center justify-center
                                rounded-full bg-[#EFF0F7] dark:bg-white/[0.06]
                                text-black/55 dark:text-white/55
                                hover:bg-black/[0.06] dark:hover:bg-white/[0.1] transition"
                         aria-label="Pengaturan"
                     >
-                        <svg
-                            class="w-[16px] h-[16px]"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.8"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        >
-                            <path d="M4 7h10"></path>
-                            <path d="M18 7h2"></path>
-                            <circle cx="16" cy="7" r="2"></circle>
-                            <path d="M4 12h2"></path>
-                            <path d="M10 12h10"></path>
-                            <circle cx="8" cy="12" r="2"></circle>
-                            <path d="M4 17h10"></path>
-                            <path d="M18 17h2"></path>
-                            <circle cx="16" cy="17" r="2"></circle>
+                        <svg class="w-[16px] h-[16px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 7h10"></path><path d="M18 7h2"></path><circle cx="16" cy="7" r="2"></circle>
+                            <path d="M4 12h2"></path><path d="M10 12h10"></path><circle cx="8" cy="12" r="2"></circle>
+                            <path d="M4 17h10"></path><path d="M18 17h2"></path><circle cx="16" cy="17" r="2"></circle>
                         </svg>
-                    </button>
-
+                    </a>
 
                     {{-- THEME --}}
                     <button
@@ -121,29 +106,16 @@
                                hover:bg-black/[0.06] dark:hover:bg-white/[0.1] transition"
                         aria-label="Gunakan Dark Mode"
                     >
-                        <svg
-                            class="w-[16px] h-[16px]"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.9"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        >
+                        <svg class="w-[16px] h-[16px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="4"></circle>
-                            <path d="M12 2v2"></path>
-                            <path d="M12 20v2"></path>
-                            <path d="m4.93 4.93 1.42 1.42"></path>
-                            <path d="m17.65 17.65 1.42 1.42"></path>
-                            <path d="M2 12h2"></path>
-                            <path d="M20 12h2"></path>
-                            <path d="m4.93 19.07-1.42-1.42"></path>
-                            <path d="m17.65 6.35 1.42-1.42"></path>
+                            <path d="M12 2v2"></path><path d="M12 20v2"></path>
+                            <path d="m4.93 4.93 1.42 1.42"></path><path d="m17.65 17.65 1.42 1.42"></path>
+                            <path d="M2 12h2"></path><path d="M20 12h2"></path>
+                            <path d="m4.93 19.07-1.42-1.42"></path><path d="m17.65 6.35-1.42 1.42"></path>
                         </svg>
                     </button>
 
-
-                    {{-- CABANG --}}
+                                        {{-- CABANG --}}
                     <button
                         type="button"
                         class="hidden sm:flex h-[38px] items-center gap-2 rounded-full

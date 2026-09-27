@@ -63,4 +63,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     updateThemeIcon();
+
+    document.querySelectorAll('.menu-link').forEach((link) => {
+        if (link.pathname === window.location.pathname) {
+            link.classList.add('active');
+        }
+    });
 });
