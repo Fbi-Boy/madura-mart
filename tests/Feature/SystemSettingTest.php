@@ -88,7 +88,7 @@ class SystemSettingTest extends TestCase
 
     public function test_invalid_email_is_rejected(): void
     {
-        $user = User::factory()->create(['role' => 'admin']);
+        $user = User::factory()->create(['role' => 'super-admin']);
 
         $this->actingAs($user)
             ->from(route('admin.settings.index'))
