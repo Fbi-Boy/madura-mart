@@ -48,6 +48,72 @@ class RouteAccessTest extends TestCase
         $this->get('/admin/report/stok')->assertRedirect('/login');
     }
 
+    public function test_admin_monitoring_is_denied_to_operational_roles(): void
+    {
+        foreach (['gudang', 'kasir', 'purchasing', 'kurir', 'customer'] as $role) {
+            $user = User::factory()->create(['role' => $role]);
+
+            $this->actingAs($user)
+                ->get('/admin/monitoring/produk')
+                ->assertForbidden();
+        }
+    }
+
+    public function test_purchasing_workspace_is_denied_to_other_roles(): void
+    {
+        foreach (['admin', 'gudang', 'kasir', 'kurir', 'customer'] as $role) {
+            $user = User::factory()->create(['role' => $role]);
+
+            $this->actingAs($user)
+                ->get('/purchasing/purchases')
+                ->assertForbidden();
+        }
+    }
+
+    public function test_warehouse_workspace_is_denied_to_other_roles(): void
+    {
+        foreach (['admin', 'kasir', 'purchasing', 'kurir', 'customer'] as $role) {
+            $user = User::factory()->create(['role' => $role]);
+
+            $this->actingAs($user)
+                ->get('/gudang/stock-opname')
+                ->assertForbidden();
+        }
+    }
+
+    public function test_cashier_workspace_is_denied_to_other_roles(): void
+    {
+        foreach (['admin', 'gudang', 'purchasing', 'kurir', 'customer'] as $role) {
+            $user = User::factory()->create(['role' => $role]);
+
+            $this->actingAs($user)
+                ->get('/kasir/riwayat-transaksi')
+                ->assertForbidden();
+        }
+    }
+
+    public function test_courier_workspace_is_denied_to_other_roles(): void
+    {
+        foreach (['admin', 'gudang', 'kasir', 'purchasing', 'customer'] as $role) {
+            $user = User::factory()->create(['role' => $role]);
+
+            $this->actingAs($user)
+                ->get('/kurir/pengiriman')
+                ->assertForbidden();
+        }
+    }
+
+    public function test_customer_workspace_is_denied_to_staff_roles(): void
+    {
+        foreach (['admin', 'gudang', 'kasir', 'purchasing', 'kurir'] as $role) {
+            $user = User::factory()->create(['role' => $role]);
+
+            $this->actingAs($user)
+                ->get('/customer/catalog')
+                ->assertForbidden();
+        }
+    }
+
     public function test_guest_cannot_access_the_profile_page(): void
     {
         $this->get('/profile')->assertRedirect('/login');
