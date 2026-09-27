@@ -8,6 +8,7 @@ use App\Services\ActivityLogService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class UserController extends Controller
@@ -28,6 +29,7 @@ class UserController extends Controller
     {
         $data = $this->validated($request);
         $data['password'] = Hash::make($data['password']);
+        $data['is_active'] = true;
 
         $user = User::create($data);
 
@@ -35,7 +37,7 @@ class UserController extends Controller
             'user.created',
             "User {$user->name} berhasil dibuat dengan role {$user->role}.",
             $user,
-            ['role' => $user->role],
+            ['role' => $user->role, 'is_active' => true],
             $request,
         );
 
@@ -51,6 +53,7 @@ class UserController extends Controller
     {
         $data = $this->validated($request, $user);
         $oldRole = $user->role;
+        $oldActive = $user->is_active;
 
         if (blank($data['password'] ?? null)) {
             unset($data['password']);
@@ -68,11 +71,51 @@ class UserController extends Controller
                 'role_before' => $oldRole,
                 'role_after' => $user->role,
                 'role_changed' => $oldRole !== $user->role,
+                'is_active_before' => $oldActive,
+                'is_active_after' => $user->is_active,
+                'status_changed' => $oldActive !== $user->is_active,
             ],
             $request,
         );
 
         return to_route('admin.users.index')->with('success', 'User berhasil diperbarui.');
+    }
+
+    public function toggleActive(Request $request, User $user): RedirectResponse
+    {
+        abort_if($request->user()->is($user), 422, 'Akun yang sedang digunakan tidak dapat dinonaktifkan.');
+
+        $user->update(['is_active' => ! $user->is_active]);
+
+        ActivityLogService::record(
+            $user->is_active ? 'user.activated' : 'user.deactivated',
+            "User {$user->name} ".($user->is_active ? 'diaktifkan' : 'dinonaktifkan').".",
+            $user,
+            ['is_active' => $user->is_active],
+            $request,
+        );
+
+        return to_route('admin.users.index')->with('success', 'Status user berhasil diperbarui.');
+    }
+
+    public function resetPassword(Request $request, User $user): RedirectResponse
+    {
+        abort_if($request->user()->is($user), 422, 'Gunakan fitur ubah password pada profil untuk akun sendiri.');
+
+        $temporaryPassword = Str::password(12);
+
+        $user->update(['password' => Hash::make($temporaryPassword)]);
+
+        ActivityLogService::record(
+            'user.password_reset',
+            "Password user {$user->name} di-reset oleh Super Admin.",
+            $user,
+            ['temporary_password_generated' => true],
+            $request,
+        );
+
+        return to_route('admin.users.index')
+            ->with('success', "Password {$user->name} berhasil di-reset. Password sementara: {$temporaryPassword}");
     }
 
     public function destroy(Request $request, User $user): RedirectResponse
@@ -104,6 +147,7 @@ class UserController extends Controller
             'email' => ['required', 'email', 'max:255', $uniqueEmail],
             'password' => [$user ? 'nullable' : 'required', 'string', 'min:8', 'confirmed'],
             'role' => ['required', 'in:admin,super-admin,gudang,kasir,purchasing,kurir,customer'],
+            'is_active' => ['sometimes', 'boolean'],
         ]);
     }
 }
