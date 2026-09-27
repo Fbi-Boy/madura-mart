@@ -3,10 +3,12 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class RouteAccessTest extends TestCase
 {
+    use RefreshDatabase;
     public function test_guest_is_redirected_to_login_from_the_application_root(): void
     {
         $this->get('/')->assertRedirect('/login');
