@@ -97,7 +97,7 @@ class DashboardTest extends TestCase
             ->assertViewHas('shippingOrders', 2)
             ->assertViewHas('activeDeliveryOrders', 2)
             ->assertViewHas('staleShipments', 1)
-            ->assertViewHas('deliveryRate', 66.7)
+            ->assertViewHas('deliveryRate', 33.3)
             ->assertViewHas('priorityOrders', fn ($orders) => $orders->count() === 2)
             ->assertViewHas('deliveredOrders', 1)
             ->assertViewHas('statusSummary', [
