@@ -123,4 +123,61 @@ class RouteAccessTest extends TestCase
     {
         $this->patch('/profile', [])->assertRedirect('/login');
     }
+
+    public function test_role_dashboards_expose_their_primary_navigation_workspaces(): void
+    {
+        $cases = [
+            'kurir' => [
+                route('kurir.pengiriman.index'),
+                route('kurir.pengiriman.riwayat'),
+            ],
+            'customer' => [
+                route('customer.catalog.index'),
+                route('customer.cart.index'),
+                route('customer.orders.index'),
+                route('customer.address.edit'),
+            ],
+            'purchasing' => [
+                route('purchasing.purchases.index'),
+                route('purchasing.suppliers.index'),
+            ],
+            'gudang' => [
+                route('gudang.stock-opname.index'),
+                route('gudang.penerimaan.index'),
+                route('gudang.barang-keluar.index'),
+                route('gudang.riwayat-stok.index'),
+            ],
+            'kasir' => [
+                route('kasir.transaksi-baru'),
+                route('kasir.riwayat-transaksi'),
+                route('kasir.retur'),
+                route('kasir.riwayat-shift'),
+            ],
+        ];
+
+        foreach ($cases as $role => $links) {
+            $user = User::factory()->create(['role' => $role]);
+
+            $response = $this->actingAs($user)->get('/dashboard')->assertOk();
+
+            foreach ($links as $link) {
+                $response->assertSee($link, false);
+            }
+        }
+    }
+
+    public function test_global_header_uses_authenticated_user_identity(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'kurir',
+            'name' => 'Kurir Utama',
+        ]);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertSee('Kurir Utama')
+            ->assertDontSee('Admin Stores');
+    }
+
 }
