@@ -15,7 +15,7 @@ return new class extends Migration
             $table->foreignId('courier_id')->nullable()->constrained('couriers')->nullOnDelete();
             $table->dateTime('order_date');
             $table->decimal('total', 15, 2)->default(0);
-            $table->enum('status', ['pending', 'processing', 'shipped', 'delivered', 'cancelled'])->default('pending');
+            $table->enum('status', ['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'failed'])->default('pending');
             $table->text('delivery_address')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();

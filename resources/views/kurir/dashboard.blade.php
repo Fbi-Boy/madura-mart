@@ -43,6 +43,7 @@
                         ['label' => 'Sedang Dikirim', 'value' => number_format($shippingOrders, 0, ',', '.'), 'hint' => 'status shipped'],
                         ['label' => 'Rute Aktif', 'value' => number_format($activeDeliveryOrders, 0, ',', '.'), 'hint' => 'processing + shipped'],
                         ['label' => 'Total Selesai', 'value' => number_format($deliveredOrders, 0, ',', '.'), 'hint' => 'status delivered'],
+                        ['label' => 'Gagal', 'value' => number_format($failedDeliveries, 0, ',', '.'), 'hint' => 'perlu tindak lanjut'],
                     ];
                 @endphp
                 @foreach ($kpis as $kpi)
@@ -159,7 +160,7 @@
                     <h3 class="font-semibold text-gray-900 dark:text-white">Status Pengiriman</h3>
                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Distribusi tugas pada akun kurir.</p>
                     <div class="mt-5 space-y-3">
-                        @foreach (['pending' => 'Menunggu', 'processing' => 'Diproses', 'shipped' => 'Dikirim', 'delivered' => 'Selesai'] as $key => $label)
+                        @foreach (['pending' => 'Menunggu', 'processing' => 'Diproses', 'shipped' => 'Dikirim', 'delivered' => 'Selesai', 'failed' => 'Gagal'] as $key => $label)
                             <div class="flex items-center justify-between rounded-xl bg-gray-50 px-4 py-3 dark:bg-gray-700/50"><span class="text-sm text-gray-600 dark:text-gray-300">{{ $label }}</span><span class="font-semibold text-gray-900 dark:text-white">{{ number_format($statusSummary[$key], 0, ',', '.') }}</span></div>
                         @endforeach
                     </div>

@@ -73,9 +73,24 @@
                                 <input type="hidden" name="status" value="{{ $nextStatus }}">
                                 <button class="w-full rounded-xl bg-[#A8F23A] px-4 py-3 text-sm font-semibold text-gray-900 hover:brightness-95">{{ $nextLabel }}</button>
                             </form>
+                            <div class="mt-4 border-t border-gray-200 pt-4 dark:border-gray-700">
+                                <p class="text-sm font-semibold text-gray-900 dark:text-white">Tandai gagal</p>
+                                <form method="POST" action="{{ route('kurir.pengiriman.status', $order) }}" class="mt-3 space-y-3">
+                                    @csrf
+                                    @method('PATCH')
+                                    <input type="hidden" name="status" value="failed">
+                                    <textarea name="failure_reason" rows="3" required maxlength="500" placeholder="Contoh: penerima tidak dapat dihubungi..." class="w-full rounded-xl border-gray-300 text-sm dark:border-gray-600 dark:bg-gray-900 dark:text-white"></textarea>
+                                    <button class="w-full rounded-xl border border-red-300 px-4 py-3 text-sm font-semibold text-red-700 hover:bg-red-50 dark:border-red-800 dark:text-red-300 dark:hover:bg-red-900/20">Tandai Pengiriman Gagal</button>
+                                </form>
+                            </div>
                         @else
                             <h3 class="mt-2 text-lg font-semibold text-gray-900 dark:text-white">Pengiriman selesai</h3>
                             <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Tidak ada status lanjutan untuk pesanan ini.</p>
+                            @if ($order->status === 'failed' && $order->delivery_failure_reason)
+                                <div class="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800 dark:border-red-900/50 dark:bg-red-900/10 dark:text-red-200">
+                                    <span class="font-semibold">Alasan gagal:</span> {{ $order->delivery_failure_reason }}
+                                </div>
+                            @endif
                         @endif
                     </div>
 

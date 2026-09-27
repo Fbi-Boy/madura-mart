@@ -420,6 +420,10 @@ class DashboardController extends Controller
             ->where('status', 'delivered')
             ->count();
 
+        $failedDeliveries = (clone $baseOrders)
+            ->where('status', 'failed')
+            ->count();
+
         $activeDeliveryOrders = (clone $baseOrders)
             ->whereIn('status', ['processing', 'shipped'])
             ->count();
@@ -430,7 +434,7 @@ class DashboardController extends Controller
             ->count();
 
         $deliveryBase = (clone $baseOrders)
-            ->whereIn('status', ['pending', 'processing', 'shipped', 'delivered'])
+            ->whereIn('status', ['pending', 'processing', 'shipped', 'delivered', 'failed'])
             ->count();
 
         $deliveryRate = $deliveryBase > 0
@@ -456,6 +460,7 @@ class DashboardController extends Controller
             'processing' => (clone $baseOrders)->where('status', 'processing')->count(),
             'shipped' => (clone $baseOrders)->where('status', 'shipped')->count(),
             'delivered' => (clone $baseOrders)->where('status', 'delivered')->count(),
+            'failed' => (clone $baseOrders)->where('status', 'failed')->count(),
         ];
 
         $recentOrders = (clone $baseOrders)
@@ -489,6 +494,7 @@ class DashboardController extends Controller
             'pendingOrders',
             'shippingOrders',
             'deliveredOrders',
+            'failedDeliveries',
             'activeDeliveryOrders',
             'staleDeliveries',
             'deliveryRate',
