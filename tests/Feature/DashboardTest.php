@@ -596,6 +596,41 @@ class DashboardTest extends TestCase
         $this->assertDashboardForRole('kurir', 'kurir.dashboard');
     }
 
+    public function test_courier_dashboard_flags_stale_delivery_tasks(): void
+    {
+        $user = User::factory()->create(['role' => 'kurir']);
+        $courier = Courier::factory()->create([
+            'email' => $user->email,
+            'is_active' => true,
+        ]);
+
+        Order::factory()->create([
+            'courier_id' => $courier->id,
+            'status' => 'shipped',
+            'order_date' => now()->subDays(4),
+        ]);
+
+        Order::factory()->create([
+            'courier_id' => $courier->id,
+            'status' => 'processing',
+            'order_date' => now()->subDays(2),
+        ]);
+
+        Order::factory()->create([
+            'courier_id' => $courier->id,
+            'status' => 'delivered',
+            'order_date' => now()->subDays(5),
+        ]);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('kurir.dashboard')
+            ->assertViewHas('staleDeliveries', 1)
+            ->assertSee('1 pengiriman belum selesai lebih dari 3 hari')
+            ->assertSee(route('kurir.pengiriman.index'), false);
+    }
+
     public function test_customer_users_see_the_customer_dashboard(): void
     {
         $this->assertDashboardForRole('customer', 'customer.dashboard');
