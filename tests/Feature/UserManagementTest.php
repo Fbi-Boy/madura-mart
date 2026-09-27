@@ -63,6 +63,25 @@ class UserManagementTest extends TestCase
             ->assertForbidden();
     }
 
+    public function test_super_admin_cannot_deactivate_or_demote_the_last_active_super_admin(): void
+    {
+        $superAdmin = User::factory()->create(['role' => 'super-admin', 'is_active' => true]);
+
+        $this->actingAs($superAdmin)
+            ->patch(route('admin.users.status', $superAdmin))
+            ->assertStatus(422);
+
+        $this->actingAs($superAdmin)
+            ->put(route('admin.users.update', $superAdmin), [
+                'name' => $superAdmin->name,
+                'email' => $superAdmin->email,
+                'role' => 'admin',
+                'password' => '',
+                'password_confirmation' => '',
+            ])
+            ->assertSessionHasErrors('role');
+    }
+
     public function test_super_admin_can_reset_a_user_password(): void
     {
         $superAdmin = User::factory()->create(['role' => 'super-admin']);
