@@ -23,6 +23,7 @@ class Order extends Model
         'status',
         'delivery_address',
         'notes',
+        'delivery_failure_reason',
     ];
 
     protected function casts(): array
