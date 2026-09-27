@@ -54,6 +54,19 @@
                 @endforeach
             </div>
 
+            @if ($staleDeliveries > 0)
+                <section class="rounded-2xl border border-orange-200 bg-orange-50 p-5 dark:border-orange-900/50 dark:bg-orange-900/10">
+                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-[0.14em] text-orange-700 dark:text-orange-300">Perlu Perhatian</p>
+                            <h3 class="mt-1 font-semibold text-gray-900 dark:text-white">{{ $staleDeliveries }} pengiriman belum selesai lebih dari 3 hari</h3>
+                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Tinjau status tugas agar pengiriman yang tertahan tidak terlewat.</p>
+                        </div>
+                        <a href="{{ route('kurir.pengiriman.index') }}" class="inline-flex w-fit rounded-xl bg-orange-500 px-3 py-2 text-xs font-semibold text-white transition hover:brightness-95">Tinjau Tugas</a>
+                    </div>
+                </section>
+            @endif
+
             <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
                 <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
