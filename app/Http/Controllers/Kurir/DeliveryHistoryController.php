@@ -19,7 +19,7 @@ class DeliveryHistoryController extends Controller
 
         $orders = Order::query()
             ->when($courier, fn ($query) => $query->where('courier_id', $courier->id), fn ($query) => $query->whereRaw('1 = 0'))
-            ->whereIn('status', ['delivered', 'cancelled'])
+            ->whereIn('status', ['delivered', 'failed', 'cancelled'])
             ->with('customer:id,name')
             ->latest('order_date')
             ->paginate(10)
