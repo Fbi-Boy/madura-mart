@@ -99,6 +99,7 @@ class DashboardTest extends TestCase
                 'processing' => 0,
                 'shipped' => 1,
                 'delivered' => 1,
+                'failed' => 0,
             ]);
     }
 
