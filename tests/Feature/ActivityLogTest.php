@@ -31,7 +31,7 @@ class ActivityLogTest extends TestCase
     public function test_user_lifecycle_actions_are_recorded(): void
     {
         $admin = User::factory()->create([
-            'role' => 'admin',
+            'role' => 'super-admin',
             'email' => 'admin@maduramart.test',
         ]);
 
