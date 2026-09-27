@@ -55,7 +55,8 @@ class SaleController extends Controller
             'invoice' => ['required', 'string', 'max:50', 'unique:sales,invoice'],
             'customer_id' => ['nullable', Rule::exists('customers', 'id')->where('is_active', true)],
             'sale_date' => ['required', 'date'],
-            'payment_method' => ['required', Rule::in(['cash', 'transfer', 'qris'])],
+            'payment_method' => ['required', Rule::in(['cash', 'transfer', 'qris', 'debit'])],
+            'paid_amount' => ['nullable', 'numeric', 'min:0', 'required_if:payment_method,cash'],
             'notes' => ['nullable', 'string'],
             'items' => ['required', 'array', 'min:1'],
             'items.*.product_id' => ['required', 'distinct', Rule::exists('products', 'id')->where('is_active', true)],
@@ -71,6 +72,8 @@ class SaleController extends Controller
                 'sale_date' => $validated['sale_date'],
                 'total' => 0,
                 'payment_method' => $validated['payment_method'],
+                'paid_amount' => 0,
+                'change_amount' => 0,
                 'status' => 'paid',
                 'notes' => $validated['notes'] ?? null,
             ]);
@@ -103,7 +106,19 @@ class SaleController extends Controller
                 $total += $subtotal;
             }
 
-            $sale->update(['total' => $total]);
+            $paidAmount = $validated['payment_method'] === 'cash'
+                ? (float) ($validated['paid_amount'] ?? 0)
+                : $total;
+
+            if ($paidAmount < $total) {
+                abort(422, 'Nominal pembayaran tidak mencukupi.');
+            }
+
+            $sale->update([
+                'total' => $total,
+                'paid_amount' => $paidAmount,
+                'change_amount' => max(0, $paidAmount - $total),
+            ]);
         });
 
         return redirect()

@@ -95,11 +95,24 @@
             </div>
             <div class="rounded-2xl border border-black/5 bg-white p-5 dark:border-white/10 dark:bg-white/5">
                 <label class="text-sm font-medium text-[#171719] dark:text-white">Metode Pembayaran</label>
-                <select name="payment_method" class="mt-2 w-full rounded-xl border border-black/10 bg-transparent px-3 py-2.5 text-sm dark:border-white/10">
+                <select name="payment_method" x-model="paymentMethod" class="mt-2 w-full rounded-xl border border-black/10 bg-transparent px-3 py-2.5 text-sm dark:border-white/10">
                     <option value="cash">Cash</option>
                     <option value="transfer">Transfer</option>
                     <option value="qris">QRIS</option>
+                    <option value="debit">Debit / Kartu</option>
                 </select>
+                <div class="mt-4">
+                    <label class="text-sm font-medium text-[#171719] dark:text-white">Nominal Dibayar</label>
+                    <input type="number" name="paid_amount" min="0" step="0.01" x-model.number="paidAmount"
+                        :readonly="paymentMethod !== 'cash'"
+                        :value="paymentMethod === 'cash' ? paidAmount : total()"
+                        class="mt-2 w-full rounded-xl border border-black/10 bg-transparent px-3 py-2.5 text-sm dark:border-white/10 read-only:bg-black/[0.03] dark:read-only:bg-white/[0.03]">
+                    <p class="mt-1 text-[11px] text-black/40 dark:text-white/40">Untuk non-cash, nominal otomatis mengikuti total transaksi.</p>
+                </div>
+                <div class="mt-4 rounded-xl bg-[#A8F23A]/10 p-3 dark:bg-[#A8F23A]/5">
+                    <p class="text-xs text-black/45 dark:text-white/45">Kembalian</p>
+                    <p class="mt-1 text-lg font-semibold text-[#171719] dark:text-white" x-text="formatCurrency(change())"></p>
+                </div>
                 <div class="mt-5 border-t border-black/5 pt-4 dark:border-white/10">
                     <p class="text-sm text-black/45 dark:text-white/45">Total</p>
                     <p class="mt-1 text-2xl font-bold text-[#171719] dark:text-white" x-text="formatCurrency(total())"></p>
@@ -119,6 +132,8 @@ function saleForm() {
 
     return {
         products,
+        paymentMethod: 'cash',
+        paidAmount: 0,
         items: [{ key: Date.now(), product_id: '', quantity: 1, price: 0 }],
         addItem() {
             this.items.push({ key: Date.now() + this.items.length, product_id: '', quantity: 1, price: 0 });
@@ -132,6 +147,10 @@ function saleForm() {
         },
         total() {
             return this.items.reduce((sum, item) => sum + ((Number(item.price) || 0) * (Number(item.quantity) || 0)), 0);
+        },
+        change() {
+            const paid = this.paymentMethod === 'cash' ? Number(this.paidAmount) || 0 : this.total();
+            return Math.max(0, paid - this.total());
         },
         formatCurrency(value) {
             return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(value || 0);
