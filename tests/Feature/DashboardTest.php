@@ -656,6 +656,27 @@ class DashboardTest extends TestCase
             ]);
     }
 
+    public function test_super_admin_dashboard_exposes_non_sensitive_system_health(): void
+    {
+        $user = User::factory()->create(['role' => 'super-admin']);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('super-admin.dashboard')
+            ->assertViewHas('systemHealth', fn ($health) =>
+                $health['database'] === true
+                && is_bool($health['storage'])
+                && is_string($health['cache_driver'])
+                && is_string($health['queue_driver'])
+            )
+            ->assertSee('System Health')
+            ->assertSee('Database')
+            ->assertSee('Storage')
+            ->assertSee('Cache')
+            ->assertSee('Queue');
+    }
+
     public function test_dashboard_query_indexes_are_available(): void
     {
         $expectedIndexes = [
