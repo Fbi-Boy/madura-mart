@@ -38,8 +38,8 @@
                             Selamat Datang Kembali
                         </p>
 
-                        <p class="mt-1 text-[14px] font-bold text-[#171719] dark:text-white">
-                            Admin Stores
+                        <p class="mt-1 text-[14px] font-semibold text-[#171719] dark:text-white">
+                            {{ auth()->user()->name }}
                         </p>
 
                     </div>
@@ -81,7 +81,38 @@
                 <div class="flex items-center gap-2 shrink-0">
 
                     {{-- SETTINGS --}}
+                    <a
+                        href="{{ in_array(auth()->user()->role, ['admin', 'super-admin'], true) ? route('admin.settings.index') : route('profile.edit') }}"
+                        class="w-[38px] h-[38px] flex items-center justify-center
+                               rounded-full bg-[#EFF0F7] dark:bg-white/[0.06]
+                               text-black/55 dark:text-white/55
+                               hover:bg-black/[0.06] dark:hover:bg-white/[0.1] transition"
+                        aria-label="Pengaturan"
+                    >
+                        <svg
+                            class="w-[16px] h-[16px]"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path d="M4 7h10"></path>
+                            <path d="M18 7h2"></path>
+                            <circle cx="16" cy="7" r="2"></circle>
+                            <path d="M4 12h2"></path>
+                            <path d="M10 12h10"></path>
+                            <circle cx="8" cy="12" r="2"></circle>
+                            <path d="M4 17h10"></path>
+                            <path d="M18 17h2"></path>
+                            <circle cx="16" cy="17" r="2"></circle>
+                        </svg>
+                    </a>
+
+                    {{-- THEME --}}
                     <button
+                        id="themeToggle"
                         type="button"
                         class="w-[38px] h-[38px] flex items-center justify-center
                                rounded-full bg-[#EFF0F7] dark:bg-white/[0.06]
