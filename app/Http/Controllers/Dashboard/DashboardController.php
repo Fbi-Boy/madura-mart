@@ -112,6 +112,13 @@ class DashboardController extends Controller
             ->limit(6)
             ->get(['id', 'order_number', 'customer_id', 'order_date', 'total', 'status']);
 
+        $systemHealth = [
+            'database' => $this->checkDatabaseHealth(),
+            'storage' => is_writable(storage_path()),
+            'cache_driver' => (string) config('cache.default'),
+            'queue_driver' => (string) config('queue.default'),
+        ];
+
         return view('super-admin.dashboard', compact(
             'totalUsers',
             'activeProducts',
@@ -128,7 +135,19 @@ class DashboardController extends Controller
             'recentUsers',
             'recentOrders',
             'recentActivities',
+            'systemHealth',
         ));
+    }
+
+    private function checkDatabaseHealth(): bool
+    {
+        try {
+            DB::connection()->select('select 1');
+
+            return true;
+        } catch (\Throwable) {
+            return false;
+        }
     }
 
     private function purchasingDashboard(): View
