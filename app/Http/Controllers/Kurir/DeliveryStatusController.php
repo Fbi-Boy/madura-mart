@@ -21,29 +21,37 @@ class DeliveryStatusController extends Controller
         abort_unless($courier && $order->courier_id === $courier->id, 403);
 
         $data = $request->validate([
-            'status' => ['required', 'in:processing,shipped,delivered'],
+            'status' => ['required', 'in:processing,shipped,delivered,failed'],
+            'failure_reason' => ['required_if:status,failed', 'nullable', 'string', 'max:500'],
         ]);
 
         $nextStatuses = [
-            'pending' => 'processing',
-            'processing' => 'shipped',
-            'shipped' => 'delivered',
+            'pending' => ['processing', 'failed'],
+            'processing' => ['shipped', 'failed'],
+            'shipped' => ['delivered', 'failed'],
         ];
 
         abort_unless(
-            ($nextStatuses[$order->status] ?? null) === $data['status'],
+            in_array($data['status'], $nextStatuses[$order->status] ?? [], true),
             422,
             'Status pengiriman harus mengikuti urutan proses.'
         );
 
         $previousStatus = $order->status;
-        $order->update(['status' => $data['status']]);
+        $order->update([
+            'status' => $data['status'],
+            'delivery_failure_reason' => $data['status'] === 'failed' ? $data['failure_reason'] : null,
+        ]);
 
         ActivityLogService::record(
             'delivery.status_updated',
             "Status pengiriman {$order->order_number} berubah dari {$previousStatus} menjadi {$data['status']}.",
             $order,
-            ['from' => $previousStatus, 'to' => $data['status']],
+            [
+                'from' => $previousStatus,
+                'to' => $data['status'],
+                'failure_reason' => $data['status'] === 'failed' ? $data['failure_reason'] : null,
+            ],
             $request,
         );
 
