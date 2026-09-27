@@ -77,6 +77,15 @@ class SystemSettingTest extends TestCase
         }
     }
 
+    public function test_only_super_admin_can_update_system_settings(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        $this->actingAs($admin)
+            ->patch(route('admin.settings.update'), ['store_name' => 'Tidak Boleh'])
+            ->assertForbidden();
+    }
+
     public function test_invalid_email_is_rejected(): void
     {
         $user = User::factory()->create(['role' => 'admin']);
