@@ -424,6 +424,11 @@ class DashboardController extends Controller
             ->whereIn('status', ['processing', 'shipped'])
             ->count();
 
+        $staleDeliveries = (clone $baseOrders)
+            ->whereIn('status', ['pending', 'processing', 'shipped'])
+            ->where('order_date', '<=', Carbon::now()->subDays(3))
+            ->count();
+
         $deliveryBase = (clone $baseOrders)
             ->whereIn('status', ['pending', 'processing', 'shipped', 'delivered'])
             ->count();
@@ -485,6 +490,7 @@ class DashboardController extends Controller
             'shippingOrders',
             'deliveredOrders',
             'activeDeliveryOrders',
+            'staleDeliveries',
             'deliveryRate',
             'priorityOrders',
             'statusSummary',
