@@ -187,6 +187,30 @@
 
         <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <section class="rounded-2xl border border-black/[0.06] bg-white p-5 dark:border-white/[0.08] dark:bg-white/[0.04]">
+                <div class="flex items-center justify-between gap-3">
+                    <div>
+                        <h2 class="text-sm font-semibold text-[#171719] dark:text-white">Customer teratas bulan ini</h2>
+                        <p class="mt-1 text-xs text-black/40 dark:text-white/40">Pelanggan dengan nilai transaksi paid terbesar.</p>
+                    </div>
+                    <span class="rounded-full bg-[#A8F23A]/20 px-2.5 py-1 text-[10px] font-bold text-[#365500] dark:text-[#A8F23A]">TOP 5</span>
+                </div>
+                <div class="mt-5 space-y-3">
+                    @forelse($topCustomers as $item)
+                        <div class="flex items-center gap-3">
+                            <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#A8F23A]/20 text-xs font-bold text-[#365500] dark:text-[#A8F23A]">{{ $loop->iteration }}</div>
+                            <div class="min-w-0 flex-1">
+                                <p class="truncate text-xs font-semibold text-[#171719] dark:text-white">{{ $item->customer?->name ?? 'Customer dihapus' }}</p>
+                                <p class="mt-0.5 text-[10px] text-black/35 dark:text-white/35">{{ number_format($item->transaction_count) }} transaksi</p>
+                            </div>
+                            <span class="text-xs font-semibold text-black/55 dark:text-white/55">Rp {{ number_format($item->total_spent, 0, ',', '.') }}</span>
+                        </div>
+                    @empty
+                        <p class="py-8 text-center text-xs text-black/35 dark:text-white/35">Belum ada transaksi customer bulan ini.</p>
+                    @endforelse
+                </div>
+            </section>
+
+            <section class="rounded-2xl border border-black/[0.06] bg-white p-5 dark:border-white/[0.08] dark:bg-white/[0.04]">
                 <div class="flex items-center justify-between">
                     <div>
                         <h2 class="text-sm font-semibold text-[#171719] dark:text-white">Produk terlaris bulan ini</h2>

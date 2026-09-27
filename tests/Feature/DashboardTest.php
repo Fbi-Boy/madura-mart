@@ -711,6 +711,28 @@ class DashboardTest extends TestCase
             ->assertSee('Queue');
     }
 
+    public function test_admin_dashboard_exposes_top_customer_insights(): void
+    {
+        $user = User::factory()->create(['role' => 'admin']);
+        $customer = Customer::factory()->create(['is_active' => true, 'name' => 'Customer Utama']);
+
+        Sale::factory()->create(['customer_id' => $customer->id, 'status' => 'paid', 'total' => 125000, 'sale_date' => now()]);
+        Sale::factory()->create(['customer_id' => $customer->id, 'status' => 'paid', 'total' => 75000, 'sale_date' => now()]);
+        Sale::factory()->create(['customer_id' => $customer->id, 'status' => 'cancelled', 'total' => 900000, 'sale_date' => now()]);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('admin.dashboard')
+            ->assertViewHas('topCustomers', fn ($customers) =>
+                $customers->count() === 1
+                && $customers->first()->customer?->name === 'Customer Utama'
+                && (float) $customers->first()->total_spent === 200000.0
+                && (int) $customers->first()->transaction_count === 2
+            )
+            ->assertSee('Customer teratas bulan ini');
+    }
+
     public function test_admin_dashboard_exposes_six_month_sales_trend(): void
     {
         $user = User::factory()->create(['role' => 'admin']);
