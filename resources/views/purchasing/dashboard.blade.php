@@ -22,6 +22,7 @@
                         ['label' => 'Draft Belum Dikirim', 'value' => number_format($draftPurchases, 0, ',', '.'), 'hint' => 'siap dikirim ke gudang', 'icon' => 'D'],
                         ['label' => 'Menunggu Penerimaan', 'value' => number_format($submittedPurchases, 0, ',', '.'), 'hint' => 'sudah dikirim ke gudang', 'icon' => 'G'],
                         ['label' => 'Diterima Hari Ini', 'value' => number_format($receivedToday, 0, ',', '.'), 'hint' => 'transaksi berstatus received', 'icon' => 'R'],
+                        ['label' => 'Receipt Terlambat', 'value' => number_format($overdueReceiving, 0, ',', '.'), 'hint' => 'lebih dari 3 hari', 'icon' => '!'],
                     ];
                 @endphp
 
@@ -37,6 +38,16 @@
                         </div>
                     </div>
                 @endforeach
+            </div>
+
+            <div class="rounded-2xl border border-orange-200 bg-orange-50 p-5 dark:border-orange-900/50 dark:bg-orange-900/10">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Receiving yang Perlu Perhatian</h3>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">{{ $overdueReceiving }} pembelian sudah disubmit lebih dari 3 hari dan belum berstatus received.</p>
+                    </div>
+                    <a href="{{ route('purchasing.purchases.index') }}" class="inline-flex w-fit rounded-full border border-orange-300 bg-white px-3 py-1.5 text-xs font-semibold text-orange-700 transition hover:bg-orange-100 dark:border-orange-800 dark:bg-gray-800 dark:text-orange-300">Tinjau Pembelian</a>
+                </div>
             </div>
 
             <div class="grid gap-6 xl:grid-cols-[1.65fr_1fr]">

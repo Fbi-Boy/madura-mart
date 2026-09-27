@@ -295,6 +295,14 @@ class DashboardTest extends TestCase
             'purchase_date' => now(),
         ]);
 
+        Purchase::factory()->create([
+            'supplier_id' => $supplier->id,
+            'status' => 'draft',
+            'submitted_at' => now()->subDays(4),
+            'total' => 300000,
+            'purchase_date' => now()->subDays(4),
+        ]);
+
         $this->actingAs($user)
             ->get('/dashboard')
             ->assertOk()
@@ -305,10 +313,11 @@ class DashboardTest extends TestCase
             ->assertViewHas('draftPurchases', 1)
             ->assertViewHas('receivedToday', 1)
             ->assertViewHas('receivedValueToday', 200000.0)
+            ->assertViewHas('overdueReceiving', 1)
             ->assertViewHas('draftPurchaseValue', 150000.0)
             ->assertViewHas('statusSummary', [
                 'draft' => 1,
-                'submitted' => 0,
+                'submitted' => 1,
                 'received' => 1,
                 'cancelled' => 1,
             ])
