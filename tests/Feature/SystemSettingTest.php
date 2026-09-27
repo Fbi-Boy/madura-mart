@@ -35,6 +35,13 @@ class SystemSettingTest extends TestCase
                 'tax_percent' => '11',
                 'discount_percent' => '5',
                 'shipping_fee' => '10000',
+                'currency' => 'IDR',
+                'order_prefix' => 'MM-',
+                'minimum_order' => '25000',
+                'payment_methods' => 'QRIS, Transfer Bank',
+                'bank_name' => 'Bank Madura',
+                'bank_account' => '1234567890',
+                'shipping_enabled' => '1',
             ])
             ->assertRedirect(route('admin.settings.index'));
 
@@ -46,6 +53,16 @@ class SystemSettingTest extends TestCase
         $this->assertDatabaseHas('system_settings', [
             'key' => 'tax_percent',
             'value' => '11',
+        ]);
+
+        $this->assertDatabaseHas('system_settings', [
+            'key' => 'shipping_enabled',
+            'value' => '1',
+        ]);
+
+        $this->assertDatabaseHas('activity_logs', [
+            'user_id' => $user->id,
+            'action' => 'system-settings.updated',
         ]);
     }
 
