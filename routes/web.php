@@ -53,7 +53,7 @@ use App\Http\Controllers\HomeController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'active'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
@@ -119,12 +119,17 @@ Route::middleware('auth')->group(function () {
         Route::resource('suppliers', SupplierController::class)->except(['show']);
         Route::resource('customers', CustomerController::class)->except(['show']);
         Route::resource('couriers', CourierController::class)->except(['show']);
-        Route::resource('users', UserController::class)->except(['show']);
         Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.index')->middleware('permission:role-management.view');
         Route::patch('/roles', [RolePermissionController::class, 'update'])->name('roles.update')->middleware('permission:role-management.view');
         Route::resource('units', UnitController::class)->except(['show']);
         Route::resource('purchases', PurchaseController::class)->only(['index','create','store']);
         Route::resource('distributors', DistributorController::class)->except(['show']);
+    });
+
+    Route::prefix('admin')->name('admin.')->middleware('role:super-admin')->group(function () {
+        Route::resource('users', UserController::class)->except(['show']);
+        Route::patch('/users/{user}/status', [UserController::class, 'toggleStatus'])->name('users.status');
+        Route::patch('/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
     });
 
     Route::prefix('purchasing')->name('purchasing.')->middleware('role:purchasing')->group(function () {

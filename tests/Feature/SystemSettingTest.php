@@ -35,6 +35,13 @@ class SystemSettingTest extends TestCase
                 'tax_percent' => '11',
                 'discount_percent' => '5',
                 'shipping_fee' => '10000',
+                'currency' => 'IDR',
+                'order_prefix' => 'MM-',
+                'minimum_order' => '25000',
+                'payment_methods' => 'QRIS, Transfer Bank',
+                'bank_name' => 'Bank Madura',
+                'bank_account' => '1234567890',
+                'shipping_enabled' => '1',
             ])
             ->assertRedirect(route('admin.settings.index'));
 
@@ -46,6 +53,16 @@ class SystemSettingTest extends TestCase
         $this->assertDatabaseHas('system_settings', [
             'key' => 'tax_percent',
             'value' => '11',
+        ]);
+
+        $this->assertDatabaseHas('system_settings', [
+            'key' => 'shipping_enabled',
+            'value' => '1',
+        ]);
+
+        $this->assertDatabaseHas('activity_logs', [
+            'user_id' => $user->id,
+            'action' => 'system-settings.updated',
         ]);
     }
 
@@ -60,9 +77,18 @@ class SystemSettingTest extends TestCase
         }
     }
 
+    public function test_only_super_admin_can_update_system_settings(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        $this->actingAs($admin)
+            ->patch(route('admin.settings.update'), ['store_name' => 'Tidak Boleh'])
+            ->assertForbidden();
+    }
+
     public function test_invalid_email_is_rejected(): void
     {
-        $user = User::factory()->create(['role' => 'admin']);
+        $user = User::factory()->create(['role' => 'super-admin']);
 
         $this->actingAs($user)
             ->from(route('admin.settings.index'))

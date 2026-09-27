@@ -14,6 +14,10 @@ class RoleMiddleware
             abort(401);
         }
 
+        if ($request->user()->is_active === false) {
+            abort(403, 'Akun Anda sedang dinonaktifkan.');
+        }
+
         if (! in_array($request->user()->role, $roles)) {
             abort(403);
         }

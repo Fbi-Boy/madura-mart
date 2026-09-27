@@ -10,55 +10,38 @@ class UserRoleCoverageTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_admin_can_create_gudang_user(): void
+    public function test_super_admin_can_create_gudang_user(): void
     {
-        $admin = User::factory()->create(['role' => 'admin']);
+        $superAdmin = User::factory()->create(['role' => 'super-admin']);
 
-        $response = $this->actingAs($admin)->post(route('admin.users.store'), [
-            'name' => 'Petugas Gudang',
-            'email' => 'gudang@maduramart.test',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
-            'role' => 'gudang',
-        ]);
+        $this->actingAs($superAdmin)->post(route('admin.users.store'), [
+            'name' => 'Petugas Gudang', 'email' => 'gudang@maduramart.test',
+            'password' => 'password123', 'password_confirmation' => 'password123', 'role' => 'gudang',
+        ])->assertRedirect(route('admin.users.index'));
 
-        $response->assertRedirect(route('admin.users.index'));
-        $this->assertDatabaseHas('users', [
-            'email' => 'gudang@maduramart.test',
-            'role' => 'gudang',
-        ]);
+        $this->assertDatabaseHas('users', ['email' => 'gudang@maduramart.test', 'role' => 'gudang']);
     }
 
-    public function test_admin_can_create_customer_user(): void
+    public function test_super_admin_can_create_customer_user(): void
     {
-        $admin = User::factory()->create(['role' => 'admin']);
+        $superAdmin = User::factory()->create(['role' => 'super-admin']);
 
-        $response = $this->actingAs($admin)->post(route('admin.users.store'), [
-            'name' => 'Customer Madura',
-            'email' => 'customer@maduramart.test',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
-            'role' => 'customer',
-        ]);
+        $this->actingAs($superAdmin)->post(route('admin.users.store'), [
+            'name' => 'Customer Madura', 'email' => 'customer@maduramart.test',
+            'password' => 'password123', 'password_confirmation' => 'password123', 'role' => 'customer',
+        ])->assertRedirect(route('admin.users.index'));
 
-        $response->assertRedirect(route('admin.users.index'));
-        $this->assertDatabaseHas('users', [
-            'email' => 'customer@maduramart.test',
-            'role' => 'customer',
-        ]);
+        $this->assertDatabaseHas('users', ['email' => 'customer@maduramart.test', 'role' => 'customer']);
     }
 
-    public function test_non_admin_cannot_create_users_with_any_role(): void
+    public function test_non_super_admin_cannot_create_users_with_any_role(): void
     {
-        $user = User::factory()->create(['role' => 'customer']);
+        $user = User::factory()->create(['role' => 'admin']);
 
         $this->actingAs($user)
             ->post(route('admin.users.store'), [
-                'name' => 'Blocked User',
-                'email' => 'blocked@maduramart.test',
-                'password' => 'password123',
-                'password_confirmation' => 'password123',
-                'role' => 'gudang',
+                'name' => 'Blocked User', 'email' => 'blocked@maduramart.test',
+                'password' => 'password123', 'password_confirmation' => 'password123', 'role' => 'gudang',
             ])
             ->assertForbidden();
     }

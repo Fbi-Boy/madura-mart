@@ -34,11 +34,11 @@ Fokus: Mengelola seluruh sistem.
 - Aktivitas Sistem
 
 ## 2.2 Manajemen Pengguna
-- Lihat Pengguna
+- Lihat dan filter Pengguna
 - Tambah Pengguna
 - Edit Pengguna
-- Nonaktifkan Pengguna
-- Hapus Pengguna
+- Aktifkan / nonaktifkan Pengguna
+- Hapus Pengguna dengan guard Super Admin terakhir
 - Atur Role Pengguna
 - Reset Password
 
@@ -54,6 +54,7 @@ Fokus: Mengelola seluruh sistem.
 - Pengaturan Pembayaran
 - Pengaturan Pengiriman
 - Pengaturan Pajak / Diskon
+- Minimum belanja dan prefix pesanan
 
 ## 2.5 Monitoring
 - Aktivitas User
@@ -583,7 +584,7 @@ Setiap fitur baru harus:
 7. Ditentukan view.
 8. Ditentukan middleware / permission jika diperlukan.
 
-Role & Permission workspace saat ini bersifat read-only; perubahan hak akses tetap direview melalui config/permissions.php.
+Role & Permission workspace mendukung override permission per role melalui `permission_overrides`. Perubahan tetap dibatasi untuk Super Admin dan dicatat ke Activity Log. Pengaturan sistem juga hanya dapat diubah oleh Super Admin.
 
 Jangan membuat fitur yang berada di luar sitemap tanpa memperbarui
 dokumen ini terlebih dahulu.

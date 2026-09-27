@@ -75,8 +75,8 @@
                 <a href="{{ route('admin.customers.index') }}" class="menu-link">Customer</a>
                 <a href="{{ route('admin.distributors.index') }}" class="menu-link">Distributor Master</a>
                 <a href="{{ route('admin.couriers.index') }}" class="menu-link">Kurir Master</a>
-                <a href="{{ route('admin.users.index') }}" class="menu-link">User & Staff</a>
                 @if(auth()->user()->role === 'super-admin')
+                    <a href="{{ route('admin.users.index') }}" class="menu-link">User & Staff</a>
                     <a href="{{ route('admin.roles.index') }}" class="menu-link">Role & Permission</a>
                     <a href="{{ route('admin.settings.index') }}" class="menu-link">Pengaturan Sistem</a>
                     <a href="{{ route('admin.activity-logs.index') }}" class="menu-link">Activity Log</a>
