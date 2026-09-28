@@ -20,13 +20,15 @@ class CheckoutController extends Controller
 {
     public function show(Request $request): View
     {
+        $customer = $this->customer($request);
         $cart = $request->session()->get('customer_cart', []);
 
         if ($cart === []) {
             return view('customer.checkout.index', [
                 'items' => collect(),
                 'total' => 0,
-                'customer' => $this->customer($request),
+                'customer' => $customer,
+                'addresses' => $customer->addresses()->orderByDesc('is_default')->latest('id')->get(),
             ]);
         }
 
@@ -38,9 +40,10 @@ class CheckoutController extends Controller
         return view('customer.checkout.index', [
             'items' => $items,
             'total' => $total,
-            'customer' => $this->customer($request),
-                'minimumOrder' => $minimumOrder,
-                'paymentMethods' => $paymentMethods,
+            'customer' => $customer,
+            'addresses' => $customer->addresses()->orderByDesc('is_default')->latest('id')->get(),
+            'minimumOrder' => $minimumOrder,
+            'paymentMethods' => $paymentMethods,
         ]);
     }
 
@@ -50,15 +53,18 @@ class CheckoutController extends Controller
 
         $validated = $request->validate([
             'payment_method' => ['required', Rule::in(array_keys($availablePaymentMethods))],
+            'address_id' => ['required', 'integer'],
         ]);
 
         $customer = $this->customer($request);
-        abort_unless($customer, 403);
+        $address = $customer->addresses()->whereKey($validated['address_id'])->first();
+
+        abort_unless($address, 422, 'Alamat pengiriman tidak valid.');
 
         $cart = $request->session()->get('customer_cart', []);
         abort_if($cart === [], 422, 'Keranjang masih kosong.');
 
-        $order = DB::transaction(function () use ($cart, $customer, $request, $validated) {
+        $order = DB::transaction(function () use ($cart, $customer, $address, $request, $validated) {
             $items = collect($cart)->mapWithKeys(fn ($quantity, $productId) => [
                 (int) $productId => (int) $quantity,
             ])->filter(fn ($quantity) => $quantity > 0);
@@ -95,7 +101,7 @@ class CheckoutController extends Controller
                 'payment_method' => $validated['payment_method'],
                 'payment_status' => 'pending',
                 'status' => 'pending',
-                'delivery_address' => trim(implode(', ', array_filter([$customer->address, $customer->city]))),
+                'delivery_address' => $address->fullAddress(),
             ]);
 
             OrderStateMachine::recordInitial($order, auth()->user(), 'Pesanan dibuat melalui checkout customer.');
@@ -151,17 +157,17 @@ class CheckoutController extends Controller
         return $methods ?: ['qris' => 'QRIS', 'bank_transfer' => 'Transfer Bank'];
     }
 
-    private function customer(Request $request): ?Customer
+    private function customer(Request $request): Customer
     {
         return Customer::query()
             ->where('email', $request->user()->email)
             ->where('is_active', true)
-            ->first();
+            ->firstOrFail();
     }
 
     private function cartItems(array $cart)
     {
-        $products = \App\Models\Product::query()
+        $products = Product::query()
             ->whereIn('id', array_keys($cart))
             ->where('is_active', true)
             ->where('stock', '>', 0)
