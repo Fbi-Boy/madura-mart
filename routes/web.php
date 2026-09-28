@@ -114,16 +114,16 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/settings', [SystemSettingController::class, 'index'])->name('settings.index')->middleware('permission:system-settings.view');
         Route::patch('/settings', [SystemSettingController::class, 'update'])->name('settings.update')->middleware(['role:super-admin', 'permission:system-settings.update']);
         Route::get('/system-monitoring', [SystemMonitoringController::class, 'index'])->name('system-monitoring.index')->middleware('permission:system-monitoring.view');
-        Route::resource('categories', CategoryController::class)->except(['show']);
-        Route::resource('products', ProductController::class)->except(['show']);
-        Route::resource('suppliers', SupplierController::class)->except(['show']);
-        Route::resource('customers', CustomerController::class)->except(['show']);
-        Route::resource('couriers', CourierController::class)->except(['show']);
+        Route::resource('categories', CategoryController::class)->except(['show'])->middleware('permission:catalog.manage');
+        Route::resource('products', ProductController::class)->except(['show'])->middleware('permission:products.manage');
+        Route::resource('suppliers', SupplierController::class)->except(['show'])->middleware('permission:suppliers.manage');
+        Route::resource('customers', CustomerController::class)->except(['show'])->middleware('permission:customers.manage');
+        Route::resource('couriers', CourierController::class)->except(['show'])->middleware('permission:couriers.manage');
         Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.index')->middleware('permission:role-management.view');
         Route::patch('/roles', [RolePermissionController::class, 'update'])->name('roles.update')->middleware('permission:role-management.view');
-        Route::resource('units', UnitController::class)->except(['show']);
-        Route::resource('purchases', PurchaseController::class)->only(['index','create','store','show']);
-        Route::resource('distributors', DistributorController::class)->except(['show']);
+        Route::resource('units', UnitController::class)->except(['show'])->middleware('permission:catalog.manage');
+        Route::resource('purchases', PurchaseController::class)->only(['index','create','store','show'])->middleware('permission:purchases.manage');
+        Route::resource('distributors', DistributorController::class)->except(['show'])->middleware('permission:distributors.manage');
     });
 
     Route::prefix('admin')->name('admin.')->middleware('role:super-admin')->group(function () {
