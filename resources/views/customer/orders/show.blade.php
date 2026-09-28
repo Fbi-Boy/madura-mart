@@ -51,6 +51,8 @@
                         @endforeach
                     </div>
 
+                    <p class="mt-4 text-[11px] text-gray-400 dark:text-gray-500">Timeline menunjukkan tahapan status berdasarkan riwayat perubahan yang tersimpan.</p>
+
                     <div class="mt-4 space-y-2">
                         @forelse ($order->statusHistories as $history)
                             <div class="flex items-start justify-between gap-4 text-xs">
