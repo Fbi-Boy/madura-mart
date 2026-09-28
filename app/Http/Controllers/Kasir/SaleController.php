@@ -19,6 +19,7 @@ class SaleController extends Controller
     public function index(): View
     {
         $sales = Sale::with(['customer', 'user'])
+            ->where('user_id', auth()->id())
             ->latest('sale_date')
             ->paginate(10);
 
@@ -27,6 +28,8 @@ class SaleController extends Controller
 
     public function receipt(Sale $sale): View
     {
+        abort_unless($sale->user_id === auth()->id(), 403);
+
         $sale->load(['customer:id,name', 'user:id,name', 'items.product:id,name,unit']);
 
         return view('kasir.struk.index', compact('sale'));
@@ -46,7 +49,13 @@ class SaleController extends Controller
             ->orderBy('name')
             ->get(['id', 'name']);
 
-        return view('kasir.transaksi-baru.index', compact('products', 'customers'));
+        $productData = $products->map(fn ($product) => [
+            'id' => $product->id,
+            'sku' => $product->sku,
+            'price' => (float) $product->price,
+        ])->values();
+
+        return view('kasir.transaksi-baru.index', compact('products', 'customers', 'productData'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -64,11 +73,22 @@ class SaleController extends Controller
         ]);
 
         DB::transaction(function () use ($validated) {
+            $shift = CashierShift::query()
+                ->where('user_id', auth()->id())
+                ->where('status', 'open')
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            $saleDate = now()->parse($validated['sale_date']);
+            if ($saleDate->lt($shift->opened_at)) {
+                abort(422, 'Tanggal transaksi tidak boleh sebelum shift dibuka.');
+            }
+
             $sale = Sale::create([
                 'invoice' => $validated['invoice'],
                 'customer_id' => $validated['customer_id'] ?? null,
                 'user_id' => auth()->id(),
-                'shift_id' => CashierShift::where('user_id', auth()->id())->where('status', 'open')->lockForUpdate()->firstOrFail()->id,
+                'shift_id' => $shift->id,
                 'sale_date' => $validated['sale_date'],
                 'total' => 0,
                 'payment_method' => $validated['payment_method'],

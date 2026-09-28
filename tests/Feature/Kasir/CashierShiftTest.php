@@ -145,4 +145,26 @@ class CashierShiftTest extends TestCase
         ]);
     }
 
+
+    public function test_cashier_cannot_open_second_shift_for_same_user(): void
+    {
+        $kasir = User::factory()->create(['role' => 'kasir']);
+        CashierShift::create([
+            'shift_number' => 'SHIFT-LOCK-1',
+            'user_id' => $kasir->id,
+            'opened_at' => now(),
+            'opening_cash' => 0,
+            'status' => 'open',
+        ]);
+
+        $this->actingAs($kasir)->post(route('kasir.buka-shift.store'), [
+            'shift_number' => 'SHIFT-LOCK-2',
+            'opened_at' => now()->format('Y-m-d H:i:s'),
+            'opening_cash' => 50000,
+        ])->assertSessionHasErrors('shift_number');
+
+        $this->assertDatabaseMissing('cashier_shifts', ['shift_number' => 'SHIFT-LOCK-2']);
+    }
+
 }
+
