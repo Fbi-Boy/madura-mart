@@ -3,8 +3,8 @@
 @endphp
 
 <nav class="w-[228px] h-[calc(100vh-2rem)] shrink-0 self-start rounded-[22px]
-                  bg-[#202124] dark:bg-[#F7F7F5]
-                  text-white dark:text-[#171719]
+                  bg-white dark:bg-[#171719]
+                  text-[#171719] dark:text-white
                   flex flex-col overflow-hidden
                   shadow-[0_12px_30px_rgba(0,0,0,0.08)]
                   dark:shadow-[0_12px_30px_rgba(0,0,0,0.06)]
@@ -12,8 +12,8 @@
 
     <div class="px-4 pt-5 pb-4">
         <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5">
-            <div class="w-9 h-9 shrink-0 rounded-[11px] bg-white dark:bg-[#171719]
-                        text-[#202124] dark:text-white flex items-center justify-center
+            <div class="w-9 h-9 shrink-0 rounded-[11px] bg-[#171719] dark:bg-white
+                        text-white dark:text-[#171719] flex items-center justify-center
                         font-black text-base">
                 M
             </div>
@@ -34,7 +34,7 @@
                 <path d="M5 9v11h14V9"></path>
                 <path d="M9 20v-6h6v6"></path>
             </svg>
-            <span>Dashboard</span>
+            <span>dashboard</span>
         </a>
 
         @if($isAdmin)
@@ -184,22 +184,22 @@
         padding: 0 12px;
         border-radius: 11px;
         font-size: 13px;
-        color: rgb(255 255 255 / 0.72);
+        color: rgb(23 23 25 / 0.68);
         transition: 0.2s;
     }
 
     .dark .menu-link {
-        color: rgb(0 0 0 / 0.68);
+        color: rgb(255 255 255 / 0.72);
     }
 
     .menu-link:hover {
-        background: rgb(255 255 255 / 0.06);
-        color: white;
+        background: rgb(23 23 25 / 0.06);
+        color: #171719;
     }
 
     .dark .menu-link:hover {
-        background: rgb(0 0 0 / 0.04);
-        color: black;
+        background: rgb(255 255 255 / 0.06);
+        color: white;
     }
 
     .menu-link.active {

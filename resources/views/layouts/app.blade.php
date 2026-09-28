@@ -16,26 +16,33 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="h-screen overflow-hidden bg-[#F8F8FC] dark:bg-[#111113] text-[#171719] dark:text-white transition-colors duration-200">
+<body class="h-screen overflow-hidden bg-[#F8F8FC] dark:bg-[#111113] text-[#171719] dark:text-white transition-colors duration-200" x-data="{ sidebarOpen: false }">
 
-    <div class="h-screen flex gap-2 p-4 sm:gap-2.5 sm:p-5 lg:gap-3 lg:p-6 overflow-hidden">
+    <div class="h-screen flex gap-2 p-3 sm:p-4 lg:gap-3 lg:p-5 overflow-hidden">
 
-        @include('layouts.navigation')
+        <div class="hidden lg:block h-full shrink-0">
+            @include('layouts.navigation')
+        </div>
+
+        <div x-show="sidebarOpen" x-cloak class="fixed inset-0 z-40 bg-black/35 lg:hidden" @click="sidebarOpen = false"></div>
+        <div x-show="sidebarOpen" x-cloak class="fixed inset-y-3 left-3 z-50 lg:hidden" x-transition>
+            @include('layouts.navigation')
+        </div>
 
         <div class="flex-1 min-w-0 h-[calc(100vh-2rem)] flex flex-col overflow-hidden">
 
             {{-- =====================================================
                 GLOBAL HEADER
             ====================================================== --}}
-            <header class="h-[70px] shrink-0 flex items-center justify-between gap-4 px-1 sm:px-2">
+            <header class="h-[64px] shrink-0 flex items-center justify-between gap-3 px-1 sm:px-2">
 
                 {{-- LEFT --}}
                 <div class="min-w-0 flex items-center gap-4">
 
                     <div class="hidden lg:block shrink-0 leading-none">
 
-                        <p class="text-[7px] font-semibold uppercase tracking-[0.035em] text-black/40 dark:text-white/40">
-                            Selamat Datang Kembali
+                        <p class="text-[9px] font-semibold tracking-[0.01em] text-black/40 dark:text-white/40">
+                            Selamat datang 👋
                         </p>
 
                         <p class="mt-1 text-[14px] font-semibold text-[#171719] dark:text-white">
@@ -65,7 +72,7 @@
 
                         <input
                             type="text"
-                            placeholder="Cari menu, SKU, invoice..."
+                            placeholder="Cari menu, SKU, invoice..." aria-label="Pencarian"
                             class="w-full bg-transparent border-0 outline-none
                                    text-[10px] text-[#171719] dark:text-white
                                    placeholder:text-black/35 dark:placeholder:text-white/35
@@ -140,7 +147,7 @@
                             <path d="M15 9h.01"></path>
                         </svg>
 
-                        Cabang Utama - Jakarta Selatan
+                        Cabang Utama - Jember
 
                     </button>
 
