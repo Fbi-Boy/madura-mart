@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Services\ActivityLogService;
 use App\Services\StockMovementService;
+use App\Services\OrderStateMachine;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -46,6 +47,7 @@ class OrderController extends Controller
         $order->load([
             'items.product:id,name,sku,unit',
             'courier:id,name',
+            'statusHistories.user:id,name',
         ]);
 
         $trackingSteps = [
@@ -108,7 +110,12 @@ class OrderController extends Controller
                 );
             }
 
-            $lockedOrder->update(['status' => 'cancelled']);
+            OrderStateMachine::transition(
+                $lockedOrder,
+                'cancelled',
+                $request->user(),
+                'Pesanan dibatalkan oleh customer.',
+            );
         });
 
         ActivityLogService::record(
