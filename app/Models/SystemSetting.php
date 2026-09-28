@@ -15,4 +15,19 @@ class SystemSetting extends Model
         'type',
         'description',
     ];
+
+    public static function valueFor(string $key, mixed $default = null): mixed
+    {
+        $setting = static::query()->where('key', $key)->first();
+
+        if (! $setting) {
+            return $default;
+        }
+
+        return match ($setting->type) {
+            'boolean' => filter_var($setting->value, FILTER_VALIDATE_BOOLEAN),
+            'number' => is_numeric($setting->value) ? (float) $setting->value : $default,
+            default => $setting->value,
+        };
+    }
 }
