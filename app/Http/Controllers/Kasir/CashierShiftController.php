@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Kasir;
 
 use App\Http\Controllers\Controller;
 use App\Models\CashierShift;
+use App\Models\SaleReturn;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -38,7 +39,13 @@ class CashierShiftController extends Controller
     {
         $shift = CashierShift::where('user_id', auth()->id())->where('status', 'open')->firstOrFail();
         $cashSales = $shift->sales()->where('status', 'paid')->where('payment_method', 'cash')->sum('total');
-        $expectedCash = (float) $shift->opening_cash + (float) $cashSales;
+        $cashReturns = SaleReturn::query()
+            ->where('refund_method', 'cash')
+            ->whereHas('sale', fn ($sale) => $sale->where('shift_id', $shift->id))
+            ->where('return_date', '>=', $shift->opened_at)
+            ->where('return_date', '<=', now())
+            ->sum('total');
+        $expectedCash = (float) $shift->opening_cash + (float) $cashSales - (float) $cashReturns;
         return view('kasir.tutup-shift.index', compact('shift', 'cashSales', 'expectedCash'));
     }
 
@@ -52,11 +59,17 @@ class CashierShiftController extends Controller
         DB::transaction(function () use ($validated) {
             $shift = CashierShift::where('user_id', auth()->id())->where('status', 'open')->lockForUpdate()->firstOrFail();
             $cashSales = $shift->sales()->where('status', 'paid')->where('payment_method', 'cash')->sum('total');
+            $cashReturns = SaleReturn::query()
+                ->where('refund_method', 'cash')
+                ->whereHas('sale', fn ($sale) => $sale->where('shift_id', $shift->id))
+                ->where('return_date', '>=', $shift->opened_at)
+                ->where('return_date', '<=', now())
+                ->sum('total');
 
             $shift->update([
                 'closed_at' => now(),
                 'closing_cash' => $validated['closing_cash'],
-                'expected_cash' => (float) $shift->opening_cash + (float) $cashSales,
+                'expected_cash' => (float) $shift->opening_cash + (float) $cashSales - (float) $cashReturns,
                 'closing_notes' => $validated['closing_notes'] ?? null,
                 'status' => 'closed',
             ]);
