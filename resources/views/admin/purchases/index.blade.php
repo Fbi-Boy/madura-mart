@@ -16,6 +16,36 @@
         <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{{ session('error') }}</div>
     @endif
 
+    <form method="GET" class="grid gap-3 rounded-2xl border border-black/5 bg-white p-4 shadow-sm md:grid-cols-2 xl:grid-cols-5">
+        <div class="xl:col-span-2">
+            <label for="purchase-search" class="text-xs font-semibold uppercase tracking-wide text-black/40">Cari</label>
+            <input id="purchase-search" name="q" value="{{ request('q') }}" placeholder="Invoice atau nama supplier" class="mt-1.5 w-full rounded-xl border-black/10 text-sm">
+        </div>
+        <div>
+            <label for="purchase-status" class="text-xs font-semibold uppercase tracking-wide text-black/40">Status</label>
+            <select id="purchase-status" name="status" class="mt-1.5 w-full rounded-xl border-black/10 text-sm">
+                <option value="">Semua status</option>
+                <option value="draft" @selected(request('status') === 'draft')>Draft</option>
+                <option value="submitted" @selected(request('status') === 'submitted')>Submitted</option>
+                <option value="received" @selected(request('status') === 'received')>Received</option>
+                <option value="cancelled" @selected(request('status') === 'cancelled')>Cancelled</option>
+            </select>
+        </div>
+        <div>
+            <label for="purchase-date-from" class="text-xs font-semibold uppercase tracking-wide text-black/40">Dari</label>
+            <input id="purchase-date-from" type="date" name="date_from" value="{{ request('date_from') }}" class="mt-1.5 w-full rounded-xl border-black/10 text-sm">
+        </div>
+        <div>
+            <label for="purchase-date-to" class="text-xs font-semibold uppercase tracking-wide text-black/40">Sampai</label>
+            <input id="purchase-date-to" type="date" name="date_to" value="{{ request('date_to') }}" class="mt-1.5 w-full rounded-xl border-black/10 text-sm">
+        </div>
+        <div class="flex items-end gap-2 md:col-span-2 xl:col-span-5">
+            <button class="rounded-xl bg-[#171719] px-4 py-2.5 text-sm font-semibold text-white">Terapkan Filter</button>
+            <a href="{{ route(auth()->user()->role === 'purchasing' ? 'purchasing.purchases.index' : 'admin.purchases.index') }}" class="rounded-xl border border-black/10 px-4 py-2.5 text-sm font-semibold">Reset</a>
+            <span class="ml-auto self-center text-xs text-black/40">{{ $purchases->total() }} hasil</span>
+        </div>
+    </form>
+
     <div class="overflow-hidden rounded-2xl border border-black/5 bg-white shadow-sm">
         <div class="overflow-x-auto">
             <table class="min-w-full text-left text-sm">
@@ -33,7 +63,7 @@
                     @forelse($purchases as $purchase)
                         @php($isSubmitted = $purchase->submitted_at !== null)
                         <tr>
-                            <td class="px-5 py-4 font-semibold">{{ $purchase->invoice }}</td>
+                            <td class="px-5 py-4"><a href="{{ route(auth()->user()->role === 'purchasing' ? 'purchasing.purchases.show' : 'admin.purchases.show', $purchase) }}" class="font-semibold hover:underline">{{ $purchase->invoice }}</a></td>
                             <td class="px-5 py-4">{{ $purchase->supplier->name }}</td>
                             <td class="px-5 py-4">{{ $purchase->purchase_date->format('d/m/Y') }}</td>
                             <td class="px-5 py-4">{{ $purchase->user->name }}</td>

@@ -15,10 +15,51 @@ use Illuminate\View\View;
 
 class PurchaseController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $purchases = Purchase::with(['supplier','user'])->latest('purchase_date')->paginate(10);
+        $query = Purchase::query()
+            ->with(['supplier', 'user'])
+            ->when($request->filled('q'), function ($query) use ($request) {
+                $term = trim((string) $request->input('q'));
+
+                $query->where(function ($query) use ($term) {
+                    $query->where('invoice', 'like', "%{$term}%")
+                        ->orWhereHas('supplier', fn ($supplier) => $supplier->where('name', 'like', "%{$term}%"));
+                });
+            })
+            ->when($request->filled('status'), function ($query) use ($request) {
+                $status = $request->string('status')->toString();
+
+                if ($status === 'submitted') {
+                    $query->where('status', 'draft')->whereNotNull('submitted_at');
+                } elseif (in_array($status, ['draft', 'received', 'cancelled'], true)) {
+                    $query->where('status', $status);
+                    if ($status === 'draft') {
+                        $query->whereNull('submitted_at');
+                    }
+                }
+            })
+            ->when($request->filled('date_from'), fn ($query) => $query->whereDate('purchase_date', '>=', $request->date('date_from')))
+            ->when($request->filled('date_to'), fn ($query) => $query->whereDate('purchase_date', '<=', $request->date('date_to')));
+
+        $purchases = $query
+            ->latest('purchase_date')
+            ->latest('id')
+            ->paginate(10)
+            ->withQueryString();
+
         return view('admin.purchases.index', compact('purchases'));
+    }
+
+    public function show(Purchase $purchase): View
+    {
+        $purchase->load([
+            'supplier',
+            'user',
+            'items.product',
+        ]);
+
+        return view('admin.purchases.show', compact('purchase'));
     }
 
     public function create(): View
