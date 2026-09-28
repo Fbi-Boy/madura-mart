@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Kasir;
 use App\Http\Controllers\Controller;
 use App\Models\CashierShift;
 use App\Models\SaleReturn;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,11 +27,17 @@ class CashierShiftController extends Controller
             'opening_cash' => ['required', 'numeric', 'min:0'],
         ]);
 
-        if (CashierShift::where('user_id', auth()->id())->where('status', 'open')->exists()) {
-            return back()->withErrors(['shift_number' => 'Anda masih memiliki shift yang aktif.'])->withInput();
-        }
+        DB::transaction(function () use ($validated): void {
+            User::query()->whereKey(auth()->id())->lockForUpdate()->firstOrFail();
 
-        CashierShift::create($validated + ['user_id' => auth()->id(), 'status' => 'open']);
+            if (CashierShift::query()->where('user_id', auth()->id())->where('status', 'open')->exists()) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'shift_number' => 'Anda masih memiliki shift yang aktif.',
+                ]);
+            }
+
+            CashierShift::create($validated + ['user_id' => auth()->id(), 'status' => 'open']);
+        });
 
         return redirect()->route('kasir.tutup-shift')->with('success', 'Shift berhasil dibuka.');
     }
