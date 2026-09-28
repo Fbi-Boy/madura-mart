@@ -26,7 +26,7 @@ class SaleTransactionTest extends TestCase
         $this->actingAs($kasir)
             ->post(route('kasir.transaksi-baru.store'), [
                 'invoice' => 'INV-0001',
-                'sale_date' => '2026-09-24 22:00',
+                'sale_date' => now()->format('Y-m-d H:i:s'),
                 'payment_method' => 'cash',
                 'paid_amount' => 37500,
                 'items' => [
