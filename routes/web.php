@@ -253,7 +253,7 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     Route::prefix('kasir')
         ->name('kasir.')
-        ->middleware('role:kasir')
+        ->middleware(['role:kasir', 'permission:sales.manage'])
         ->group(function () {
             Route::get('/transaksi-baru', [SaleController::class, 'create'])->name('transaksi-baru');
             Route::post('/transaksi-baru', [SaleController::class, 'store'])->name('transaksi-baru.store');
