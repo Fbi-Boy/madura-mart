@@ -43,15 +43,16 @@
                     <aside class="h-fit rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
                         <p class="text-sm text-gray-500 dark:text-gray-400">Total Pesanan</p>
                         <p class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">Rp {{ number_format($total, 0, ',', '.') }}</p>
-                        <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Harga dan stok akan diverifikasi ulang saat pesanan disimpan.</p>
+                        <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Harga dan stok akan diverifikasi ulang saat pesanan disimpan. @if(($minimumOrder ?? 0) > 0) Minimum belanja: Rp {{ number_format($minimumOrder, 0, ',', '.') }}. @endif</p>
                         <form method="POST" action="{{ route('customer.checkout.store') }}" class="mt-5 space-y-4">
                             @csrf
                             <div>
                                 <label for="payment_method" class="text-sm font-medium text-gray-700 dark:text-gray-200">Metode Pembayaran</label>
                                 <select id="payment_method" name="payment_method" required class="mt-2 w-full rounded-xl border-gray-300 bg-white text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white">
                                     <option value="">Pilih metode</option>
-                                    <option value="bank_transfer" @selected(old('payment_method') === 'bank_transfer')>Transfer Bank</option>
-                                    <option value="qris" @selected(old('payment_method') === 'qris')>QRIS</option>
+                                    @foreach ($paymentMethods ?? [] as $value => $label)
+                                        <option value="{{ $value }}" @selected(old('payment_method') === $value)>{{ $label }}</option>
+                                    @endforeach
                                 </select>
                                 @error('payment_method')
                                     <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
