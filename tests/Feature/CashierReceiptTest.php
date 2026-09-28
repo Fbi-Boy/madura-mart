@@ -62,4 +62,17 @@ class CashierReceiptTest extends TestCase
             ->get(route('kasir.transaksi-struk', $sale))
             ->assertForbidden();
     }
+
+    public function test_cashier_cannot_open_another_cashiers_receipt(): void
+    {
+        $cashier = User::factory()->create(['role' => 'kasir']);
+        $otherCashier = User::factory()->create(['role' => 'kasir']);
+        $sale = Sale::factory()->create(['user_id' => $otherCashier->id]);
+
+        $this->actingAs($cashier)
+            ->get(route('kasir.transaksi-struk', $sale))
+            ->assertForbidden();
+    }
+
 }
+
