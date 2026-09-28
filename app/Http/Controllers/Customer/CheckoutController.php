@@ -22,14 +22,10 @@ class CheckoutController extends Controller
     {
         $customer = $this->customer($request);
         $cart = $request->session()->get('customer_cart', []);
+        $addresses = $customer->addresses()->orderByDesc('is_default')->latest('id')->get();
 
         if ($cart === []) {
-            return view('customer.checkout.index', [
-                'items' => collect(),
-                'total' => 0,
-                'customer' => $customer,
-                'addresses' => $customer->addresses()->orderByDesc('is_default')->latest('id')->get(),
-            ]);
+            return view('customer.checkout.index', ['items' => collect(), 'total' => 0, 'customer' => $customer, 'addresses' => $addresses]);
         }
 
         $items = $this->cartItems($cart);
@@ -37,20 +33,12 @@ class CheckoutController extends Controller
         $minimumOrder = (float) SystemSetting::valueFor('minimum_order', 0);
         $paymentMethods = $this->paymentMethods();
 
-        return view('customer.checkout.index', [
-            'items' => $items,
-            'total' => $total,
-            'customer' => $customer,
-            'addresses' => $customer->addresses()->orderByDesc('is_default')->latest('id')->get(),
-            'minimumOrder' => $minimumOrder,
-            'paymentMethods' => $paymentMethods,
-        ]);
+        return view('customer.checkout.index', compact('items', 'total', 'customer', 'addresses', 'minimumOrder', 'paymentMethods'));
     }
 
     public function store(Request $request): RedirectResponse
     {
         $availablePaymentMethods = $this->paymentMethods();
-
         $validated = $request->validate([
             'payment_method' => ['required', Rule::in(array_keys($availablePaymentMethods))],
             'address_id' => ['required', 'integer'],
@@ -58,29 +46,19 @@ class CheckoutController extends Controller
 
         $customer = $this->customer($request);
         $address = $customer->addresses()->whereKey($validated['address_id'])->first();
-
         abort_unless($address, 422, 'Alamat pengiriman tidak valid.');
 
         $cart = $request->session()->get('customer_cart', []);
         abort_if($cart === [], 422, 'Keranjang masih kosong.');
 
         $order = DB::transaction(function () use ($cart, $customer, $address, $request, $validated) {
-            $items = collect($cart)->mapWithKeys(fn ($quantity, $productId) => [
-                (int) $productId => (int) $quantity,
-            ])->filter(fn ($quantity) => $quantity > 0);
-
+            $items = collect($cart)->mapWithKeys(fn ($quantity, $productId) => [(int) $productId => (int) $quantity])->filter(fn ($quantity) => $quantity > 0);
             $total = 0;
             $lockedProducts = [];
 
             foreach ($items as $productId => $quantity) {
-                $product = Product::query()
-                    ->whereKey($productId)
-                    ->where('is_active', true)
-                    ->lockForUpdate()
-                    ->first();
-
+                $product = Product::query()->whereKey($productId)->where('is_active', true)->lockForUpdate()->first();
                 abort_unless($product && $product->stock >= $quantity, 422, 'Stok produk berubah. Silakan periksa kembali keranjang.');
-
                 $subtotal = $quantity * (float) $product->price;
                 $total += $subtotal;
                 $lockedProducts[$productId] = [$product, $quantity, $subtotal];
@@ -94,26 +72,15 @@ class CheckoutController extends Controller
             } while (Order::query()->where('order_number', $orderNumber)->exists());
 
             $order = Order::query()->create([
-                'order_number' => $orderNumber,
-                'customer_id' => $customer->id,
-                'order_date' => now(),
-                'total' => $total,
-                'payment_method' => $validated['payment_method'],
-                'payment_status' => 'pending',
-                'status' => 'pending',
-                'delivery_address' => $address->fullAddress(),
+                'order_number' => $orderNumber, 'customer_id' => $customer->id, 'order_date' => now(),
+                'total' => $total, 'payment_method' => $validated['payment_method'], 'payment_status' => 'pending',
+                'status' => 'pending', 'delivery_address' => $address->fullAddress(),
             ]);
 
             OrderStateMachine::recordInitial($order, auth()->user(), 'Pesanan dibuat melalui checkout customer.');
 
             foreach ($lockedProducts as [$product, $quantity, $subtotal]) {
-                $order->items()->create([
-                    'product_id' => $product->id,
-                    'quantity' => $quantity,
-                    'unit_price' => $product->price,
-                    'subtotal' => $subtotal,
-                ]);
-
+                $order->items()->create(['product_id' => $product->id, 'quantity' => $quantity, 'unit_price' => $product->price, 'subtotal' => $subtotal]);
                 StockMovementService::apply($product, -$quantity, 'sale', auth()->user(), 'order', $order->id, "Penjualan online {$order->order_number}");
             }
 
@@ -121,29 +88,20 @@ class CheckoutController extends Controller
         });
 
         $request->session()->forget('customer_cart');
-
-        return redirect()
-            ->route('customer.checkout.success', $order)
-            ->with('status', 'Pesanan berhasil dibuat.');
+        return redirect()->route('customer.checkout.success', $order)->with('status', 'Pesanan berhasil dibuat.');
     }
 
     public function success(Order $order): View
     {
         $order->load(['items.product:id,name,unit', 'customer:id,name,email,address,city']);
-
         abort_unless($order->customer_id === optional($this->customer(request()))->id, 403);
-
         return view('customer.checkout.success', compact('order'));
     }
 
     private function paymentMethods(): array
     {
         $configured = (string) SystemSetting::valueFor('payment_methods', 'QRIS, Transfer Bank');
-        $mapping = [
-            'qris' => ['QRIS', 'qris'],
-            'bank_transfer' => ['Transfer Bank', 'bank_transfer'],
-        ];
-
+        $mapping = ['qris' => ['QRIS', 'qris'], 'bank_transfer' => ['Transfer Bank', 'bank_transfer']];
         $methods = [];
         foreach (array_map('trim', explode(',', $configured)) as $label) {
             foreach ($mapping as $method => [$configuredLabel]) {
@@ -153,34 +111,29 @@ class CheckoutController extends Controller
                 }
             }
         }
-
         return $methods ?: ['qris' => 'QRIS', 'bank_transfer' => 'Transfer Bank'];
     }
 
     private function customer(Request $request): Customer
     {
-        return Customer::query()
-            ->where('email', $request->user()->email)
-            ->where('is_active', true)
-            ->firstOrFail();
+        $customer = Customer::query()->where('email', $request->user()->email)->where('is_active', true)->firstOrFail();
+
+        if ($customer->addresses()->doesntExist() && $customer->address) {
+            $customer->addresses()->create([
+                'label' => 'Alamat Utama', 'recipient_name' => $customer->name, 'phone' => $customer->phone,
+                'address' => $customer->address, 'city' => $customer->city, 'is_default' => true,
+            ]);
+        }
+
+        return $customer;
     }
 
     private function cartItems(array $cart)
     {
-        $products = Product::query()
-            ->whereIn('id', array_keys($cart))
-            ->where('is_active', true)
-            ->where('stock', '>', 0)
-            ->get(['id', 'name', 'sku', 'price', 'stock', 'unit']);
-
+        $products = Product::query()->whereIn('id', array_keys($cart))->where('is_active', true)->where('stock', '>', 0)->get(['id', 'name', 'sku', 'price', 'stock', 'unit']);
         return $products->map(function ($product) use ($cart) {
             $quantity = min((int) ($cart[$product->id] ?? 0), $product->stock);
-
-            return [
-                'product' => $product,
-                'quantity' => $quantity,
-                'subtotal' => $quantity * (float) $product->price,
-            ];
+            return ['product' => $product, 'quantity' => $quantity, 'subtotal' => $quantity * (float) $product->price];
         })->filter(fn (array $item) => $item['quantity'] > 0)->values();
     }
 }
