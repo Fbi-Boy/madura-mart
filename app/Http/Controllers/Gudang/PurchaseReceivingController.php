@@ -81,6 +81,23 @@ class PurchaseReceivingController extends Controller
             $hasReceivingBreakdown = array_key_exists('received', $validated) || array_key_exists('damaged', $validated);
             $received = $validated['received'] ?? [];
             $damaged = $validated['damaged'] ?? [];
+            $itemIds = $lockedPurchase->items->pluck('id')->map(fn ($id) => (string) $id)->all();
+
+            foreach (array_keys($received) as $itemId) {
+                if (! in_array((string) $itemId, $itemIds, true)) {
+                    throw ValidationException::withMessages([
+                        "received.{$itemId}" => 'Item penerimaan tidak termasuk dalam purchase order.',
+                    ]);
+                }
+            }
+
+            foreach (array_keys($damaged) as $itemId) {
+                if (! in_array((string) $itemId, $itemIds, true)) {
+                    throw ValidationException::withMessages([
+                        "damaged.{$itemId}" => 'Item penerimaan tidak termasuk dalam purchase order.',
+                    ]);
+                }
+            }
 
             foreach ($lockedPurchase->items as $item) {
                 $receivedQuantity = $hasReceivingBreakdown
