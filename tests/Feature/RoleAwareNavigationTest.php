@@ -90,4 +90,24 @@ class RoleAwareNavigationTest extends TestCase
     }
 
 
+    public function test_kasir_navigation_hides_sales_workspaces_when_permission_is_revoked(): void
+    {
+        $user = User::factory()->create(['role' => 'kasir']);
+
+        \App\Models\PermissionOverride::query()->create([
+            'role' => 'kasir',
+            'permission' => 'sales.manage',
+            'enabled' => false,
+            'updated_by' => $user->id,
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('dashboard'))
+            ->assertOk()
+            ->assertDontSee(route('kasir.transaksi-baru'), false)
+            ->assertDontSee(route('kasir.riwayat-transaksi'), false)
+            ->assertDontSee(route('kasir.retur'), false);
+    }
+
+
 }
