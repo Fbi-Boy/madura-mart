@@ -51,9 +51,21 @@
                         @endforeach
                     </div>
 
-                    <p class="mt-4 text-[11px] text-gray-400 dark:text-gray-500">
-                        Timeline menunjukkan tahapan status, bukan waktu kejadian. Sistem belum menyimpan timestamp perubahan status.
-                    </p>
+                    <div class="mt-4 space-y-2">
+                        @forelse ($order->statusHistories as $history)
+                            <div class="flex items-start justify-between gap-4 text-xs">
+                                <div>
+                                    <span class="font-semibold text-gray-700 dark:text-gray-200">{{ ucfirst($history->to_status) }}</span>
+                                    @if ($history->note)
+                                        <span class="text-gray-400"> · {{ $history->note }}</span>
+                                    @endif
+                                </div>
+                                <time class="shrink-0 text-gray-400">{{ $history->created_at->format('d M Y H:i') }}</time>
+                            </div>
+                        @empty
+                            <p class="text-xs text-gray-400">Belum ada riwayat perubahan status.</p>
+                        @endforelse
+                    </div>
                 </div>
 
                 <div class="mt-6 divide-y divide-gray-100 rounded-2xl border border-gray-100 dark:divide-gray-700 dark:border-gray-700">
