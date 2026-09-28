@@ -176,7 +176,7 @@ class RolePermissionTest extends TestCase
         ]);
     }
 
-    public function test_system_settings_are_super_admin_only(): void
+    public function test_super_admin_can_access_system_settings_while_admin_retains_view_access(): void
     {
         $superAdmin = User::factory()->create(['role' => 'super-admin']);
         $admin = User::factory()->create(['role' => 'admin']);
