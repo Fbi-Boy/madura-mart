@@ -106,7 +106,7 @@ class OrderPaymentStateMachineTest extends TestCase
 
         $this->actingAs($customerUser)
             ->post(route('customer.payment.store', $order), ['payment_proof' => $file])
-            ->assertSessionHasErrors('payment_proof');
+            ->assertUnprocessable();
 
         $this->actingAs($admin)
             ->patch(route('admin.payment-verification.update', $order), [
