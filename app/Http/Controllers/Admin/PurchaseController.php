@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Supplier;
 use App\Services\ActivityLogService;
+use App\Services\StockMovementService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -152,7 +153,7 @@ class PurchaseController extends Controller
                 ]);
 
                 if ($request->user()->role !== 'purchasing') {
-                    $product->increment('stock', $item['quantity']);
+                    StockMovementService::apply($product, $item['quantity'], 'purchase_receipt', auth()->user(), 'purchase', $purchase->id, "Penerimaan {$purchase->invoice}");
                 }
                 $total += $subtotal;
             }
