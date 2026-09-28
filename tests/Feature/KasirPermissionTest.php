@@ -73,4 +73,13 @@ class KasirPermissionTest extends TestCase
         $this->actingAs($user)->get(route('kasir.retur'))->assertForbidden();
     }
 
+
+    public function test_sales_permission_override_blocks_new_return_form(): void
+    {
+        $user = $this->cashier();
+        $this->revokeSalesPermission($user);
+
+        $this->actingAs($user)->get(route('kasir.retur.create'))->assertForbidden();
+    }
+
 }
