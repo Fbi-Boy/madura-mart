@@ -104,12 +104,14 @@
         @elseif(auth()->user()->role === 'kasir')
 
             <div class="mt-3 space-y-0.5">
+                @if(auth()->user()->hasPermission('sales.manage'))
                 <a href="{{ route('kasir.transaksi-baru') }}" class="menu-link">Transaksi Baru</a>
                 <a href="{{ route('kasir.riwayat-transaksi') }}" class="menu-link">Riwayat Transaksi</a>
                 <a href="{{ route('kasir.retur') }}" class="menu-link">Retur</a>
                 <a href="{{ route('kasir.buka-shift') }}" class="menu-link">Buka Shift</a>
                 <a href="{{ route('kasir.tutup-shift') }}" class="menu-link">Tutup Shift</a>
                 <a href="{{ route('kasir.riwayat-shift') }}" class="menu-link">Riwayat Shift</a>
+                @endif
             </div>
 
         @elseif(auth()->user()->role === 'gudang')
