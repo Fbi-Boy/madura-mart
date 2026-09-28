@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div>
             <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Checkout</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Konfirmasi data dan produk sebelum pesanan dibuat.</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Konfirmasi alamat, pembayaran, dan produk sebelum pesanan dibuat.</p>
         </div>
     </x-slot>
 
@@ -16,14 +16,35 @@
             @else
                 <div class="grid gap-6 lg:grid-cols-[1fr_320px]">
                     <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                        <h3 class="font-semibold text-gray-900 dark:text-white">Data Pengiriman</h3>
-                        <div class="mt-4 rounded-xl bg-gray-50 p-4 dark:bg-gray-700/50">
-                            <p class="font-medium text-gray-900 dark:text-white">{{ $customer?->name }}</p>
-                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">{{ $customer?->email }}</p>
-                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">{{ $customer?->address ?: 'Alamat belum diisi' }}</p>
-                            @if ($customer?->city)
-                                <p class="text-sm text-gray-600 dark:text-gray-300">{{ $customer->city }}</p>
-                            @endif
+                        <div class="flex items-center justify-between gap-3">
+                            <div>
+                                <h3 class="font-semibold text-gray-900 dark:text-white">Alamat Pengiriman</h3>
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Pilih alamat milik kamu untuk pesanan ini.</p>
+                            </div>
+                            <a href="{{ route('customer.address.edit') }}" class="text-xs font-semibold text-gray-700 hover:underline dark:text-gray-200">Kelola alamat</a>
+                        </div>
+
+                        <div class="mt-4 space-y-3">
+                            @forelse ($addresses ?? [] as $address)
+                                <label class="block cursor-pointer rounded-xl border p-4 transition {{ $address->is_default ? 'border-lime-400 bg-lime-50/50 dark:bg-lime-950/10' : 'border-gray-200 dark:border-gray-700' }}">
+                                    <div class="flex gap-3">
+                                        <input type="radio" name="address_id" value="{{ $address->id }}" form="checkout-form" required @checked($address->is_default) class="mt-1">
+                                        <div>
+                                            <div class="flex items-center gap-2">
+                                                <p class="font-medium text-gray-900 dark:text-white">{{ $address->label }}</p>
+                                                @if($address->is_default)<span class="rounded-full bg-lime-100 px-2 py-0.5 text-[11px] font-semibold text-lime-800">Utama</span>@endif
+                                            </div>
+                                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">{{ $address->recipient_name }} · {{ $address->phone }}</p>
+                                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">{{ $address->address }}, {{ $address->city }}</p>
+                                        </div>
+                                    </div>
+                                </label>
+                            @empty
+                                <div class="rounded-xl border border-dashed border-gray-300 p-5 text-center dark:border-gray-700">
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">Belum ada alamat pengiriman.</p>
+                                    <a href="{{ route('customer.address.edit') }}" class="mt-2 inline-block text-sm font-semibold underline">Tambah alamat</a>
+                                </div>
+                            @endforelse
                         </div>
 
                         <h3 class="mt-6 font-semibold text-gray-900 dark:text-white">Item Pesanan</h3>
@@ -44,7 +65,7 @@
                         <p class="text-sm text-gray-500 dark:text-gray-400">Total Pesanan</p>
                         <p class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">Rp {{ number_format($total, 0, ',', '.') }}</p>
                         <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Harga dan stok akan diverifikasi ulang saat pesanan disimpan. @if(($minimumOrder ?? 0) > 0) Minimum belanja: Rp {{ number_format($minimumOrder, 0, ',', '.') }}. @endif</p>
-                        <form method="POST" action="{{ route('customer.checkout.store') }}" class="mt-5 space-y-4">
+                        <form id="checkout-form" method="POST" action="{{ route('customer.checkout.store') }}" class="mt-5 space-y-4">
                             @csrf
                             <div>
                                 <label for="payment_method" class="text-sm font-medium text-gray-700 dark:text-gray-200">Metode Pembayaran</label>
@@ -54,9 +75,8 @@
                                         <option value="{{ $value }}" @selected(old('payment_method') === $value)>{{ $label }}</option>
                                     @endforeach
                                 </select>
-                                @error('payment_method')
-                                    <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
-                                @enderror
+                                @error('payment_method')<p class="mt-1 text-xs text-red-500">{{ $message }}</p>@enderror
+                                @error('address_id')<p class="mt-1 text-xs text-red-500">{{ $message }}</p>@enderror
                             </div>
                             <button class="w-full rounded-xl bg-[#A8F23A] px-4 py-3 text-sm font-semibold text-gray-900 transition hover:brightness-95">Buat Pesanan</button>
                         </form>
