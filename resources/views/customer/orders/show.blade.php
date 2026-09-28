@@ -74,6 +74,9 @@
                             <p class="text-xs uppercase tracking-wide text-gray-400">Pembayaran</p>
                             <p class="mt-1 font-semibold text-gray-900 dark:text-white">{{ $order->payment_method === 'qris' ? 'QRIS' : 'Transfer Bank' }}</p>
                             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Status: {{ ucfirst($order->payment_status) }}</p>
+                            @if ($order->payment_status === 'rejected')
+                                <p class="mt-2 text-xs text-red-600 dark:text-red-300">Alasan: {{ $order->payment_rejection_reason }}</p>
+                            @endif
                         </div>
                         @if ($order->payment_status !== 'paid' && $order->status !== 'cancelled')
                             <a href="{{ route('customer.payment.show', $order) }}" class="rounded-xl bg-[#A8F23A] px-3 py-2 text-xs font-semibold text-gray-900">Bayar / Kirim Bukti</a>
