@@ -7,6 +7,7 @@ use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\SystemSetting;
+use App\Services\StockMovementService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -104,7 +105,7 @@ class CheckoutController extends Controller
                     'subtotal' => $subtotal,
                 ]);
 
-                $product->decrement('stock', $quantity);
+                StockMovementService::apply($product, -$quantity, 'sale', auth()->user(), 'order', $order->id, "Penjualan online {$order->order_number}");
             }
 
             return $order;
