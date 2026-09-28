@@ -65,8 +65,7 @@ class StockOpnameController extends Controller
                 ]);
 
                 if ($actualStock !== $systemStock) {
-                    $product->update(['stock' => $actualStock]);
-                    StockMovementService::record($product, $actualStock - $systemStock, 'adjustment', auth()->user(), 'stock_opname', $opname->id, 'Penyesuaian hasil stock opname');
+                    StockMovementService::apply($product, $actualStock - $systemStock, 'adjustment', auth()->user(), 'stock_opname', $opname->id, 'Penyesuaian hasil stock opname');
                 }
             }
 

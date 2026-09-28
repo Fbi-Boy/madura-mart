@@ -87,8 +87,7 @@ class SaleReturnController extends Controller
                 ]);
 
                 $product = $saleItem->product()->lockForUpdate()->firstOrFail();
-                $product->increment('stock', $input['quantity']);
-                StockMovementService::record($product, $input['quantity'], 'return', auth()->user(), 'sale_return', $return->id, "Retur {$return->return_number}");
+                StockMovementService::apply($product, $input['quantity'], 'return', auth()->user(), 'sale_return', $return->id, "Retur {$return->return_number}");
                 $total += $subtotal;
             }
 

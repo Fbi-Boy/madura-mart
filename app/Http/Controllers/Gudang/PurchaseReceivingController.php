@@ -90,8 +90,7 @@ class PurchaseReceivingController extends Controller
 
                 $product = $item->product()->lockForUpdate()->firstOrFail();
                 if ($receivedQuantity > 0) {
-                    $product->increment('stock', $receivedQuantity);
-                    StockMovementService::record(
+                    StockMovementService::apply(
                         $product,
                         $receivedQuantity,
                         'purchase_receipt',

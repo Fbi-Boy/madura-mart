@@ -14,6 +14,8 @@ class StockMovement extends Model
         'user_id',
         'type',
         'quantity',
+        'balance_before',
+        'balance_after',
         'reference_type',
         'reference_id',
         'notes',
@@ -24,6 +26,8 @@ class StockMovement extends Model
     {
         return [
             'quantity' => 'integer',
+            'balance_before' => 'integer',
+            'balance_after' => 'integer',
             'reference_id' => 'integer',
             'occurred_at' => 'datetime',
         ];
