@@ -67,14 +67,24 @@
                 <a href="{{ route('admin.report.pengiriman') }}" class="menu-link">Laporan Pengiriman</a>
                 <a href="{{ route('admin.report.pelanggan') }}" class="menu-link">Laporan Pelanggan</a>
                 @endif
+                @if(auth()->user()->hasPermission('catalog.manage'))
                 <a href="{{ route('admin.categories.index') }}" class="menu-link">Kategori</a>
+                @endif
+                @if(auth()->user()->hasPermission('products.manage'))
                 <a href="{{ route('admin.products.index') }}" class="menu-link">Produk Master</a>
+                @endif
                 @if(auth()->user()->hasPermission('suppliers.manage'))
                 <a href="{{ route('admin.suppliers.index') }}" class="menu-link">Supplier</a>
                 @endif
+                @if(auth()->user()->hasPermission('customers.manage'))
                 <a href="{{ route('admin.customers.index') }}" class="menu-link">Customer</a>
+                @endif
+                @if(auth()->user()->hasPermission('distributors.manage'))
                 <a href="{{ route('admin.distributors.index') }}" class="menu-link">Distributor Master</a>
+                @endif
+                @if(auth()->user()->hasPermission('couriers.manage'))
                 <a href="{{ route('admin.couriers.index') }}" class="menu-link">Kurir Master</a>
+                @endif
                 @if(auth()->user()->role === 'super-admin')
                     <a href="{{ route('admin.users.index') }}" class="menu-link">User & Staff</a>
                     <a href="{{ route('admin.roles.index') }}" class="menu-link">Role & Permission</a>
@@ -83,7 +93,9 @@
                     <a href="{{ route('admin.audit-logs.index') }}" class="menu-link">Audit Log</a>
                     <a href="{{ route('admin.system-monitoring.index') }}" class="menu-link">System Monitoring</a>
                 @endif
+                @if(auth()->user()->hasPermission('catalog.manage'))
                 <a href="{{ route('admin.units.index') }}" class="menu-link">Satuan</a>
+                @endif
                 @if(auth()->user()->hasPermission('purchases.manage'))
                 <a href="{{ route('admin.purchases.index') }}" class="menu-link">Pembelian</a>
                 @endif
