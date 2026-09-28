@@ -36,6 +36,10 @@ return [
         'deliveries.manage' => 'Kelola pengiriman',
         'orders.manage' => 'Kelola pesanan',
         'role-management.view' => 'Lihat role & permission',
+        'catalog.manage' => 'Kelola kategori dan satuan',
+        'customers.manage' => 'Kelola customer',
+        'distributors.manage' => 'Kelola distributor',
+        'couriers.manage' => 'Kelola kurir',
     ],
     'roles' => [
         'dashboard.view' => [
@@ -56,5 +60,9 @@ return [
         'deliveries.manage' => ['admin', 'super-admin', 'kurir'],
         'orders.manage' => ['admin', 'super-admin', 'customer'],
         'role-management.view' => ['super-admin'],
+        'catalog.manage' => ['admin', 'super-admin'],
+        'customers.manage' => ['admin', 'super-admin'],
+        'distributors.manage' => ['admin', 'super-admin'],
+        'couriers.manage' => ['admin', 'super-admin'],
     ],
 ];
