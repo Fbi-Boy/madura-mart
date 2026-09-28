@@ -135,8 +135,10 @@
         @elseif(auth()->user()->role === 'kurir')
 
             <div class="mt-3 space-y-0.5">
+                @if(auth()->user()->hasPermission('deliveries.manage'))
                 <a href="{{ route('kurir.pengiriman.index') }}" class="menu-link">Tugas Pengiriman</a>
                 <a href="{{ route('kurir.pengiriman.riwayat') }}" class="menu-link">Riwayat Pengiriman</a>
+                @endif
             </div>
 
         @elseif(auth()->user()->role === 'customer')
