@@ -205,7 +205,7 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     Route::prefix('gudang')
         ->name('gudang.')
-        ->middleware('role:gudang')
+        ->middleware(['role:gudang', 'permission:stock.manage'])
         ->group(function () {
             Route::get('/stock-opname', [StockOpnameController::class, 'index'])->name('stock-opname.index');
             Route::post('/stock-opname', [StockOpnameController::class, 'store'])->name('stock-opname.store');

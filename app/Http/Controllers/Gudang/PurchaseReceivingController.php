@@ -40,6 +40,11 @@ class PurchaseReceivingController extends Controller
 
     public function show(Purchase $purchase): View
     {
+        abort_unless(
+            $purchase->status === 'draft' && $purchase->submitted_at !== null,
+            404,
+        );
+
         $purchase->load([
             'supplier:id,name,contact_person,phone',
             'user:id,name',
@@ -56,7 +61,14 @@ class PurchaseReceivingController extends Controller
                 ->with('error', 'Purchase order sudah diproses dan tidak dapat diterima lagi.');
         }
 
-        DB::transaction(function () use ($request, $purchase): void {
+        $validated = $request->validate([
+            'received' => ['sometimes', 'array'],
+            'received.*' => ['integer', 'min:0'],
+            'damaged' => ['sometimes', 'array'],
+            'damaged.*' => ['integer', 'min:0'],
+        ]);
+
+        DB::transaction(function () use ($validated, $purchase): void {
             $lockedPurchase = Purchase::query()
                 ->lockForUpdate()
                 ->with('items')
@@ -66,9 +78,26 @@ class PurchaseReceivingController extends Controller
                 return;
             }
 
-            $hasReceivingBreakdown = $request->has('received') || $request->has('damaged');
-            $received = $request->input('received', []);
-            $damaged = $request->input('damaged', []);
+            $hasReceivingBreakdown = array_key_exists('received', $validated) || array_key_exists('damaged', $validated);
+            $received = $validated['received'] ?? [];
+            $damaged = $validated['damaged'] ?? [];
+            $itemIds = $lockedPurchase->items->pluck('id')->map(fn ($id) => (string) $id)->all();
+
+            foreach (array_keys($received) as $itemId) {
+                if (! in_array((string) $itemId, $itemIds, true)) {
+                    throw ValidationException::withMessages([
+                        "received.{$itemId}" => 'Item penerimaan tidak termasuk dalam purchase order.',
+                    ]);
+                }
+            }
+
+            foreach (array_keys($damaged) as $itemId) {
+                if (! in_array((string) $itemId, $itemIds, true)) {
+                    throw ValidationException::withMessages([
+                        "damaged.{$itemId}" => 'Item penerimaan tidak termasuk dalam purchase order.',
+                    ]);
+                }
+            }
 
             foreach ($lockedPurchase->items as $item) {
                 $receivedQuantity = $hasReceivingBreakdown
