@@ -39,6 +39,7 @@ class SaleReturnTest extends TestCase
 
         $this->actingAs($kasir)->post(route('kasir.retur.store'), [
             'return_number' => 'RET-0002', 'sale_id' => $sale->id, 'return_date' => '2026-09-24 22:00',
+            'refund_method' => 'cash',
             'items' => [['sale_item_id' => $item->id, 'quantity' => 3]],
         ])->assertStatus(422);
 
