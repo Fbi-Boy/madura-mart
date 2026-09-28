@@ -136,4 +136,19 @@ class KasirPermissionTest extends TestCase
         $this->actingAs($user)->get(route('kasir.riwayat-shift'))->assertForbidden();
     }
 
+
+    public function test_explicitly_enabled_sales_override_restores_cashier_access(): void
+    {
+        $user = $this->cashier();
+
+        PermissionOverride::create([
+            'role' => 'kasir',
+            'permission' => 'sales.manage',
+            'enabled' => true,
+            'updated_by' => $user->id,
+        ]);
+
+        $this->actingAs($user)->get(route('kasir.transaksi-baru'))->assertRedirect();
+    }
+
 }
