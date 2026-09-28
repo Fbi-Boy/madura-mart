@@ -33,7 +33,7 @@ class PaymentController extends Controller
         abort_if($order->payment_status === 'paid', 422, 'Pembayaran pesanan sudah dikonfirmasi.');
 
         $validated = $request->validate([
-            'payment_proof' => ['required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
+            'payment_proof' => ['required', 'file', 'mimes:jpg,jpeg,png,pdf', 'mimetypes:image/jpeg,image/png,application/pdf', 'max:2048'],
         ]);
 
         $previousProof = $order->payment_proof;
