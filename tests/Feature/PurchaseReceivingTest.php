@@ -206,4 +206,49 @@ class PurchaseReceivingTest extends TestCase
             ->post(route('gudang.penerimaan.receive', $purchase))
             ->assertForbidden();
     }
+
+    public function test_gudang_can_filter_receiving_queue_by_invoice_and_date(): void
+    {
+        $user = User::factory()->create(['role' => 'gudang']);
+        $supplier = Supplier::factory()->create(['name' => 'Supplier Filter']);
+
+        $target = Purchase::factory()->create([
+            'invoice' => 'PO-RECEIVE-TARGET',
+            'supplier_id' => $supplier->id,
+            'status' => 'draft',
+            'submitted_at' => now()->subDay(),
+            'purchase_date' => now()->subDay(),
+        ]);
+
+        Purchase::factory()->create([
+            'invoice' => 'PO-RECEIVE-OTHER',
+            'status' => 'draft',
+            'submitted_at' => now()->subMonth(),
+            'purchase_date' => now()->subMonth(),
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('gudang.penerimaan.index', [
+                'q' => 'PO-RECEIVE-TARGET',
+                'date_from' => now()->subDays(2)->toDateString(),
+                'date_to' => now()->toDateString(),
+            ]))
+            ->assertOk()
+            ->assertViewHas('purchases', fn ($purchases) =>
+                $purchases->total() === 1
+                && $purchases->first()->id === $target->id
+            )
+            ->assertSee('PO-RECEIVE-TARGET')
+            ->assertDontSee('PO-RECEIVE-OTHER');
+    }
+
+    public function test_customer_cannot_access_receiving_queue_filters(): void
+    {
+        $user = User::factory()->create(['role' => 'customer']);
+
+        $this->actingAs($user)
+            ->get(route('gudang.penerimaan.index', ['q' => 'PO']))
+            ->assertForbidden();
+    }
+
 }
