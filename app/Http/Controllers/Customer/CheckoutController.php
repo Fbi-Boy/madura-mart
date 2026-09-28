@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\SystemSetting;
 use App\Services\StockMovementService;
+use App\Services\OrderStateMachine;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -96,6 +97,8 @@ class CheckoutController extends Controller
                 'status' => 'pending',
                 'delivery_address' => trim(implode(', ', array_filter([$customer->address, $customer->city]))),
             ]);
+
+            OrderStateMachine::recordInitial($order, auth()->user(), 'Pesanan dibuat melalui checkout customer.');
 
             foreach ($lockedProducts as [$product, $quantity, $subtotal]) {
                 $order->items()->create([
