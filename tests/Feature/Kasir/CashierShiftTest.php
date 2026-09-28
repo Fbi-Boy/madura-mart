@@ -67,4 +67,82 @@ class CashierShiftTest extends TestCase
 
         $this->actingAs($kasir)->get(route('kasir.transaksi-baru'))->assertNotFound();
     }
+
+    public function test_cash_refund_reduces_expected_shift_cash(): void
+    {
+        $kasir = User::factory()->create(['role' => 'kasir']);
+        $shift = CashierShift::create([
+            'shift_number' => 'SHIFT-REFUND',
+            'user_id' => $kasir->id,
+            'opened_at' => now()->subHour(),
+            'opening_cash' => 100000,
+            'status' => 'open',
+        ]);
+
+        $sale = Sale::factory()->create([
+            'user_id' => $kasir->id,
+            'shift_id' => $shift->id,
+            'status' => 'paid',
+            'payment_method' => 'cash',
+            'total' => 50000,
+        ]);
+
+        SaleReturn::create([
+            'return_number' => 'RET-SHIFT-001',
+            'sale_id' => $sale->id,
+            'user_id' => $kasir->id,
+            'return_date' => now(),
+            'total' => 20000,
+            'refund_method' => 'cash',
+        ]);
+
+        $this->actingAs($kasir)
+            ->post(route('kasir.tutup-shift.store'), ['closing_cash' => 130000])
+            ->assertRedirect(route('kasir.riwayat-shift'));
+
+        $this->assertDatabaseHas('cashier_shifts', [
+            'id' => $shift->id,
+            'expected_cash' => 130000,
+            'closing_cash' => 130000,
+        ]);
+    }
+
+    public function test_non_cash_refund_does_not_reduce_expected_shift_cash(): void
+    {
+        $kasir = User::factory()->create(['role' => 'kasir']);
+        $shift = CashierShift::create([
+            'shift_number' => 'SHIFT-NONCASH-REFUND',
+            'user_id' => $kasir->id,
+            'opened_at' => now()->subHour(),
+            'opening_cash' => 100000,
+            'status' => 'open',
+        ]);
+
+        $sale = Sale::factory()->create([
+            'user_id' => $kasir->id,
+            'shift_id' => $shift->id,
+            'status' => 'paid',
+            'payment_method' => 'qris',
+            'total' => 50000,
+        ]);
+
+        SaleReturn::create([
+            'return_number' => 'RET-SHIFT-002',
+            'sale_id' => $sale->id,
+            'user_id' => $kasir->id,
+            'return_date' => now(),
+            'total' => 20000,
+            'refund_method' => 'qris',
+        ]);
+
+        $this->actingAs($kasir)
+            ->post(route('kasir.tutup-shift.store'), ['closing_cash' => 100000])
+            ->assertRedirect(route('kasir.riwayat-shift'));
+
+        $this->assertDatabaseHas('cashier_shifts', [
+            'id' => $shift->id,
+            'expected_cash' => 100000,
+        ]);
+    }
+
 }
