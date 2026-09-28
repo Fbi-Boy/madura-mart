@@ -100,4 +100,13 @@ class KasirPermissionTest extends TestCase
         $this->actingAs($user)->get(route('kasir.buka-shift'))->assertForbidden();
     }
 
+
+    public function test_sales_permission_override_blocks_open_shift_submission(): void
+    {
+        $user = $this->cashier();
+        $this->revokeSalesPermission($user);
+
+        $this->actingAs($user)->post(route('kasir.buka-shift.store'), [])->assertForbidden();
+    }
+
 }
