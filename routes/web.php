@@ -66,11 +66,11 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     Route::get('/admin/monitoring/pembelian', [MonitoringPembelianController::class, 'index'])
         ->name('admin.monitoring.pembelian')
-        ->middleware('role:admin,super-admin,purchasing');
+        ->middleware(['role:admin,super-admin,purchasing', 'permission:purchases.manage']);
 
     Route::prefix('admin/monitoring')
         ->name('admin.monitoring.')
-        ->middleware('role:admin,super-admin')
+        ->middleware(['role:admin,super-admin', 'permission:system-monitoring.view'])
         ->group(function () {
             Route::get('/penjualan', [MonitoringPenjualanController::class, 'index'])->name('penjualan');
             Route::get('/pesanan', [PesananController::class, 'index'])->name('pesanan');
@@ -98,7 +98,7 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     Route::prefix('admin/report')
         ->name('admin.report.')
-        ->middleware('role:admin,super-admin')
+        ->middleware(['role:admin,super-admin', 'permission:reports.view'])
         ->group(function () {
             Route::get('/penjualan', [ReportPenjualanController::class, 'index'])->name('penjualan');
             Route::get('/pembelian', [ReportPembelianController::class, 'index'])->name('pembelian');
