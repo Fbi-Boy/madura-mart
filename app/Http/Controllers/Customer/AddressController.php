@@ -27,30 +27,48 @@ class AddressController extends Controller
         if ($mode === 'default') {
             $data = $request->validate(['address_id' => ['required', 'integer']]);
             $address = $customer->addresses()->findOrFail($data['address_id']);
-
             DB::transaction(function () use ($customer, $address): void {
                 $customer->addresses()->update(['is_default' => false]);
                 $address->update(['is_default' => true]);
             });
-
             return back()->with('status', 'address-default-updated');
         }
 
         if ($mode === 'delete') {
             $data = $request->validate(['address_id' => ['required', 'integer']]);
             $address = $customer->addresses()->findOrFail($data['address_id']);
-
             DB::transaction(function () use ($customer, $address): void {
                 $wasDefault = $address->is_default;
                 $address->delete();
-
                 if ($wasDefault) {
-                    $replacement = $customer->addresses()->latest('id')->first();
-                    $replacement?->update(['is_default' => true]);
+                    $customer->addresses()->latest('id')->first()?->update(['is_default' => true]);
                 }
             });
-
             return back()->with('status', 'address-deleted');
+        }
+
+        // Keep the existing single-address profile endpoint backward compatible.
+        if ($mode === 'legacy') {
+            $data = $request->validate([
+                'name' => ['required', 'string', 'max:100'],
+                'phone' => ['required', 'string', 'max:30'],
+                'address' => ['required', 'string', 'max:500'],
+                'city' => ['required', 'string', 'max:100'],
+            ]);
+
+            $customer->update($data);
+
+            $default = $customer->addresses()->where('is_default', true)->first();
+            if ($default) {
+                $default->update([
+                    'recipient_name' => $data['name'],
+                    'phone' => $data['phone'],
+                    'address' => $data['address'],
+                    'city' => $data['city'],
+                ]);
+            }
+
+            return to_route('customer.address.edit')->with('status', 'address-updated');
         }
 
         $data = $request->validate([
@@ -62,41 +80,42 @@ class AddressController extends Controller
             'is_default' => ['nullable', 'boolean'],
         ]);
 
-        if ($mode === 'add') {
-            DB::transaction(function () use ($customer, $data): void {
-                if (!empty($data['is_default'])) {
-                    $customer->addresses()->update(['is_default' => false]);
-                }
+        DB::transaction(function () use ($customer, $data): void {
+            if (!empty($data['is_default'])) {
+                $customer->addresses()->update(['is_default' => false]);
+            }
 
-                $address = $customer->addresses()->create([
-                    ...$data,
-                    'is_default' => !empty($data['is_default']),
-                ]);
+            $address = $customer->addresses()->create([
+                ...$data,
+                'is_default' => !empty($data['is_default']),
+            ]);
 
-                if ($customer->addresses()->count() === 1) {
-                    $address->update(['is_default' => true]);
-                }
-            });
+            if ($customer->addresses()->count() === 1) {
+                $address->update(['is_default' => true]);
+            }
+        });
 
-            return back()->with('status', 'address-created');
-        }
-
-        // Legacy profile-address form remains supported.
-        $customer->update([
-            'name' => $data['recipient_name'],
-            'phone' => $data['phone'],
-            'address' => $data['address'],
-            'city' => $data['city'],
-        ]);
-
-        return back()->with('status', 'address-updated');
+        return back()->with('status', 'address-created');
     }
 
     private function customer(Request $request): Customer
     {
-        return Customer::query()
+        $customer = Customer::query()
             ->where('email', $request->user()->email)
             ->where('is_active', true)
             ->firstOrFail();
+
+        if ($customer->addresses()->doesntExist() && $customer->address) {
+            $customer->addresses()->create([
+                'label' => 'Alamat Utama',
+                'recipient_name' => $customer->name,
+                'phone' => $customer->phone,
+                'address' => $customer->address,
+                'city' => $customer->city,
+                'is_default' => true,
+            ]);
+        }
+
+        return $customer;
     }
 }
