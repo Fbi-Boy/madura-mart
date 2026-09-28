@@ -49,7 +49,13 @@ class SaleController extends Controller
             ->orderBy('name')
             ->get(['id', 'name']);
 
-        return view('kasir.transaksi-baru.index', compact('products', 'customers'));
+        $productData = $products->map(fn ($product) => [
+            'id' => $product->id,
+            'sku' => $product->sku,
+            'price' => (float) $product->price,
+        ])->values();
+
+        return view('kasir.transaksi-baru.index', compact('products', 'customers', 'productData'));
     }
 
     public function store(Request $request): RedirectResponse
