@@ -32,6 +32,12 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
 
+      - name: Prepare Laravel
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+          php artisan migrate --force
+
       - name: Run auth test
         run: php artisan test tests/Feature/AuthenticationSecurityTest.php --filter="${{ matrix.test }}"
 
@@ -52,6 +58,12 @@ jobs:
 
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Prepare Laravel
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+          php artisan migrate --force
 
       - name: Run full PHPUnit suite
         run: php artisan test
