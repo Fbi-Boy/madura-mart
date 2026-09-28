@@ -27,7 +27,7 @@ class PurchaseWorkspaceTest extends TestCase
             'submitted_at' => null,
             'purchase_date' => now()->subDay(),
         ]);
-        PurchaseItem::factory()->create([
+        PurchaseItem::create([
             'purchase_id' => $target->id,
             'product_id' => $product->id,
             'quantity' => 4,
