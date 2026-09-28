@@ -24,7 +24,7 @@ class SaleReturnController extends Controller
 
     public function create(): View
     {
-        $sales = Sale::query()->where('status', 'paid')->latest('sale_date')->limit(100)->get(['id', 'invoice', 'sale_date', 'total']);
+        $sales = Sale::query()->where('status', 'paid')->latest('sale_date')->limit(100)->get(['id', 'invoice', 'sale_date', 'total', 'payment_method']);
         return view('kasir.retur.create', compact('sales'));
     }
 
@@ -43,6 +43,10 @@ class SaleReturnController extends Controller
 
         DB::transaction(function () use ($validated) {
             $sale = Sale::query()->whereKey($validated['sale_id'])->where('status', 'paid')->lockForUpdate()->firstOrFail();
+
+            if ($validated['refund_method'] !== $sale->payment_method) {
+                abort(422, 'Metode refund harus mengikuti metode pembayaran transaksi asal.');
+            }
 
             $return = SaleReturn::create([
                 'return_number' => $validated['return_number'],
