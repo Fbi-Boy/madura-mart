@@ -39,6 +39,9 @@ class DatabaseSeeder extends Seeder
             CourierSeeder::class,
             UnitSeeder::class,
             CustomerSeeder::class,
+            DemoTransactionSeeder::class,
+            DemoOrderSeeder::class,
+            DemoSystemSeeder::class,
         ]);
     }
 }
