@@ -76,4 +76,18 @@ class RoleAwareNavigationTest extends TestCase
             });
     }
 
+    public function test_kasir_navigation_exposes_sales_workspaces_with_default_permission(): void
+    {
+        $this->actingAs(User::factory()->create(['role' => 'kasir']))
+            ->get(route('dashboard'))
+            ->assertOk()
+            ->assertSee(route('kasir.transaksi-baru'), false)
+            ->assertSee(route('kasir.riwayat-transaksi'), false)
+            ->assertSee(route('kasir.retur'), false)
+            ->assertSee(route('kasir.buka-shift'), false)
+            ->assertSee(route('kasir.tutup-shift'), false)
+            ->assertSee(route('kasir.riwayat-shift'), false);
+    }
+
+
 }
