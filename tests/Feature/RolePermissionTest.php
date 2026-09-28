@@ -144,4 +144,51 @@ class RolePermissionTest extends TestCase
             );
     }
 
+
+    public function test_super_admin_can_grant_a_permission_not_in_the_default_role(): void
+    {
+        $superAdmin = User::factory()->create(['role' => 'super-admin']);
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        $this->actingAs($admin)
+            ->get(route('admin.audit-logs.index'))
+            ->assertForbidden();
+
+        $this->actingAs($superAdmin)
+            ->patch(route('admin.roles.update'), [
+                'permissions' => [
+                    'admin' => [
+                        'audit-log.view' => true,
+                    ],
+                ],
+            ])
+            ->assertRedirect(route('admin.roles.index'));
+
+        $this->actingAs($admin)
+            ->get(route('admin.audit-logs.index'))
+            ->assertOk();
+
+        $this->assertDatabaseHas('permission_overrides', [
+            'role' => 'admin',
+            'permission' => 'audit-log.view',
+            'enabled' => true,
+            'updated_by' => $superAdmin->id,
+        ]);
+    }
+
+    public function test_system_settings_are_super_admin_only(): void
+    {
+        $superAdmin = User::factory()->create(['role' => 'super-admin']);
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        $this->actingAs($admin)
+            ->get(route('admin.settings.index'))
+            ->assertForbidden();
+
+        $this->actingAs($superAdmin)
+            ->get(route('admin.settings.index'))
+            ->assertOk()
+            ->assertViewIs('admin.settings.index');
+    }
+
 }
