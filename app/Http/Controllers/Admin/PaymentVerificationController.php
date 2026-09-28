@@ -38,6 +38,10 @@ class PaymentVerificationController extends Controller
 
     public function update(Request $request, Order $order): RedirectResponse
     {
+        abort_if($order->payment_status !== 'pending', 422, 'Pembayaran sudah diproses.');
+        abort_if($order->status === 'cancelled', 422, 'Pesanan sudah dibatalkan.');
+        abort_unless($order->payment_proof, 422, 'Bukti pembayaran belum tersedia.');
+
         $validated = $request->validate([
             'payment_status' => ['required', 'in:paid,rejected'],
             'rejection_reason' => ['nullable', 'string', 'max:500'],
