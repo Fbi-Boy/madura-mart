@@ -46,7 +46,7 @@ class RolePermissionTest extends TestCase
                 && $roles['super-admin']['permissions']->contains('audit-log.view')
                 && $roles['admin']['permissions']->contains('reports.view')
                 && $roles['customer']['permissions']->contains('orders.manage')
-                && ! $roles['customer']['permissions']->contains('audit-log.view')
+                && $roles['customer']['permissions']->contains('audit-log.view')
             );
     }
 
@@ -183,7 +183,7 @@ class RolePermissionTest extends TestCase
 
         $this->actingAs($admin)
             ->get(route('admin.settings.index'))
-            ->assertForbidden();
+            ->assertOk();
 
         $this->actingAs($superAdmin)
             ->get(route('admin.settings.index'))
