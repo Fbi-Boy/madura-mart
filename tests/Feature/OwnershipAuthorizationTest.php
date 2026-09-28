@@ -70,10 +70,10 @@ class OwnershipAuthorizationTest extends TestCase
 
     public function test_customer_can_only_see_own_orders_in_index(): void
     {
-        [$owner, $other, $order] = $this->customerOrderPair();
+        [$owner, $other, $order, $ownerCustomer, $otherCustomer] = $this->customerOrderPair();
 
         $otherOrder = Order::factory()->create([
-            'customer_id' => $other->customer_id,
+            'customer_id' => $otherCustomer->id,
             'order_number' => 'ORD-OTHER-CUSTOMER',
         ]);
 
@@ -182,6 +182,6 @@ class OwnershipAuthorizationTest extends TestCase
             'order_number' => 'ORD-OWNER',
         ]);
 
-        return [$owner, $other, $order];
+        return [$owner, $other, $order, $ownerCustomer, $otherCustomer];
     }
 }
