@@ -73,7 +73,7 @@ class OrderController extends Controller
 
         abort_unless($customer && $order->customer_id === $customer->id, 404);
 
-        DB::transaction(function () use ($order, $customer): void {
+        DB::transaction(function () use ($order, $customer, $request): void {
             $lockedOrder = Order::query()
                 ->whereKey($order->id)
                 ->lockForUpdate()
