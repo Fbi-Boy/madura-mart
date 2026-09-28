@@ -23,8 +23,7 @@ class RolePermissionController
             return [$role => [
                 'label' => $label,
                 'description' => $descriptions[$role] ?? '',
-                'permissions' => collect($permissions)
-                    ->filter(fn (array $allowedRoles) => in_array($role, $allowedRoles, true))
+                'permissions' => collect($permissionLabels)
                     ->keys()
                     ->filter(function (string $permission) use ($permissionLabels, $permissionQuery): bool {
                         if ($permissionQuery === '') {
@@ -66,6 +65,8 @@ class RolePermissionController
         $changes = [];
 
         foreach ($roles as $role) {
+            if ($role === 'super-admin') { continue; }
+
             foreach ($permissionKeys as $permission) {
                 if (! array_key_exists($role, $submitted) || ! array_key_exists($permission, $submitted[$role])) {
                     continue;
