@@ -804,6 +804,22 @@ class DashboardTest extends TestCase
             ]);
     }
 
+    public function test_super_admin_dashboard_exposes_control_center_routes(): void
+    {
+        $user = User::factory()->create(['role' => 'super-admin']);
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertViewIs('super-admin.dashboard')
+            ->assertSee(route('admin.users.index'), false)
+            ->assertSee(route('admin.roles.index'), false)
+            ->assertSee(route('admin.settings.index'), false)
+            ->assertSee(route('admin.activity-logs.index'), false)
+            ->assertSee(route('admin.audit-logs.index'), false)
+            ->assertSee(route('admin.system-monitoring.index'), false);
+    }
+
     public function test_super_admin_dashboard_exposes_non_sensitive_system_health(): void
     {
         $user = User::factory()->create(['role' => 'super-admin']);

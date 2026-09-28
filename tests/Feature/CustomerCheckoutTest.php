@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\SystemSetting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -176,4 +177,54 @@ class CustomerCheckoutTest extends TestCase
             ->get(route('customer.checkout.success', $order))
             ->assertForbidden();
     }
+
+    public function test_checkout_honors_configured_minimum_order(): void
+    {
+        [$user, $customer] = $this->customerUser();
+        $product = Product::factory()->create(['is_active' => true, 'stock' => 5, 'price' => 10000]);
+
+        SystemSetting::create([
+            'key' => 'minimum_order',
+            'value' => '50000',
+            'type' => 'number',
+            'description' => 'Minimum checkout.',
+        ]);
+
+        $this->withSession(['customer_cart' => [$product->id => 2]])
+            ->actingAs($user)
+            ->post(route('customer.checkout.store'), ['payment_method' => 'qris'])
+            ->assertStatus(422);
+
+        $this->assertDatabaseMissing('orders', ['customer_id' => $customer->id]);
+        $this->assertSame(5, $product->fresh()->stock);
+    }
+
+    public function test_checkout_honors_configured_payment_methods(): void
+    {
+        [$user, $customer] = $this->customerUser();
+        $product = Product::factory()->create(['is_active' => true, 'stock' => 5, 'price' => 10000]);
+
+        SystemSetting::create([
+            'key' => 'payment_methods',
+            'value' => 'QRIS',
+            'type' => 'text',
+            'description' => 'Payment methods.',
+        ]);
+
+        $this->withSession(['customer_cart' => [$product->id => 1]])
+            ->actingAs($user)
+            ->post(route('customer.checkout.store'), ['payment_method' => 'bank_transfer'])
+            ->assertSessionHasErrors('payment_method');
+
+        $this->withSession(['customer_cart' => [$product->id => 1]])
+            ->actingAs($user)
+            ->post(route('customer.checkout.store'), ['payment_method' => 'qris'])
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('orders', [
+            'customer_id' => $customer->id,
+            'payment_method' => 'qris',
+        ]);
+    }
+
 }

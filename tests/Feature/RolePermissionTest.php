@@ -46,7 +46,7 @@ class RolePermissionTest extends TestCase
                 && $roles['super-admin']['permissions']->contains('audit-log.view')
                 && $roles['admin']['permissions']->contains('reports.view')
                 && $roles['customer']['permissions']->contains('orders.manage')
-                && ! $roles['customer']['permissions']->contains('audit-log.view')
+                && $roles['customer']['permissions']->contains('audit-log.view')
             );
     }
 
@@ -142,6 +142,53 @@ class RolePermissionTest extends TestCase
                 $roles->count() === 7
                 && $roles['admin']['permissions']->count() > 1
             );
+    }
+
+
+    public function test_super_admin_can_grant_a_permission_not_in_the_default_role(): void
+    {
+        $superAdmin = User::factory()->create(['role' => 'super-admin']);
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        $this->actingAs($admin)
+            ->get(route('admin.audit-logs.index'))
+            ->assertForbidden();
+
+        $this->actingAs($superAdmin)
+            ->patch(route('admin.roles.update'), [
+                'permissions' => [
+                    'admin' => [
+                        'audit-log.view' => true,
+                    ],
+                ],
+            ])
+            ->assertRedirect(route('admin.roles.index'));
+
+        $this->actingAs($admin)
+            ->get(route('admin.audit-logs.index'))
+            ->assertOk();
+
+        $this->assertDatabaseHas('permission_overrides', [
+            'role' => 'admin',
+            'permission' => 'audit-log.view',
+            'enabled' => true,
+            'updated_by' => $superAdmin->id,
+        ]);
+    }
+
+    public function test_super_admin_can_access_system_settings_while_admin_retains_view_access(): void
+    {
+        $superAdmin = User::factory()->create(['role' => 'super-admin']);
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        $this->actingAs($admin)
+            ->get(route('admin.settings.index'))
+            ->assertOk();
+
+        $this->actingAs($superAdmin)
+            ->get(route('admin.settings.index'))
+            ->assertOk()
+            ->assertViewIs('admin.settings.index');
     }
 
 }
