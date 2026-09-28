@@ -101,8 +101,7 @@ class SaleController extends Controller
                     'subtotal' => $subtotal,
                 ]);
 
-                $product->decrement('stock', $item['quantity']);
-                StockMovementService::record($product, -$item['quantity'], 'sale', auth()->user(), 'sale', $sale->id, "Penjualan {$sale->invoice}");
+                StockMovementService::apply($product, -$item['quantity'], 'sale', auth()->user(), 'sale', $sale->id, "Penjualan {$sale->invoice}");
                 $total += $subtotal;
             }
 
