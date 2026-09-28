@@ -34,6 +34,7 @@ class SaleReturnController extends Controller
             'return_number' => ['required', 'string', 'max:50', 'unique:sale_returns,return_number'],
             'sale_id' => ['required', Rule::exists('sales', 'id')->where('status', 'paid')],
             'return_date' => ['required', 'date'],
+            'refund_method' => ['required', Rule::in(['cash', 'qris', 'transfer', 'debit'])],
             'reason' => ['nullable', 'string'],
             'items' => ['required', 'array', 'min:1'],
             'items.*.sale_item_id' => ['required', 'distinct', 'exists:sale_items,id'],
@@ -49,6 +50,7 @@ class SaleReturnController extends Controller
                 'user_id' => auth()->id(),
                 'return_date' => $validated['return_date'],
                 'total' => 0,
+                'refund_method' => $validated['refund_method'],
                 'reason' => $validated['reason'] ?? null,
             ]);
 
