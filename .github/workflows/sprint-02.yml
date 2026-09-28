@@ -31,4 +31,4 @@ jobs:
           php artisan migrate --force
 
       - name: Run ownership tests
-        run: php artisan test tests/Feature/OwnershipAuthorizationTest.php
+        run: php artisan test tests/Feature/OwnershipAuthorizationTest.php --testdox
