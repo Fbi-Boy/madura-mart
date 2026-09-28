@@ -200,7 +200,7 @@ Route::middleware(['auth', 'active'])->group(function () {
         ->middleware('role:customer')
         ->group(function () {
             Route::get('/', [PaymentController::class, 'show'])->name('show');
-            Route::post('/', [PaymentController::class, 'store'])->name('store');
+            Route::post('/', [PaymentController::class, 'store'])->name('store')->middleware('throttle:payment-upload');
         });
 
     Route::prefix('gudang')
