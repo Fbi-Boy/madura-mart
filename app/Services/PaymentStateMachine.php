@@ -74,6 +74,7 @@ class PaymentStateMachine
             [
                 'from' => 'pending',
                 'to' => $status,
+                'payment_status' => $status,
                 'payment_method' => $order->payment_method,
                 'rejection_reason' => $status === 'rejected' ? $order->payment_rejection_reason : null,
             ],
