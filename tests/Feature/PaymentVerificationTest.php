@@ -109,6 +109,7 @@ class PaymentVerificationTest extends TestCase
         $this->actingAs($admin)
             ->patch(route('admin.payment-verification.update', $rejectedOrder), [
                 'payment_status' => 'rejected',
+                'rejection_reason' => 'Bukti pembayaran tidak sesuai.',
             ])
             ->assertRedirect();
 
@@ -129,6 +130,7 @@ class PaymentVerificationTest extends TestCase
         $this->actingAs($admin)
             ->patch(route('admin.payment-verification.update', $order), [
                 'payment_status' => 'rejected',
+                'rejection_reason' => 'Bukti pembayaran tidak sesuai.',
             ])
             ->assertRedirect();
 
