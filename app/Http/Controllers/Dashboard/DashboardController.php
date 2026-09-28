@@ -13,6 +13,7 @@ use App\Models\PurchaseItem;
 use App\Models\Purchase;
 use App\Models\Sale;
 use App\Models\SaleItem;
+use App\Models\SaleReturn;
 use App\Models\Supplier;
 use App\Models\User;
 use Illuminate\Support\Carbon;
