@@ -232,7 +232,7 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     Route::prefix('kurir')
         ->name('kurir.')
-        ->middleware('role:kurir')
+        ->middleware(['role:kurir', 'permission:deliveries.manage'])
         ->group(function () {
             Route::get('/pengiriman', [DeliveryTaskController::class, 'index'])
                 ->name('pengiriman.index');
