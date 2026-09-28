@@ -159,4 +159,12 @@ class KasirPermissionTest extends TestCase
         $this->actingAs($user)->get(route('kasir.transaksi-baru'))->assertForbidden();
     }
 
+
+    public function test_customer_cannot_use_cashier_routes_even_with_sales_permission(): void
+    {
+        $user = User::factory()->create(['role' => 'customer']);
+
+        $this->actingAs($user)->get(route('kasir.transaksi-baru'))->assertForbidden();
+    }
+
 }
