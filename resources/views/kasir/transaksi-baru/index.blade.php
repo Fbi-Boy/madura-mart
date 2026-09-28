@@ -132,11 +132,7 @@
 
 <script>
 function saleForm() {
-    const products = @json($products->map(fn ($product) => [
-        'id' => $product->id,
-        'sku' => $product->sku,
-        'price' => (float) $product->price,
-    ])->values());
+    const products = @json($productData);
 
     return {
         products,
