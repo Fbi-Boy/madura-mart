@@ -2,8 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\PermissionOverride;
-use App\Models\SystemSetting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -77,18 +75,13 @@ class SuperAdminControlTest extends TestCase
         ]);
     }
 
-    public function test_super_admin_cannot_remove_last_active_super_admin(): void
+    public function test_super_admin_cannot_remove_themselves_from_the_control_plane(): void
     {
         $superAdmin = User::factory()->create(['role' => 'super-admin', 'is_active' => true]);
 
         $this->actingAs($superAdmin)
             ->patch(route('admin.users.status', $superAdmin))
-            ->assertSessionHasErrors('user');
-
-        $this->assertDatabaseHas('users', [
-            'id' => $superAdmin->id,
-            'is_active' => true,
-        ]);
+            ->assertStatus(422);
 
         $this->actingAs($superAdmin)
             ->patch(route('admin.users.update', $superAdmin), [
@@ -101,6 +94,7 @@ class SuperAdminControlTest extends TestCase
         $this->assertDatabaseHas('users', [
             'id' => $superAdmin->id,
             'role' => 'super-admin',
+            'is_active' => true,
         ]);
     }
 
