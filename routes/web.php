@@ -111,7 +111,7 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::prefix('admin')->name('admin.')->middleware('role:admin,super-admin')->group(function () {
         Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index')->middleware('permission:activity-log.view');
         Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index')->middleware('permission:audit-log.view');
-        Route::get('/settings', [SystemSettingController::class, 'index'])->name('settings.index')->middleware(['role:super-admin', 'permission:system-settings.view']);
+        Route::get('/settings', [SystemSettingController::class, 'index'])->name('settings.index')->middleware('permission:system-settings.view');
         Route::patch('/settings', [SystemSettingController::class, 'update'])->name('settings.update')->middleware(['role:super-admin', 'permission:system-settings.update']);
         Route::get('/system-monitoring', [SystemMonitoringController::class, 'index'])->name('system-monitoring.index')->middleware('permission:system-monitoring.view');
         Route::resource('categories', CategoryController::class)->except(['show']);
