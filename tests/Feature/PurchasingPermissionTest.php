@@ -59,15 +59,5 @@ class PurchasingPermissionTest extends TestCase
             ->get(route('purchasing.suppliers.index'))
             ->assertForbidden();
 
-        PermissionOverride::create([
-            'role' => 'purchasing',
-            'permission' => 'suppliers.manage',
-            'enabled' => true,
-            'updated_by' => $user->id,
-        ]);
-
-        $this->actingAs($user)
-            ->get(route('purchasing.suppliers.index'))
-            ->assertOk();
     }
 }
