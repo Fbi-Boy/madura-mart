@@ -48,10 +48,17 @@
         </div>
 
         <div class="rounded-2xl border border-black/5 bg-white p-5 dark:border-white/10 dark:bg-white/5">
-            <div class="mb-4 flex items-center justify-between">
+            <div class="mb-4 flex items-center justify-between gap-4">
                 <div>
                     <h3 class="font-semibold text-[#171719] dark:text-white">Item Penjualan</h3>
                     <p class="mt-1 text-xs text-black/45 dark:text-white/45">Stok akan dikurangi otomatis setelah transaksi tersimpan.</p>
+                </div>
+                <div class="flex w-full max-w-md items-center gap-2">
+                    <input x-ref="barcode" x-model="barcode" @keydown.enter.prevent="scanBarcode()"
+                        type="text" inputmode="numeric" autocomplete="off"
+                        placeholder="Scan barcode / SKU lalu Enter"
+                        class="w-full rounded-xl border border-black/10 bg-transparent px-3 py-2.5 text-sm dark:border-white/10">
+                    <button type="button" @click="scanBarcode()" class="rounded-xl bg-[#171719] px-4 py-2.5 text-sm font-semibold text-white">Scan</button>
                 </div>
                 <button type="button" @click="addItem()" class="rounded-xl bg-[#A8F23A] px-4 py-2 text-sm font-semibold text-[#171719]">+ Tambah Item</button>
             </div>
@@ -127,6 +134,7 @@
 function saleForm() {
     const products = @json($products->map(fn ($product) => [
         'id' => $product->id,
+        'sku' => $product->sku,
         'price' => (float) $product->price,
     ])->values());
 
@@ -134,6 +142,34 @@ function saleForm() {
         products,
         paymentMethod: 'cash',
         paidAmount: 0,
+        barcode: '',
+        scanBarcode() {
+            const code = this.barcode.trim().toLowerCase();
+            if (!code) return;
+
+            const product = this.products.find(product => String(product.sku).toLowerCase() === code);
+            if (!product) {
+                alert('SKU/barcode tidak ditemukan.');
+                this.barcode = '';
+                this.$nextTick(() => this.$refs.barcode?.focus());
+                return;
+            }
+
+            const existing = this.items.find(item => String(item.product_id) === String(product.id));
+            if (existing) {
+                existing.quantity = Number(existing.quantity || 0) + 1;
+            } else {
+                this.items.push({
+                    key: Date.now() + this.items.length,
+                    product_id: product.id,
+                    quantity: 1,
+                    price: product.price,
+                });
+            }
+
+            this.barcode = '';
+            this.$nextTick(() => this.$refs.barcode?.focus());
+        },
         items: [{ key: Date.now(), product_id: '', quantity: 1, price: 0 }],
         addItem() {
             this.items.push({ key: Date.now() + this.items.length, product_id: '', quantity: 1, price: 0 });
