@@ -15,7 +15,6 @@ class AddressController extends Controller
     {
         $customer = $this->customer($request);
         $addresses = $customer->addresses()->orderByDesc('is_default')->latest('id')->get();
-
         return view('customer.address.edit', compact('customer', 'addresses'));
     }
 
@@ -47,7 +46,6 @@ class AddressController extends Controller
             return back()->with('status', 'address-deleted');
         }
 
-        // Keep the existing single-address profile endpoint backward compatible.
         if ($mode === 'legacy') {
             $data = $request->validate([
                 'name' => ['required', 'string', 'max:100'],
@@ -55,19 +53,12 @@ class AddressController extends Controller
                 'address' => ['required', 'string', 'max:500'],
                 'city' => ['required', 'string', 'max:100'],
             ]);
-
             $customer->update($data);
-
             $default = $customer->addresses()->where('is_default', true)->first();
-            if ($default) {
-                $default->update([
-                    'recipient_name' => $data['name'],
-                    'phone' => $data['phone'],
-                    'address' => $data['address'],
-                    'city' => $data['city'],
-                ]);
-            }
-
+            $default?->update([
+                'recipient_name' => $data['name'], 'phone' => $data['phone'],
+                'address' => $data['address'], 'city' => $data['city'],
+            ]);
             return to_route('customer.address.edit')->with('status', 'address-updated');
         }
 
@@ -84,12 +75,7 @@ class AddressController extends Controller
             if (!empty($data['is_default'])) {
                 $customer->addresses()->update(['is_default' => false]);
             }
-
-            $address = $customer->addresses()->create([
-                ...$data,
-                'is_default' => !empty($data['is_default']),
-            ]);
-
+            $address = $customer->addresses()->create([...$data, 'is_default' => !empty($data['is_default'])]);
             if ($customer->addresses()->count() === 1) {
                 $address->update(['is_default' => true]);
             }
@@ -100,22 +86,9 @@ class AddressController extends Controller
 
     private function customer(Request $request): Customer
     {
-        $customer = Customer::query()
+        return Customer::query()
             ->where('email', $request->user()->email)
             ->where('is_active', true)
             ->firstOrFail();
-
-        if ($customer->addresses()->doesntExist() && $customer->address) {
-            $customer->addresses()->create([
-                'label' => 'Alamat Utama',
-                'recipient_name' => $customer->name,
-                'phone' => $customer->phone,
-                'address' => $customer->address,
-                'city' => $customer->city,
-                'is_default' => true,
-            ]);
-        }
-
-        return $customer;
     }
 }
