@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\PurchaseItem;
+use App\Models\PermissionOverride;
 use App\Models\Supplier;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,6 +14,72 @@ use Tests\TestCase;
 class PurchaseReceivingTest extends TestCase
 {
     use RefreshDatabase;
+
+
+    public function test_gudang_requires_stock_manage_permission(): void
+    {
+        $user = User::factory()->create(['role' => 'gudang']);
+
+        PermissionOverride::create([
+            'role' => 'gudang',
+            'permission' => 'stock.manage',
+            'enabled' => false,
+            'updated_by' => $user->id,
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('gudang.penerimaan.index'))
+            ->assertForbidden();
+    }
+
+    public function test_receiving_rejects_unknown_purchase_item_payload(): void
+    {
+        $user = User::factory()->create(['role' => 'gudang']);
+        $product = Product::factory()->create(['stock' => 10]);
+        $purchase = Purchase::factory()->create([
+            'status' => 'draft',
+            'submitted_at' => now(),
+        ]);
+
+        $item = PurchaseItem::create([
+            'purchase_id' => $purchase->id,
+            'product_id' => $product->id,
+            'quantity' => 5,
+            'unit_price' => 12000,
+            'subtotal' => 60000,
+        ]);
+
+        $unknownItemId = $item->id + 999;
+
+        $this->actingAs($user)
+            ->post(route('gudang.penerimaan.receive', $purchase), [
+                'received' => [$unknownItemId => 5],
+            ])
+            ->assertSessionHasErrors("received.{$unknownItemId}");
+
+        $this->assertDatabaseHas('purchases', [
+            'id' => $purchase->id,
+            'status' => 'draft',
+        ]);
+
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id,
+            'stock' => 10,
+        ]);
+    }
+
+    public function test_gudang_cannot_review_already_processed_purchase(): void
+    {
+        $user = User::factory()->create(['role' => 'gudang']);
+        $purchase = Purchase::factory()->create([
+            'status' => 'received',
+            'submitted_at' => now(),
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('gudang.penerimaan.show', $purchase))
+            ->assertNotFound();
+    }
 
     public function test_gudang_can_see_draft_purchase_orders_for_receiving(): void
     {
