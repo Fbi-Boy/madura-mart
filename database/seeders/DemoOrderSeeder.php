@@ -35,7 +35,7 @@ class DemoOrderSeeder extends Seeder
             ] as [$code, $label, $name, $phone, $address, $city, $default]) {
                 DB::table('customer_addresses')->updateOrInsert(
                     ['customer_id' => $owners[$code]->id, 'label' => $label],
-                    compact('name') + [
+                    [
                         'recipient_name' => $name, 'phone' => $phone, 'address' => $address, 'city' => $city,
                         'is_default' => $default, 'created_at' => now(), 'updated_at' => now(),
                     ],
