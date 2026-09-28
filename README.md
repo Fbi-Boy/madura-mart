@@ -32,7 +32,7 @@ The dashboard is selected from the authenticated user's `role`:
 - **Admin Monitoring** — sales, purchases, orders, products, distributors, clients, suppliers, and couriers.
 - **Admin Reports** — sales, purchases, stock, transactions, customers, and shipping reports.
 - **Master Data** — categories, products, suppliers, customers, distributors, couriers, units, and users.
-- **Purchasing** — purchase orders, purchase history, procurement dashboard, and supplier directory.
+- **Purchasing** — purchase orders, purchase history, procurement dashboard, supplier directory, purchase search/filtering, and purchase detail workspace.
 - **Gudang** — stock opname, purchase receiving, stock history, and outbound operations.
 - **Kasir** — new transactions, transaction history, returns, receipts, and shift management.
 - **Kurir** — delivery status updates and delivery history.
