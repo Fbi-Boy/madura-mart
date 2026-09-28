@@ -15,6 +15,26 @@
                 <div class="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/40 dark:bg-red-900/20 dark:text-red-300">{{ session('error') }}</div>
             @endif
 
+            <form method="GET" class="grid gap-3 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:grid-cols-2 lg:grid-cols-4">
+                <div class="lg:col-span-2">
+                    <label for="receiving-search" class="text-xs font-semibold uppercase tracking-wide text-gray-400">Cari PO / Supplier</label>
+                    <input id="receiving-search" name="q" value="{{ request('q') }}" placeholder="Invoice atau nama supplier" class="mt-1.5 w-full rounded-xl border-gray-300 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                </div>
+                <div>
+                    <label for="receiving-from" class="text-xs font-semibold uppercase tracking-wide text-gray-400">Dari</label>
+                    <input id="receiving-from" type="date" name="date_from" value="{{ request('date_from') }}" class="mt-1.5 w-full rounded-xl border-gray-300 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                </div>
+                <div>
+                    <label for="receiving-to" class="text-xs font-semibold uppercase tracking-wide text-gray-400">Sampai</label>
+                    <input id="receiving-to" type="date" name="date_to" value="{{ request('date_to') }}" class="mt-1.5 w-full rounded-xl border-gray-300 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                </div>
+                <div class="flex items-end gap-2 lg:col-span-4">
+                    <button class="rounded-xl bg-[#A8F23A] px-4 py-2.5 text-sm font-semibold text-gray-900">Terapkan</button>
+                    <a href="{{ route('gudang.penerimaan.index') }}" class="rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-700 dark:border-gray-700 dark:text-gray-200">Reset</a>
+                    <span class="ml-auto self-center text-xs text-gray-400">{{ $purchases->total() }} PO</span>
+                </div>
+            </form>
+
             <section class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
                 <div class="flex items-center justify-between border-b border-gray-100 px-5 py-4 dark:border-gray-700">
                     <div>
@@ -39,7 +59,7 @@
                         <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
                             @forelse($purchases as $purchase)
                                 <tr class="transition hover:bg-gray-50 dark:hover:bg-gray-700/40">
-                                    <td class="px-5 py-4 font-semibold text-gray-900 dark:text-white">{{ $purchase->invoice }}</td>
+                                    <td class="px-5 py-4"><div class="font-semibold text-gray-900 dark:text-white">{{ $purchase->invoice }}</div><div class="mt-1 text-xs text-gray-400">Dikirim {{ $purchase->submitted_at?->diffForHumans() }}</div></td>
                                     <td class="px-5 py-4 text-gray-600 dark:text-gray-300">{{ $purchase->supplier?->name ?? '-' }}</td>
                                     <td class="px-5 py-4 text-gray-500 dark:text-gray-400">{{ $purchase->purchase_date?->format('d/m/Y') }}</td>
                                     <td class="px-5 py-4 text-gray-600 dark:text-gray-300">{{ $purchase->user?->name ?? '-' }}</td>
