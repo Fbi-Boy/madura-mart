@@ -46,4 +46,13 @@ class KasirPermissionTest extends TestCase
         $this->actingAs($user)->get(route('kasir.transaksi-baru'))->assertForbidden();
     }
 
+
+    public function test_sales_permission_override_blocks_transaction_submission(): void
+    {
+        $user = $this->cashier();
+        $this->revokeSalesPermission($user);
+
+        $this->actingAs($user)->post(route('kasir.transaksi-baru.store'), [])->assertForbidden();
+    }
+
 }
