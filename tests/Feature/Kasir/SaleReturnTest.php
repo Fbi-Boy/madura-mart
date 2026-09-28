@@ -22,6 +22,7 @@ class SaleReturnTest extends TestCase
 
         $this->actingAs($kasir)->post(route('kasir.retur.store'), [
             'return_number' => 'RET-0001', 'sale_id' => $sale->id, 'return_date' => '2026-09-24 22:00',
+            'refund_method' => 'cash',
             'items' => [['sale_item_id' => $item->id, 'quantity' => 2]],
         ])->assertRedirect(route('kasir.retur'));
 
@@ -44,4 +45,37 @@ class SaleReturnTest extends TestCase
         $this->assertDatabaseMissing('sale_returns', ['return_number' => 'RET-0002']);
         $this->assertDatabaseHas('products', ['id' => $product->id, 'stock' => 7]);
     }
+
+    public function test_refund_method_must_match_original_sale_payment_method(): void
+    {
+        $kasir = User::factory()->create(['role' => 'kasir']);
+        $product = Product::factory()->create(['stock' => 5, 'price' => 50000]);
+
+        $sale = Sale::factory()->create([
+            'user_id' => $kasir->id,
+            'status' => 'paid',
+            'payment_method' => 'qris',
+        ]);
+
+        $saleItem = SaleItem::create([
+            'sale_id' => $sale->id,
+            'product_id' => $product->id,
+            'quantity' => 1,
+            'unit_price' => 50000,
+            'subtotal' => 50000,
+        ]);
+
+        $this->actingAs($kasir)
+            ->post(route('kasir.retur.store'), [
+                'return_number' => 'RET-METHOD-MISMATCH',
+                'sale_id' => $sale->id,
+                'return_date' => now()->format('Y-m-d H:i:s'),
+                'refund_method' => 'cash',
+                'items' => [['sale_item_id' => $saleItem->id, 'quantity' => 1]],
+            ])
+            ->assertStatus(422);
+
+        $this->assertDatabaseMissing('sale_returns', ['return_number' => 'RET-METHOD-MISMATCH']);
+    }
+
 }

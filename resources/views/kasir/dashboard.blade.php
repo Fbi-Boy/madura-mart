@@ -51,7 +51,7 @@
                     Rp {{ number_format($expectedCash, 0, ',', '.') }}
                 </p>
                 <p class="mt-1 text-xs text-black/40 dark:text-white/40">
-                    {{ $openShift ? 'Opening cash + penjualan cash' : 'Tidak ada shift aktif' }}
+                    {{ $openShift ? 'Opening + cash sales − cash refunds' : 'Tidak ada shift aktif' }}
                 </p>
             </div>
 
@@ -73,6 +73,13 @@
                 </p>
             </div>
         </div>
+
+        @if($openShift && $shiftCashReturns > 0)
+            <div class="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 dark:border-amber-500/20 dark:bg-amber-500/10">
+                <p class="text-xs font-semibold text-amber-800 dark:text-amber-200">Refund cash shift</p>
+                <p class="mt-1 text-sm text-amber-700 dark:text-amber-200/80">Rp {{ number_format($shiftCashReturns, 0, ',', '.') }} sudah dikurangkan dari kas yang diharapkan.</p>
+            </div>
+        @endif
 
         <div class="grid grid-cols-1 gap-4 lg:grid-cols-[1.35fr_.65fr]">
             <section class="rounded-2xl border border-black/[0.06] bg-white p-5 dark:border-white/[0.08] dark:bg-white/[0.04]">

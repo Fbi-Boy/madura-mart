@@ -540,8 +540,17 @@ class DashboardController extends Controller
             ? $openShift->sales()->where('status', 'paid')->where('payment_method', 'cash')->sum('total')
             : 0;
 
+        $shiftCashReturns = $openShift
+            ? SaleReturn::query()
+                ->where('refund_method', 'cash')
+                ->whereHas('sale', fn ($sale) => $sale->where('shift_id', $openShift->id))
+                ->where('return_date', '>=', $openShift->opened_at)
+                ->where('return_date', '<=', now())
+                ->sum('total')
+            : 0;
+
         $expectedCash = $openShift
-            ? (float) $openShift->opening_cash + (float) $shiftCashSales
+            ? (float) $openShift->opening_cash + (float) $shiftCashSales - (float) $shiftCashReturns
             : 0;
 
         $recentSales = Sale::query()
@@ -564,6 +573,7 @@ class DashboardController extends Controller
             'todayTransactions',
             'paymentSummary',
             'shiftCashSales',
+            'shiftCashReturns',
             'expectedCash',
             'recentSales',
             'lowStockProducts',
