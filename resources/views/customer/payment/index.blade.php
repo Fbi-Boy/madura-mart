@@ -29,6 +29,13 @@
                     </p>
                 </div>
 
+                @if ($order->payment_status === 'rejected' && $order->payment_rejection_reason)
+                    <div class="mt-5 rounded-xl bg-red-50 p-4 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-300">
+                        <p class="font-semibold">Bukti pembayaran ditolak</p>
+                        <p class="mt-1">{{ $order->payment_rejection_reason }}</p>
+                    </div>
+                @endif
+
                 @if ($errors->any())
                     <div class="mt-5 rounded-xl bg-red-50 p-4 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-300">
                         {{ $errors->first() }}

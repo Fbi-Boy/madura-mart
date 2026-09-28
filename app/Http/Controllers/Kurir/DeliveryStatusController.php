@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Courier;
 use App\Models\Order;
 use App\Services\ActivityLogService;
+use App\Services\OrderStateMachine;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -38,8 +39,16 @@ class DeliveryStatusController extends Controller
         );
 
         $previousStatus = $order->status;
+        OrderStateMachine::transition(
+            $order,
+            $data['status'],
+            $request->user(),
+            $data['status'] === 'failed'
+                ? 'Pengiriman gagal: '.$data['failure_reason']
+                : 'Status pengiriman diperbarui oleh kurir.',
+        );
+
         $order->update([
-            'status' => $data['status'],
             'delivery_failure_reason' => $data['status'] === 'failed' ? $data['failure_reason'] : null,
         ]);
 

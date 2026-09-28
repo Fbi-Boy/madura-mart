@@ -24,6 +24,7 @@ class Order extends Model
         'delivery_address',
         'notes',
         'delivery_failure_reason',
+        'payment_rejection_reason',
     ];
 
     protected function casts(): array
@@ -48,5 +49,10 @@ class Order extends Model
     public function courier(): BelongsTo
     {
         return $this->belongsTo(Courier::class);
+    }
+
+    public function statusHistories(): HasMany
+    {
+        return $this->hasMany(OrderStatusHistory::class)->latest();
     }
 }

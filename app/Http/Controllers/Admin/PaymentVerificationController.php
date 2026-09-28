@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use App\Services\PaymentStateMachine;
 
 class PaymentVerificationController extends Controller
 {
@@ -37,36 +38,24 @@ class PaymentVerificationController extends Controller
 
     public function update(Request $request, Order $order): RedirectResponse
     {
-        $validated = $request->validate([
-            'payment_status' => ['required', 'in:paid,rejected'],
-        ]);
-
+        abort_if($order->payment_status !== 'pending', 422, 'Pembayaran sudah diproses.');
         abort_if($order->status === 'cancelled', 422, 'Pesanan sudah dibatalkan.');
         abort_unless($order->payment_proof, 422, 'Bukti pembayaran belum tersedia.');
-        abort_unless($order->payment_status === 'pending', 422, 'Pembayaran sudah diproses.');
+
+        $validated = $request->validate([
+            'payment_status' => ['required', 'in:paid,rejected'],
+            'rejection_reason' => ['nullable', 'string', 'max:500'],
+        ]);
 
         DB::transaction(function () use ($request, $order, $validated): void {
-            $order->update([
-                'payment_status' => $validated['payment_status'],
-            ]);
+            $lockedOrder = Order::query()->whereKey($order->id)->lockForUpdate()->firstOrFail();
 
-            ActivityLog::query()->create([
-                'user_id' => $request->user()->id,
-                'action' => $validated['payment_status'] === 'paid'
-                    ? 'payment.verified'
-                    : 'payment.rejected',
-                'subject_type' => Order::class,
-                'subject_id' => $order->id,
-                'description' => $validated['payment_status'] === 'paid'
-                    ? "Pembayaran order {$order->order_number} dikonfirmasi."
-                    : "Bukti pembayaran order {$order->order_number} ditolak.",
-                'metadata' => [
-                    'payment_status' => $validated['payment_status'],
-                    'payment_method' => $order->payment_method,
-                ],
-                'ip_address' => $request->ip(),
-                'user_agent' => $request->userAgent(),
-            ]);
+            PaymentStateMachine::review(
+                $lockedOrder,
+                $validated['payment_status'],
+                $request->user(),
+                $validated['rejection_reason'] ?? null,
+            );
         });
 
         return back()->with(
