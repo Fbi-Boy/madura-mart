@@ -13,15 +13,27 @@ use Illuminate\View\View;
 
 class PurchaseReceivingController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
         $purchases = Purchase::query()
             ->with(['supplier:id,name', 'user:id,name'])
             ->withCount('items')
             ->where('status', 'draft')
             ->whereNotNull('submitted_at')
-            ->latest('purchase_date')
-            ->paginate(10);
+            ->when($request->filled('q'), function ($query) use ($request) {
+                $term = trim((string) $request->input('q'));
+
+                $query->where(function ($query) use ($term) {
+                    $query->where('invoice', 'like', "%{$term}%")
+                        ->orWhereHas('supplier', fn ($supplier) => $supplier->where('name', 'like', "%{$term}%"));
+                });
+            })
+            ->when($request->filled('date_from'), fn ($query) => $query->whereDate('purchase_date', '>=', $request->date('date_from')))
+            ->when($request->filled('date_to'), fn ($query) => $query->whereDate('purchase_date', '<=', $request->date('date_to')))
+            ->latest('submitted_at')
+            ->latest('id')
+            ->paginate(10)
+            ->withQueryString();
 
         return view('gudang.penerimaan.index', compact('purchases'));
     }
