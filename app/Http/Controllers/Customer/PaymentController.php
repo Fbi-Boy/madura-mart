@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use App\Services\PaymentStateMachine;
 
 class PaymentController extends Controller
 {
@@ -39,10 +40,8 @@ class PaymentController extends Controller
         $path = $validated['payment_proof']->store('payment-proofs', 'local');
 
         try {
-            $order->update([
-                'payment_status' => 'pending',
-                'payment_proof' => $path,
-            ]);
+            $order->update(['payment_proof' => $path]);
+            PaymentStateMachine::submitProof($order);
         } catch (\Throwable $exception) {
             Storage::disk('local')->delete($path);
 
