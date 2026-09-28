@@ -11,7 +11,7 @@ class SaleReturn extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['return_number', 'sale_id', 'user_id', 'return_date', 'total', 'reason'];
+    protected $fillable = ['return_number', 'sale_id', 'user_id', 'return_date', 'total', 'refund_method', 'reason'];
 
     protected function casts(): array
     {
