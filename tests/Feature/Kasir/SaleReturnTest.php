@@ -17,11 +17,11 @@ class SaleReturnTest extends TestCase
     {
         $kasir = User::factory()->create(['role' => 'kasir']);
         $product = Product::factory()->create(['stock' => 7, 'price' => 12500, 'is_active' => true]);
-        $sale = Sale::factory()->create(['user_id' => $kasir->id, 'status' => 'paid', 'total' => 37500]);
+        $sale = Sale::factory()->create(['user_id' => $kasir->id, 'status' => 'paid', 'payment_method' => 'cash', 'total' => 37500]);
         $item = SaleItem::create(['sale_id' => $sale->id, 'product_id' => $product->id, 'quantity' => 3, 'unit_price' => 12500, 'subtotal' => 37500]);
 
         $this->actingAs($kasir)->post(route('kasir.retur.store'), [
-            'return_number' => 'RET-0001', 'sale_id' => $sale->id, 'return_date' => '2026-09-24 22:00',
+            'return_number' => 'RET-0001', 'sale_id' => $sale->id, 'return_date' => now()->format('Y-m-d H:i:s'),
             'refund_method' => 'cash',
             'items' => [['sale_item_id' => $item->id, 'quantity' => 2]],
         ])->assertRedirect(route('kasir.retur'));
