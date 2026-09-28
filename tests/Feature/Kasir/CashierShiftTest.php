@@ -5,6 +5,7 @@ namespace Tests\Feature\Kasir;
 use App\Models\CashierShift;
 use App\Models\Product;
 use App\Models\Sale;
+use App\Models\SaleReturn;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
