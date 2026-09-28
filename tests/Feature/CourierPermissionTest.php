@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\Courier;
+use App\Models\Order;
 use App\Models\PermissionOverride;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -57,6 +59,16 @@ class CourierPermissionTest extends TestCase
             'email' => 'status-kurir@maduramart.test',
         ]);
 
+        $courier = Courier::factory()->create([
+            'email' => $user->email,
+            'is_active' => true,
+        ]);
+
+        $order = Order::factory()->create([
+            'courier_id' => $courier->id,
+            'status' => 'pending',
+        ]);
+
         PermissionOverride::create([
             'role' => 'kurir',
             'permission' => 'deliveries.manage',
@@ -65,7 +77,7 @@ class CourierPermissionTest extends TestCase
         ]);
 
         $this->actingAs($user)
-            ->patch(route('kurir.pengiriman.status', 1), ['status' => 'processing'])
+            ->patch(route('kurir.pengiriman.status', $order), ['status' => 'processing'])
             ->assertForbidden();
     }
 }
