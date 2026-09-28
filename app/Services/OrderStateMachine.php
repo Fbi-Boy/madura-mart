@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Order;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class OrderStateMachine
@@ -35,14 +36,16 @@ class OrderStateMachine
             ]);
         }
 
-        $order->update(['status' => $to]);
+        DB::transaction(function () use ($order, $to, $from, $user, $note): void {
+            $order->update(['status' => $to]);
 
-        $order->statusHistories()->create([
-            'user_id' => $user?->id,
-            'from_status' => $from,
-            'to_status' => $to,
-            'note' => $note,
-        ]);
+            $order->statusHistories()->create([
+                'user_id' => $user?->id,
+                'from_status' => $from,
+                'to_status' => $to,
+                'note' => $note,
+            ]);
+        });
 
         return $order->refresh();
     }
