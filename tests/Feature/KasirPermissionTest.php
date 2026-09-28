@@ -167,4 +167,29 @@ class KasirPermissionTest extends TestCase
         $this->actingAs($user)->get(route('kasir.transaksi-baru'))->assertForbidden();
     }
 
+
+    public function test_every_cashier_route_requires_sales_permission(): void
+    {
+        $routes = [
+            'kasir.transaksi-baru',
+            'kasir.transaksi-baru.store',
+            'kasir.riwayat-transaksi',
+            'kasir.retur',
+            'kasir.retur.create',
+            'kasir.retur.store',
+            'kasir.buka-shift',
+            'kasir.buka-shift.store',
+            'kasir.tutup-shift',
+            'kasir.tutup-shift.store',
+            'kasir.riwayat-shift',
+        ];
+
+        foreach ($routes as $name) {
+            $route = app('router')->getRoutes()->getByName($name);
+
+            $this->assertNotNull($route, $name);
+            $this->assertContains('permission:sales.manage', $route->middleware(), $name);
+        }
+    }
+
 }
