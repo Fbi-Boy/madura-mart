@@ -57,7 +57,7 @@ class SalePaymentMethodTest extends TestCase
         ]);
     }
 
-    public function test_cashier_cannot_complete_non_cash_sale_with_insufficient_payment(): void
+    public function test_cashier_cannot_complete_cash_sale_with_insufficient_payment(): void
     {
         $kasir = User::factory()->create(['role' => 'kasir']);
         CashierShift::create([
@@ -78,7 +78,7 @@ class SalePaymentMethodTest extends TestCase
             ->post(route('kasir.transaksi-baru.store'), [
                 'invoice' => 'INV-PAYMENT-001',
                 'sale_date' => now()->format('Y-m-d H:i:s'),
-                'payment_method' => 'debit',
+                'payment_method' => 'cash',
                 'paid_amount' => 10000,
                 'items' => [
                     ['product_id' => $product->id, 'quantity' => 1],
