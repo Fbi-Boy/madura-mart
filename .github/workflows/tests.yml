@@ -24,8 +24,8 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
 
-      - name: Run PHPUnit
-        run: php artisan test
-
       - name: Run Sprint 1 auth tests
         run: php artisan test tests/Feature/AuthenticationSecurityTest.php
+
+      - name: Run full PHPUnit suite
+        run: php artisan test
