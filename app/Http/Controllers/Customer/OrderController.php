@@ -97,9 +97,7 @@ class OrderController extends Controller
                     ->lockForUpdate()
                     ->firstOrFail();
 
-                $product->increment('stock', $item->quantity);
-
-                StockMovementService::record(
+                StockMovementService::apply(
                     $product,
                     (int) $item->quantity,
                     'return',
