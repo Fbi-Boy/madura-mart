@@ -30,6 +30,30 @@
                 </div>
             </div>
 
+            <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                @php
+                    $controlCenter = [
+                        ['title' => 'Manajemen User', 'description' => 'Akun, role, status, dan reset password.', 'route' => 'admin.users.index'],
+                        ['title' => 'Role & Permission', 'description' => 'Atur akses role dan override permission.', 'route' => 'admin.roles.index'],
+                        ['title' => 'Pengaturan Sistem', 'description' => 'Identitas toko, transaksi, pembayaran, dan pengiriman.', 'route' => 'admin.settings.index'],
+                        ['title' => 'Activity Log', 'description' => 'Telusuri aktivitas pengguna dan sistem.', 'route' => 'admin.activity-logs.index'],
+                        ['title' => 'Audit Log', 'description' => 'Periksa perubahan data yang memiliki objek terkait.', 'route' => 'admin.audit-logs.index'],
+                        ['title' => 'System Monitoring', 'description' => 'Periksa database, cache, storage, dan kondisi aplikasi.', 'route' => 'admin.system-monitoring.index'],
+                    ];
+                @endphp
+                @foreach ($controlCenter as $control)
+                    <a href="{{ route($control['route']) }}" class="group rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-[#A8F23A]/60 hover:shadow-md dark:border-gray-700 dark:bg-gray-800">
+                        <div class="flex items-start justify-between gap-4">
+                            <div>
+                                <p class="font-semibold text-gray-900 dark:text-white">{{ $control['title'] }}</p>
+                                <p class="mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400">{{ $control['description'] }}</p>
+                            </div>
+                            <span class="rounded-full bg-[#A8F23A]/20 px-2.5 py-1 text-xs font-semibold text-gray-800 transition group-hover:bg-[#A8F23A]">↗</span>
+                        </div>
+                    </a>
+                @endforeach
+            </section>
+
             <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 @php
                     $kpis = [
