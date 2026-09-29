@@ -196,7 +196,7 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     Route::prefix('customer/orders')
         ->name('customer.orders.')
-        ->middleware('role:customer')
+        ->middleware(['role:customer', 'permission:orders.manage'])
         ->group(function () {
             Route::get('/', [OrderController::class, 'index'])->name('index');
             Route::get('/{order}', [OrderController::class, 'show'])->name('show');
