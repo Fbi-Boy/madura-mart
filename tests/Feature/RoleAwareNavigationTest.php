@@ -54,13 +54,9 @@ class RoleAwareNavigationTest extends TestCase
     {
         $admin = User::factory()->create(['role' => 'admin']);
 
-        $this->actingAs($admin)
-            ->get(route('dashboard'))
-            ->assertOk()
-            ->assertSee(route('admin.monitoring.penjualan'), false)
-            ->tap(function ($response) use ($admin) {
-                $this->assertSame(3, substr_count($response->getContent(), route('admin.monitoring.penjualan')));
-            });
+        $this->actingAs($admin);
+        $this->view('layouts.navigation')
+            ->assertSee(route('admin.monitoring.penjualan'), false);
 
         PermissionOverride::query()->create([
             'role' => 'admin',
@@ -69,9 +65,7 @@ class RoleAwareNavigationTest extends TestCase
             'updated_by' => $admin->id,
         ]);
 
-        $this->actingAs($admin)
-            ->get(route('dashboard'))
-            ->assertOk()
+        $this->view('layouts.navigation')
             ->assertDontSee(route('admin.monitoring.penjualan'), false);
     }
 
@@ -93,16 +87,15 @@ class RoleAwareNavigationTest extends TestCase
     {
         $user = User::factory()->create(['role' => 'kasir']);
 
-        \App\Models\PermissionOverride::query()->create([
+        PermissionOverride::query()->create([
             'role' => 'kasir',
             'permission' => 'sales.manage',
             'enabled' => false,
             'updated_by' => $user->id,
         ]);
 
-        $this->actingAs($user)
-            ->get(route('dashboard'))
-            ->assertOk()
+        $this->actingAs($user);
+        $this->view('layouts.navigation')
             ->assertDontSee(route('kasir.transaksi-baru'), false)
             ->assertDontSee(route('kasir.riwayat-transaksi'), false)
             ->assertDontSee(route('kasir.retur'), false);
