@@ -42,7 +42,9 @@
             <div class="mt-3 space-y-0.5">
                 @if(auth()->user()->hasPermission('system-monitoring.view'))
                 <a href="{{ route('admin.monitoring.penjualan') }}" class="menu-link">Penjualan</a>
+                @if(auth()->user()->hasPermission('purchases.manage'))
                 <a href="{{ route('admin.monitoring.pembelian') }}" class="menu-link">Pembelian</a>
+                @endif
                 <a href="{{ route('admin.monitoring.pesanan') }}" class="menu-link">Pesanan</a>
                 <a href="{{ route('admin.monitoring.produk') }}" class="menu-link">Produk</a>
                 <a href="{{ route('admin.monitoring.distributor') }}" class="menu-link">Distributor</a>
@@ -81,11 +83,21 @@
                 @endif
                 @if(auth()->user()->role === 'super-admin')
                     <a href="{{ route('admin.users.index') }}" class="menu-link">User & Staff</a>
+                    @if(auth()->user()->hasPermission('role-management.view'))
                     <a href="{{ route('admin.roles.index') }}" class="menu-link">Role & Permission</a>
+                    @endif
+                    @if(auth()->user()->hasPermission('system-settings.view'))
                     <a href="{{ route('admin.settings.index') }}" class="menu-link">Pengaturan Sistem</a>
+                    @endif
+                    @if(auth()->user()->hasPermission('activity-log.view'))
                     <a href="{{ route('admin.activity-logs.index') }}" class="menu-link">Activity Log</a>
+                    @endif
+                    @if(auth()->user()->hasPermission('audit-log.view'))
                     <a href="{{ route('admin.audit-logs.index') }}" class="menu-link">Audit Log</a>
+                    @endif
+                    @if(auth()->user()->hasPermission('system-monitoring.view'))
                     <a href="{{ route('admin.system-monitoring.index') }}" class="menu-link">System Monitoring</a>
+                    @endif
                 @endif
                 @if(auth()->user()->hasPermission('catalog.manage'))
                 <a href="{{ route('admin.units.index') }}" class="menu-link">Satuan</a>
@@ -111,10 +123,12 @@
         @elseif(auth()->user()->role === 'gudang')
 
             <div class="mt-3 space-y-0.5">
+                @if(auth()->user()->hasPermission('stock.manage'))
                 <a href="{{ route('gudang.stock-opname.index') }}" class="menu-link">Stock Opname</a>
                 <a href="{{ route('gudang.penerimaan.index') }}" class="menu-link">Penerimaan Barang</a>
                 <a href="{{ route('gudang.barang-keluar.index') }}" class="menu-link">Barang Keluar</a>
                 <a href="{{ route('gudang.riwayat-stok.index') }}" class="menu-link">Riwayat Stok</a>
+                @endif
             </div>
 
         @elseif(auth()->user()->role === 'purchasing')
