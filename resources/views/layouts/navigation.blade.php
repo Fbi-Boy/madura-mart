@@ -26,6 +26,7 @@
     <div class="flex-1 px-3 overflow-y-auto [&::-webkit-scrollbar]:hidden"
          style="scrollbar-width:none;-ms-overflow-style:none;">
 
+        @if(auth()->user()->hasPermission('dashboard.view'))
         <a href="{{ route('dashboard') }}"
            class="h-11 flex items-center gap-3 px-3 rounded-[13px]
                   bg-[#A8F23A] text-[#171719] text-[13px] font-semibold transition">
@@ -36,6 +37,7 @@
             </svg>
             <span>dashboard</span>
         </a>
+        @endif
 
         @if($isAdmin)
 
