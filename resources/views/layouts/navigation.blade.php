@@ -40,22 +40,16 @@
         @if($isAdmin)
 
             <div class="mt-3 space-y-0.5">
-                @if(auth()->user()->hasPermission('sales.manage'))
+                @if(auth()->user()->hasPermission('system-monitoring.view'))
                 <a href="{{ route('admin.monitoring.penjualan') }}" class="menu-link">Penjualan</a>
-                @endif
-                @if(auth()->user()->hasPermission('purchases.manage'))
                 <a href="{{ route('admin.monitoring.pembelian') }}" class="menu-link">Pembelian</a>
-                @endif
-                @if(auth()->user()->hasPermission('orders.manage'))
                 <a href="{{ route('admin.monitoring.pesanan') }}" class="menu-link">Pesanan</a>
-                @endif
-                @if(auth()->user()->hasPermission('products.manage'))
                 <a href="{{ route('admin.monitoring.produk') }}" class="menu-link">Produk</a>
-                @endif
                 <a href="{{ route('admin.monitoring.distributor') }}" class="menu-link">Distributor</a>
                 <a href="{{ route('admin.monitoring.client') }}" class="menu-link">Client</a>
                 <a href="{{ route('admin.monitoring.kurir') }}" class="menu-link">Kurir</a>
                 <a href="{{ route('admin.monitoring.supplier') }}" class="menu-link">Supplier</a>
+                @endif
                 @if(auth()->user()->hasPermission('payments.verify'))
                 <a href="{{ route('admin.payment-verification.index') }}" class="menu-link">Verifikasi Pembayaran</a>
                 @endif
