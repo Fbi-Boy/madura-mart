@@ -148,7 +148,9 @@
             <div class="mt-3 space-y-0.5">
                 <a href="{{ route('customer.catalog.index') }}" class="menu-link">Katalog</a>
                 <a href="{{ route('customer.cart.index') }}" class="menu-link">Keranjang</a>
+                @if(auth()->user()->hasPermission('orders.manage'))
                 <a href="{{ route('customer.orders.index') }}" class="menu-link">Pesanan Saya</a>
+                @endif
                 <a href="{{ route('customer.address.edit') }}" class="menu-link">Alamat</a>
             </div>
 
