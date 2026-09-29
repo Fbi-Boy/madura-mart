@@ -179,7 +179,7 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     Route::prefix('customer/checkout')
         ->name('customer.checkout.')
-        ->middleware('role:customer')
+        ->middleware(['role:customer', 'permission:orders.manage'])
         ->group(function () {
             Route::get('/', [CheckoutController::class, 'show'])->name('index');
             Route::post('/', [CheckoutController::class, 'store'])->name('store');
