@@ -205,7 +205,7 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     Route::prefix('customer/orders/{order}/payment')
         ->name('customer.payment.')
-        ->middleware('role:customer')
+        ->middleware(['role:customer', 'permission:orders.manage'])
         ->group(function () {
             Route::get('/', [PaymentController::class, 'show'])->name('show');
             Route::post('/', [PaymentController::class, 'store'])->name('store')->middleware('throttle:payment-upload');
