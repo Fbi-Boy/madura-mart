@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\PermissionOverride;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -61,9 +62,9 @@ class RoleAwareNavigationTest extends TestCase
                 $this->assertSame(3, substr_count($response->getContent(), route('admin.monitoring.penjualan')));
             });
 
-        \App\Models\PermissionOverride::query()->create([
+        PermissionOverride::query()->create([
             'role' => 'admin',
-            'permission' => 'sales.manage',
+            'permission' => 'system-monitoring.view',
             'enabled' => false,
             'updated_by' => $admin->id,
         ]);
@@ -71,9 +72,7 @@ class RoleAwareNavigationTest extends TestCase
         $this->actingAs($admin)
             ->get(route('dashboard'))
             ->assertOk()
-            ->tap(function ($response) use ($admin) {
-                $this->assertSame(1, substr_count($response->getContent(), route('admin.monitoring.penjualan')));
-            });
+            ->assertDontSee(route('admin.monitoring.penjualan'), false);
     }
 
     public function test_kasir_navigation_exposes_sales_workspaces_with_default_permission(): void
