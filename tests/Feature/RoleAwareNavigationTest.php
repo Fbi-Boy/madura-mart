@@ -102,4 +102,69 @@ class RoleAwareNavigationTest extends TestCase
     }
 
 
+    public function test_gudang_navigation_hides_inventory_workspaces_when_permission_is_revoked(): void
+    {
+        $user = User::factory()->create(['role' => 'gudang']);
+
+        PermissionOverride::query()->create([
+            'role' => 'gudang',
+            'permission' => 'stock.manage',
+            'enabled' => false,
+            'updated_by' => $user->id,
+        ]);
+
+        $this->actingAs($user)
+            ->view('layouts.navigation')
+            ->assertDontSee(route('gudang.stock-opname.index'), false)
+            ->assertDontSee(route('gudang.penerimaan.index'), false)
+            ->assertDontSee(route('gudang.barang-keluar.index'), false)
+            ->assertDontSee(route('gudang.riwayat-stok.index'), false);
+    }
+
+    public function test_admin_navigation_hides_purchase_monitoring_when_purchase_permission_is_revoked(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        PermissionOverride::query()->create([
+            'role' => 'admin',
+            'permission' => 'purchases.manage',
+            'enabled' => false,
+            'updated_by' => $admin->id,
+        ]);
+
+        $this->actingAs($admin)
+            ->view('layouts.navigation')
+            ->assertDontSee(route('admin.monitoring.pembelian'), false)
+            ->assertSee(route('admin.monitoring.penjualan'), false);
+    }
+
+    public function test_super_admin_navigation_hides_permission_control_links_when_overridden(): void
+    {
+        $admin = User::factory()->create(['role' => 'super-admin']);
+
+        foreach ([
+            'role-management.view' => 'admin.roles.index',
+            'system-settings.view' => 'admin.settings.index',
+            'activity-log.view' => 'admin.activity-logs.index',
+            'audit-log.view' => 'admin.audit-logs.index',
+            'system-monitoring.view' => 'admin.system-monitoring.index',
+        ] as $permission => $route) {
+            PermissionOverride::query()->create([
+                'role' => 'super-admin',
+                'permission' => $permission,
+                'enabled' => false,
+                'updated_by' => $admin->id,
+            ]);
+        }
+
+        $this->actingAs($admin)
+            ->view('layouts.navigation')
+            ->assertDontSee(route('admin.roles.index'), false)
+            ->assertDontSee(route('admin.settings.index'), false)
+            ->assertDontSee(route('admin.activity-logs.index'), false)
+            ->assertDontSee(route('admin.audit-logs.index'), false)
+            ->assertDontSee(route('admin.system-monitoring.index'), false)
+            ->assertSee(route('admin.users.index'), false);
+    }
+
 }
