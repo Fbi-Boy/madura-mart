@@ -31,7 +31,7 @@ class DemoSystemSeeder extends Seeder
         }
 
         foreach ([
-            ['admin', 'reports.view'], ['admin', 'payment.verify'], ['gudang', 'inventory.manage'],
+            ['admin', 'reports.view'], ['admin', 'payment.verify'], ['gudang', 'stock.manage'],
             ['kasir', 'sales.manage'], ['purchasing', 'purchases.manage'], ['kurir', 'deliveries.manage'],
         ] as [$role, $permission]) {
             DB::table('permission_overrides')->updateOrInsert(
