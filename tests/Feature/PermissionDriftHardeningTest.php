@@ -69,4 +69,40 @@ class PermissionDriftHardeningTest extends TestCase
             ->assertDontSee(route('admin.monitoring.kurir'))
             ->assertDontSee(route('admin.monitoring.supplier'));
     }
+
+    public function test_dashboard_permission_override_blocks_dashboard_access(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        PermissionOverride::query()->create([
+            'role' => 'admin',
+            'permission' => 'dashboard.view',
+            'enabled' => false,
+            'updated_by' => $admin->id,
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('dashboard'))
+            ->assertForbidden();
+    }
+
+    public function test_dashboard_permission_is_available_to_default_roles(): void
+    {
+        foreach ([
+            'admin',
+            'super-admin',
+            'gudang',
+            'kasir',
+            'purchasing',
+            'kurir',
+            'customer',
+        ] as $role) {
+            $user = User::factory()->create(['role' => $role]);
+
+            $this->actingAs($user)
+                ->get(route('dashboard'))
+                ->assertOk();
+        }
+    }
+
 }

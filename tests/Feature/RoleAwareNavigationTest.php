@@ -167,4 +167,21 @@ class RoleAwareNavigationTest extends TestCase
             ->assertSee(route('admin.users.index'), false);
     }
 
+
+    public function test_dashboard_navigation_hides_dashboard_when_permission_is_revoked(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        PermissionOverride::query()->create([
+            'role' => 'admin',
+            'permission' => 'dashboard.view',
+            'enabled' => false,
+            'updated_by' => $admin->id,
+        ]);
+
+        $this->actingAs($admin)
+            ->view('layouts.navigation')
+            ->assertDontSee(route('dashboard'), false);
+    }
+
 }
