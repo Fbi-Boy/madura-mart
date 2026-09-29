@@ -20,6 +20,11 @@ class CourierPermissionTest extends TestCase
             'email' => 'permission-kurir@maduramart.test',
         ]);
 
+        Courier::factory()->create([
+            'email' => $user->email,
+            'is_active' => true,
+        ]);
+
         $this->actingAs($user)
             ->get(route('kurir.pengiriman.index'))
             ->assertOk();
