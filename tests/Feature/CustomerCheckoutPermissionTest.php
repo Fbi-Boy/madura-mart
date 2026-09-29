@@ -72,8 +72,6 @@ class CustomerCheckoutPermissionTest extends TestCase
             'price' => 15000,
         ]);
 
-        $user->forceFill([])->save();
-
         PermissionOverride::create([
             'role' => 'customer',
             'permission' => 'orders.manage',
