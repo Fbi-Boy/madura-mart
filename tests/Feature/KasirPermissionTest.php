@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\CashierShift;
 use App\Models\PermissionOverride;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,10 +14,17 @@ class KasirPermissionTest extends TestCase
 
     private function cashier(): User
     {
-        return User::factory()->create([
+        $user = User::factory()->create([
             'role' => 'kasir',
             'email' => 'permission-kasir@maduramart.test',
         ]);
+
+        CashierShift::factory()->create([
+            'user_id' => $user->id,
+            'status' => 'open',
+        ]);
+
+        return $user;
     }
 
     private function revokeSalesPermission(User $user): void
@@ -35,7 +43,7 @@ class KasirPermissionTest extends TestCase
 
         $this->actingAs($user)
             ->get(route('kasir.transaksi-baru'))
-            ->assertRedirect();
+            ->assertOk();
     }
 
     public function test_sales_permission_override_blocks_new_transaction(): void
@@ -148,7 +156,7 @@ class KasirPermissionTest extends TestCase
             'updated_by' => $user->id,
         ]);
 
-        $this->actingAs($user)->get(route('kasir.transaksi-baru'))->assertRedirect();
+        $this->actingAs($user)->get(route('kasir.transaksi-baru'))->assertOk();
     }
 
 

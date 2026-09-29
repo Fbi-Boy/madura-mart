@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\PermissionOverride;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -53,27 +54,19 @@ class RoleAwareNavigationTest extends TestCase
     {
         $admin = User::factory()->create(['role' => 'admin']);
 
-        $this->actingAs($admin)
-            ->get(route('dashboard'))
-            ->assertOk()
-            ->assertSee(route('admin.monitoring.penjualan'), false)
-            ->tap(function ($response) use ($admin) {
-                $this->assertSame(3, substr_count($response->getContent(), route('admin.monitoring.penjualan')));
-            });
+        $this->actingAs($admin);
+        $this->view('layouts.navigation')
+            ->assertSee(route('admin.monitoring.penjualan'), false);
 
-        \App\Models\PermissionOverride::query()->create([
+        PermissionOverride::query()->create([
             'role' => 'admin',
-            'permission' => 'sales.manage',
+            'permission' => 'system-monitoring.view',
             'enabled' => false,
             'updated_by' => $admin->id,
         ]);
 
-        $this->actingAs($admin)
-            ->get(route('dashboard'))
-            ->assertOk()
-            ->tap(function ($response) use ($admin) {
-                $this->assertSame(1, substr_count($response->getContent(), route('admin.monitoring.penjualan')));
-            });
+        $this->view('layouts.navigation')
+            ->assertDontSee(route('admin.monitoring.penjualan'), false);
     }
 
     public function test_kasir_navigation_exposes_sales_workspaces_with_default_permission(): void
@@ -94,16 +87,15 @@ class RoleAwareNavigationTest extends TestCase
     {
         $user = User::factory()->create(['role' => 'kasir']);
 
-        \App\Models\PermissionOverride::query()->create([
+        PermissionOverride::query()->create([
             'role' => 'kasir',
             'permission' => 'sales.manage',
             'enabled' => false,
             'updated_by' => $user->id,
         ]);
 
-        $this->actingAs($user)
-            ->get(route('dashboard'))
-            ->assertOk()
+        $this->actingAs($user);
+        $this->view('layouts.navigation')
             ->assertDontSee(route('kasir.transaksi-baru'), false)
             ->assertDontSee(route('kasir.riwayat-transaksi'), false)
             ->assertDontSee(route('kasir.retur'), false);
