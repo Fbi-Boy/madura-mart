@@ -47,6 +47,75 @@ class SaleReturnTest extends TestCase
         $this->assertDatabaseHas('products', ['id' => $product->id, 'stock' => 7]);
     }
 
+    public function test_return_cannot_use_item_from_another_sale(): void
+    {
+        $kasir = User::factory()->create(['role' => 'kasir']);
+        $product = Product::factory()->create(['stock' => 5, 'is_active' => true]);
+
+        $saleA = Sale::factory()->create([
+            'user_id' => $kasir->id,
+            'status' => 'paid',
+            'payment_method' => 'cash',
+        ]);
+        $saleB = Sale::factory()->create([
+            'user_id' => $kasir->id,
+            'status' => 'paid',
+            'payment_method' => 'cash',
+        ]);
+
+        $itemFromSaleB = SaleItem::create([
+            'sale_id' => $saleB->id,
+            'product_id' => $product->id,
+            'quantity' => 1,
+            'unit_price' => 10000,
+            'subtotal' => 10000,
+        ]);
+
+        $this->actingAs($kasir)
+            ->post(route('kasir.retur.store'), [
+                'return_number' => 'RET-CROSS-SALE',
+                'sale_id' => $saleA->id,
+                'return_date' => now()->format('Y-m-d H:i:s'),
+                'refund_method' => 'cash',
+                'items' => [['sale_item_id' => $itemFromSaleB->id, 'quantity' => 1]],
+            ])
+            ->assertStatus(422);
+
+        $this->assertDatabaseMissing('sale_returns', ['return_number' => 'RET-CROSS-SALE']);
+        $this->assertDatabaseHas('products', ['id' => $product->id, 'stock' => 5]);
+    }
+
+    public function test_future_return_date_is_rejected(): void
+    {
+        $kasir = User::factory()->create(['role' => 'kasir']);
+        $sale = Sale::factory()->create([
+            'user_id' => $kasir->id,
+            'status' => 'paid',
+            'payment_method' => 'cash',
+        ]);
+        $product = Product::factory()->create(['stock' => 5, 'is_active' => true]);
+        $item = SaleItem::create([
+            'sale_id' => $sale->id,
+            'product_id' => $product->id,
+            'quantity' => 1,
+            'unit_price' => 10000,
+            'subtotal' => 10000,
+        ]);
+
+        $this->actingAs($kasir)
+            ->post(route('kasir.retur.store'), [
+                'return_number' => 'RET-FUTURE',
+                'sale_id' => $sale->id,
+                'return_date' => now()->addDay()->format('Y-m-d H:i:s'),
+                'refund_method' => 'cash',
+                'items' => [['sale_item_id' => $item->id, 'quantity' => 1]],
+            ])
+            ->assertSessionHasErrors('return_date');
+
+        $this->assertDatabaseMissing('sale_returns', ['return_number' => 'RET-FUTURE']);
+        $this->assertDatabaseHas('products', ['id' => $product->id, 'stock' => 5]);
+    }
+
     public function test_refund_method_must_match_original_sale_payment_method(): void
     {
         $kasir = User::factory()->create(['role' => 'kasir']);
