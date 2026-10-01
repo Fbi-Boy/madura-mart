@@ -33,7 +33,7 @@ class SaleReturnController extends Controller
         $validated = $request->validate([
             'return_number' => ['required', 'string', 'max:50', 'unique:sale_returns,return_number'],
             'sale_id' => ['required', Rule::exists('sales', 'id')->where('status', 'paid')],
-            'return_date' => ['required', 'date'],
+            'return_date' => ['required', 'date', 'before_or_equal:now'],
             'refund_method' => ['required', Rule::in(['cash', 'qris', 'transfer', 'debit'])],
             'reason' => ['nullable', 'string'],
             'items' => ['required', 'array', 'min:1'],
