@@ -38,6 +38,7 @@ The dashboard is selected from the authenticated user's `role`:
 - **Kasir** — new transactions, transaction history, returns, receipts, and shift management.
 - **Kurir** — delivery status updates and delivery history.
 - **Customer** — catalog, cart, checkout, orders, payment, and personal dashboard.
+- **Customer Payment Resubmission** — rejected payment proofs can be replaced by the owning customer, with the previous rejection reason cleared and the old proof removed safely.
 - **Profile** — update account information and delete an account.
 
 ## Local Setup

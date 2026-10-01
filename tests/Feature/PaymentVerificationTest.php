@@ -235,4 +235,63 @@ class PaymentVerificationTest extends TestCase
         $this->assertSame('paid', $order->fresh()->payment_status);
     }
 
+
+    public function test_customer_can_resubmit_rejected_payment_and_clears_rejection_reason(): void
+    {
+        Storage::fake('local');
+
+        [$customerUser, $customer] = $this->customerUser();
+
+        $oldProof = UploadedFile::fake()
+            ->create('old-proof.pdf', 100, 'application/pdf')
+            ->store('payment-proofs', 'local');
+
+        $order = Order::factory()->create([
+            'customer_id' => $customer->id,
+            'payment_status' => 'rejected',
+            'payment_proof' => $oldProof,
+            'payment_rejection_reason' => 'Bukti sebelumnya tidak sesuai.',
+        ]);
+
+        $newProof = UploadedFile::fake()->create('new-proof.pdf', 100, 'application/pdf');
+
+        $this->actingAs($customerUser)
+            ->post(route('customer.payment.store', $order), [
+                'payment_proof' => $newProof,
+            ])
+            ->assertRedirect(route('customer.orders.show', $order));
+
+        $order = $order->fresh();
+
+        $this->assertSame('pending', $order->payment_status);
+        $this->assertNull($order->payment_rejection_reason);
+        $this->assertNotSame($oldProof, $order->payment_proof);
+        Storage::disk('local')->assertMissing($oldProof);
+        Storage::disk('local')->assertExists($order->payment_proof);
+    }
+
+    public function test_customer_cannot_resubmit_payment_after_it_is_paid(): void
+    {
+        Storage::fake('local');
+
+        [$customerUser, $customer] = $this->customerUser();
+
+        $order = Order::factory()->create([
+            'customer_id' => $customer->id,
+            'payment_status' => 'paid',
+            'payment_proof' => 'payment-proofs/paid-proof.pdf',
+        ]);
+
+        $newProof = UploadedFile::fake()->create('new-proof.pdf', 100, 'application/pdf');
+
+        $this->actingAs($customerUser)
+            ->post(route('customer.payment.store', $order), [
+                'payment_proof' => $newProof,
+            ])
+            ->assertStatus(422);
+
+        $this->assertSame('paid', $order->fresh()->payment_status);
+        Storage::disk('local')->assertMissing($newProof->hashName());
+    }
+
 }
