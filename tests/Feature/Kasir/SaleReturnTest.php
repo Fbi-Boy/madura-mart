@@ -13,6 +13,19 @@ class SaleReturnTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_non_cashier_cannot_access_returns(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        $this->actingAs($admin)
+            ->get(route('kasir.retur'))
+            ->assertForbidden();
+
+        $this->actingAs($admin)
+            ->get(route('kasir.retur.create'))
+            ->assertForbidden();
+    }
+
     public function test_return_restores_product_stock(): void
     {
         $kasir = User::factory()->create(['role' => 'kasir']);
