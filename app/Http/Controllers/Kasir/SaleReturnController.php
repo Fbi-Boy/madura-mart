@@ -7,6 +7,7 @@ use App\Models\Sale;
 use App\Models\SaleItem;
 use App\Models\SaleReturn;
 use App\Models\SaleReturnItem;
+use App\Services\ActivityLogService;
 use App\Services\StockMovementService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -92,6 +93,18 @@ class SaleReturnController extends Controller
             }
 
             $return->update(['total' => $total]);
+
+            ActivityLogService::record(
+                'sale.returned',
+                "Retur penjualan {$return->return_number} berhasil diproses.",
+                $return,
+                [
+                    'sale_id' => $sale->id,
+                    'total' => $total,
+                    'refund_method' => $return->refund_method,
+                    'item_count' => count($validated['items']),
+                ],
+            );
         });
 
         return redirect()->route('kasir.retur')->with('success', 'Retur penjualan berhasil disimpan.');
