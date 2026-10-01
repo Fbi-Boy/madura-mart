@@ -598,3 +598,7 @@ Administrative monitoring and report routes are restricted to `admin` and `super
 - **User & Staff** — account search/filter, newest-first listing, role/status management, password reset, and protected self/last-admin actions.
 - **Pengaturan Sistem** — store identity, transaction parameters, payment configuration, and shipping configuration.
 - **Action UI** — destructive and state-changing actions use compact icon controls with accessible labels.
+
+## Sales Return Integrity
+
+Retur penjualan hanya dapat diproses oleh Kasir dengan permission penjualan. Sistem memvalidasi transaksi asal, item transaksi, jumlah retur yang tersisa, metode refund, dan batas tanggal retur. Setiap retur yang berhasil menambah kembali stok melalui `StockMovementService` dan dicatat pada Activity Log.
