@@ -128,6 +128,10 @@ Protected application routes are scoped by authenticated role. Administrative mo
 - Dokumentasi: `docs/master-data/couriers.md`.
 - Dokumentasi: `docs/master-data/distributors.md`.
 - Dokumentasi: `docs/master-data/suppliers.md` dan `docs/master-data/customers.md`.
+## Current UI Hardening
+
+The Super Admin workspace now keeps User & Staff listings newest-first, uses compact icon-only actions, and provides a consistent system-settings workspace for operational configuration.
+
 ## Continuous Integration
 
 Every push to `main` and every pull request targeting `main` is validated by two GitHub Actions workflows:

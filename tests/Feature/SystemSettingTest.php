@@ -23,6 +23,19 @@ class SystemSettingTest extends TestCase
             ->assertSee('Madura Mart');
     }
 
+    public function test_settings_page_exposes_all_configuration_groups(): void
+    {
+        $user = User::factory()->create(['role' => 'admin']);
+
+        $this->actingAs($user)
+            ->get(route('admin.settings.index'))
+            ->assertOk()
+            ->assertSee('Identitas Toko')
+            ->assertSee('Transaksi')
+            ->assertSee('Pembayaran')
+            ->assertSee('Pengiriman');
+    }
+
     public function test_super_admin_can_update_system_settings(): void
     {
         $user = User::factory()->create(['role' => 'super-admin']);
@@ -84,6 +97,28 @@ class SystemSettingTest extends TestCase
         $this->actingAs($admin)
             ->patch(route('admin.settings.update'), ['store_name' => 'Tidak Boleh'])
             ->assertForbidden();
+    }
+
+    public function test_negative_transaction_values_are_rejected(): void
+    {
+        $user = User::factory()->create(['role' => 'super-admin']);
+
+        $this->actingAs($user)
+            ->from(route('admin.settings.index'))
+            ->patch(route('admin.settings.update'), [
+                'minimum_order' => '-1',
+                'tax_percent' => '-5',
+                'discount_percent' => '-10',
+                'shipping_fee' => '-1000',
+            ])
+            ->assertSessionHasErrors([
+                'minimum_order',
+                'tax_percent',
+                'discount_percent',
+                'shipping_fee',
+            ]);
+
+        $this->assertDatabaseCount('system_settings', 0);
     }
 
     public function test_invalid_email_is_rejected(): void

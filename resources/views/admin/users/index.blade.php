@@ -38,7 +38,7 @@
                 <div class="overflow-x-auto">
                     <table class="min-w-full text-left text-sm">
                         <thead class="border-b border-gray-100 bg-gray-50 dark:border-gray-700 dark:bg-gray-900/40">
-                            <tr><th class="px-5 py-3">Nama</th><th class="px-5 py-3">Email</th><th class="px-5 py-3">Role</th><th class="px-5 py-3">Status</th><th class="px-5 py-3 text-right">Aksi</th></tr>
+                            <tr><th class="px-5 py-3">Nama</th><th class="px-5 py-3">Email</th><th class="px-5 py-3">Role</th><th class="px-5 py-3">Status</th><th class="px-5 py-3 text-center">Aksi</th></tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
                             @forelse($users as $user)
@@ -50,14 +50,51 @@
                                         <span class="rounded-full px-2.5 py-1 text-xs font-semibold {{ $user->is_active ? 'bg-[#A8F23A]/20 text-gray-900' : 'bg-red-100 text-red-700' }}">{{ $user->is_active ? 'Aktif' : 'Nonaktif' }}</span>
                                     </td>
                                     <td class="px-5 py-4">
-                                        <div class="flex justify-end gap-2">
-                                            <a href="{{ route('admin.users.edit',$user) }}" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-semibold dark:border-gray-600 dark:text-white">Edit</a>
+                                        <div class="flex items-center justify-center gap-2">
+                                            <a href="{{ route('admin.users.edit',$user) }}"
+                                               title="Edit user"
+                                               aria-label="Edit user"
+                                               class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 text-gray-600 transition hover:bg-gray-100 hover:text-gray-900 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white">
+                                                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M12 20h9"></path>
+                                                    <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+                                                </svg>
+                                            </a>
                                             @if(!auth()->user()->is($user))
-                                                <form method="POST" action="{{ route('admin.users.status',$user) }}">@csrf @method('PATCH')
-                                                    <button class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-semibold dark:border-gray-600">{{ $user->is_active ? 'Nonaktifkan' : 'Aktifkan' }}</button>
+                                                <form method="POST" action="{{ route('admin.users.status',$user) }}">
+                                                    @csrf @method('PATCH')
+                                                    <button type="submit"
+                                                            title="{{ $user->is_active ? 'Nonaktifkan user' : 'Aktifkan user' }}"
+                                                            aria-label="{{ $user->is_active ? 'Nonaktifkan user' : 'Aktifkan user' }}"
+                                                            class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 text-gray-600 transition hover:bg-gray-100 hover:text-gray-900 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white">
+                                                        @if($user->is_active)
+                                                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                                                <circle cx="12" cy="12" r="9"></circle>
+                                                                <path d="M8 12h8"></path>
+                                                            </svg>
+                                                        @else
+                                                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                                                <circle cx="12" cy="12" r="9"></circle>
+                                                                <path d="M8 12h8"></path>
+                                                                <path d="M12 8v8"></path>
+                                                            </svg>
+                                                        @endif
+                                                    </button>
                                                 </form>
-                                                <form method="POST" action="{{ route('admin.users.destroy',$user) }}" onsubmit="return confirm('Hapus user ini?')">@csrf @method('DELETE')
-                                                    <button class="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-600">Hapus</button>
+                                                <form method="POST" action="{{ route('admin.users.destroy',$user) }}" onsubmit="return confirm('Hapus user ini?')">
+                                                    @csrf @method('DELETE')
+                                                    <button type="submit"
+                                                            title="Hapus user"
+                                                            aria-label="Hapus user"
+                                                            class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-red-200 text-red-600 transition hover:bg-red-50 dark:border-red-900/50 dark:hover:bg-red-900/20">
+                                                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path d="M3 6h18"></path>
+                                                            <path d="M8 6V4h8v2"></path>
+                                                            <path d="m19 6-1 14H6L5 6"></path>
+                                                            <path d="M10 11v5"></path>
+                                                            <path d="M14 11v5"></path>
+                                                        </svg>
+                                                    </button>
                                                 </form>
                                             @endif
                                         </div>

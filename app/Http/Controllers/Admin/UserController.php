@@ -14,7 +14,7 @@ class UserController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = User::query()->orderBy('name');
+        $query = User::query()->latest();
 
         $search = $request->string('search')->trim()->toString();
         $role = $request->string('role')->trim()->toString();

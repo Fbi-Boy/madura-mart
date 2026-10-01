@@ -21,6 +21,25 @@ class UserMasterCrudTest extends TestCase
         $this->assertDatabaseHas('users', ['email' => 'staff@example.com', 'role' => 'kasir']);
     }
 
+    public function test_duplicate_email_is_rejected_when_creating_user(): void
+    {
+        $superAdmin = User::factory()->create(['role' => 'super-admin']);
+        User::factory()->create(['email' => 'taken@example.com']);
+
+        $this->actingAs($superAdmin)
+            ->from(route('admin.users.create'))
+            ->post(route('admin.users.store'), [
+                'name' => 'Duplicate',
+                'email' => 'taken@example.com',
+                'password' => 'password123',
+                'password_confirmation' => 'password123',
+                'role' => 'kasir',
+            ])
+            ->assertSessionHasErrors('email');
+
+        $this->assertDatabaseMissing('users', ['name' => 'Duplicate']);
+    }
+
     public function test_super_admin_can_update_user_without_changing_password(): void
     {
         $superAdmin = User::factory()->create(['role' => 'super-admin']);

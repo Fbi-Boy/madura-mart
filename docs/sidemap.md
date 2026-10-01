@@ -592,3 +592,9 @@ dokumen ini terlebih dahulu.
 # 13. ROUTE ACCESS RULES
 
 Administrative monitoring and report routes are restricted to `admin` and `super-admin`. Cashier transaction and shift routes are restricted to `kasir`. Authentication is required before role authorization is evaluated.
+
+## Super Admin Workspace
+
+- **User & Staff** — account search/filter, newest-first listing, role/status management, password reset, and protected self/last-admin actions.
+- **Pengaturan Sistem** — store identity, transaction parameters, payment configuration, and shipping configuration.
+- **Action UI** — destructive and state-changing actions use compact icon controls with accessible labels.

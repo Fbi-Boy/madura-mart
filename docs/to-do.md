@@ -34,3 +34,11 @@ A feature or fix is ready for review when:
 - [x] Apply role middleware to administrative report routes.
 - [x] Apply role middleware to cashier routes.
 - [x] Add feature coverage for allowed and denied role access.
+
+## Sprint 24 — Super Admin UI Hardening
+
+- [x] Tampilkan user terbaru lebih dahulu pada User & Staff.
+- [x] Gunakan kontrol aksi berbasis ikon untuk edit, status, dan hapus user.
+- [x] Rapikan workspace Pengaturan Sistem agar konsisten dengan dashboard.
+- [x] Tambahkan regression coverage untuk urutan user dan kontrol aksi.
+- [x] Tambahkan validation coverage untuk nilai pengaturan transaksi.

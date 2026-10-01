@@ -36,6 +36,36 @@ class UserManagementTest extends TestCase
             );
     }
 
+    public function test_users_are_listed_newest_first(): void
+    {
+        $superAdmin = User::factory()->create(['role' => 'super-admin']);
+
+        $oldest = User::factory()->create(['name' => 'Oldest User']);
+        $newest = User::factory()->create(['name' => 'Newest User']);
+
+        $this->actingAs($superAdmin)
+            ->get(route('admin.users.index'))
+            ->assertOk()
+            ->assertViewHas('users', function ($users) use ($oldest, $newest) {
+                return $users->first()->is($newest)
+                    && $users->last()->is($oldest);
+            });
+    }
+
+    public function test_user_list_uses_icon_only_actions(): void
+    {
+        $superAdmin = User::factory()->create(['role' => 'super-admin']);
+        $user = User::factory()->create(['role' => 'kasir']);
+
+        $this->actingAs($superAdmin)
+            ->get(route('admin.users.index'))
+            ->assertOk()
+            ->assertSee('aria-label="Edit user"', false)
+            ->assertSee('aria-label="Nonaktifkan user"', false)
+            ->assertSee('aria-label="Hapus user"', false)
+            ->assertSee('class="h-4 w-4"', false);
+    }
+
     public function test_super_admin_can_deactivate_and_reactivate_user(): void
     {
         $superAdmin = User::factory()->create(['role' => 'super-admin']);
