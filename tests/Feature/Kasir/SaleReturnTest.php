@@ -72,7 +72,7 @@ class SaleReturnTest extends TestCase
             ])
             ->assertRedirect(route('kasir.retur'));
 
-        $return = AppModelsSaleReturn::query()->where('return_number', 'RET-AUDIT-0001')->firstOrFail();
+        $return = \App\Models\SaleReturn::query()->where('return_number', 'RET-AUDIT-0001')->firstOrFail();
 
         $this->assertDatabaseHas('activity_logs', [
             'action' => 'sale.returned',
