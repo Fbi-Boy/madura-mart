@@ -60,3 +60,11 @@ A feature or fix is ready for review when:
 - [x] Record both successful verification and rejection outcomes in Activity Log.
 - [x] Cover rejected-without-reason and successful-verification regressions.
 - [x] Verify operational roles cannot access the payment verification workspace.
+
+Sprint 27 — Customer Payment Resubmission Hardening
+
+- [x] Allow rejected payments to be submitted again by the owning customer.
+- [x] Clear the previous rejection reason when a new proof is submitted.
+- [x] Replace the previous payment proof and remove the obsolete file.
+- [x] Keep paid orders blocked from payment resubmission.
+- [x] Add regression coverage for replacement and paid-order guards.
