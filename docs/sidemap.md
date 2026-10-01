@@ -602,3 +602,7 @@ Administrative monitoring and report routes are restricted to `admin` and `super
 ## Sales Return Integrity
 
 Retur penjualan hanya dapat diproses oleh Kasir dengan permission penjualan. Sistem memvalidasi transaksi asal, item transaksi, jumlah retur yang tersisa, metode refund, dan batas tanggal retur. Setiap retur yang berhasil menambah kembali stok melalui `StockMovementService` dan dicatat pada Activity Log.
+
+## Payment Resubmission Integrity
+
+Customer dapat mengirim ulang bukti pembayaran setelah pembayaran ditolak. Saat bukti baru diterima, status kembali menjadi `pending`, alasan penolakan sebelumnya dihapus, dan file bukti lama dihapus setelah penggantian berhasil. Pembayaran yang sudah `paid` tetap tidak dapat dikirim ulang.
