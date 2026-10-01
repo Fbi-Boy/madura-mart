@@ -45,6 +45,10 @@ class SaleReturnController extends Controller
         DB::transaction(function () use ($validated) {
             $sale = Sale::query()->whereKey($validated['sale_id'])->where('status', 'paid')->lockForUpdate()->firstOrFail();
 
+            if ($validated['return_date'] < $sale->sale_date->toDateTimeString()) {
+                abort(422, 'Tanggal retur tidak boleh lebih awal dari tanggal transaksi.');
+            }
+
             if ($validated['refund_method'] !== $sale->payment_method) {
                 abort(422, 'Metode refund harus mengikuti metode pembayaran transaksi asal.');
             }
