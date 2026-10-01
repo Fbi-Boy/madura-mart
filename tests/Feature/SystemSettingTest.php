@@ -23,6 +23,19 @@ class SystemSettingTest extends TestCase
             ->assertSee('Madura Mart');
     }
 
+    public function test_settings_page_exposes_all_configuration_groups(): void
+    {
+        $user = User::factory()->create(['role' => 'admin']);
+
+        $this->actingAs($user)
+            ->get(route('admin.settings.index'))
+            ->assertOk()
+            ->assertSee('Identitas Toko')
+            ->assertSee('Transaksi')
+            ->assertSee('Pembayaran')
+            ->assertSee('Pengiriman');
+    }
+
     public function test_super_admin_can_update_system_settings(): void
     {
         $user = User::factory()->create(['role' => 'super-admin']);
