@@ -7,6 +7,7 @@ use App\Models\Sale;
 use App\Models\SaleItem;
 use App\Models\SaleReturn;
 use App\Models\SaleReturnItem;
+use App\Services\ActivityLogService;
 use App\Services\StockMovementService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -33,7 +34,7 @@ class SaleReturnController extends Controller
         $validated = $request->validate([
             'return_number' => ['required', 'string', 'max:50', 'unique:sale_returns,return_number'],
             'sale_id' => ['required', Rule::exists('sales', 'id')->where('status', 'paid')],
-            'return_date' => ['required', 'date'],
+            'return_date' => ['required', 'date', 'before_or_equal:now'],
             'refund_method' => ['required', Rule::in(['cash', 'qris', 'transfer', 'debit'])],
             'reason' => ['nullable', 'string'],
             'items' => ['required', 'array', 'min:1'],
@@ -43,6 +44,10 @@ class SaleReturnController extends Controller
 
         DB::transaction(function () use ($validated) {
             $sale = Sale::query()->whereKey($validated['sale_id'])->where('status', 'paid')->lockForUpdate()->firstOrFail();
+
+            if ($validated['return_date'] < $sale->sale_date->toDateTimeString()) {
+                abort(422, 'Tanggal retur tidak boleh lebih awal dari tanggal transaksi.');
+            }
 
             if ($validated['refund_method'] !== $sale->payment_method) {
                 abort(422, 'Metode refund harus mengikuti metode pembayaran transaksi asal.');
@@ -92,6 +97,18 @@ class SaleReturnController extends Controller
             }
 
             $return->update(['total' => $total]);
+
+            ActivityLogService::record(
+                'sale.returned',
+                "Retur penjualan {$return->return_number} berhasil diproses.",
+                $return,
+                [
+                    'sale_id' => $sale->id,
+                    'total' => $total,
+                    'refund_method' => $return->refund_method,
+                    'item_count' => count($validated['items']),
+                ],
+            );
         });
 
         return redirect()->route('kasir.retur')->with('success', 'Retur penjualan berhasil disimpan.');

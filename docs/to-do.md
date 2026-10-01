@@ -42,3 +42,12 @@ A feature or fix is ready for review when:
 - [x] Rapikan workspace Pengaturan Sistem agar konsisten dengan dashboard.
 - [x] Tambahkan regression coverage untuk urutan user dan kontrol aksi.
 - [x] Tambahkan validation coverage untuk nilai pengaturan transaksi.
+
+## Sprint 25 — Sales Return Hardening
+
+- [x] Reject future return dates.
+- [x] Reject return dates earlier than the original sale.
+- [x] Prevent cross-sale item returns.
+- [x] Keep refund method aligned with the original payment method.
+- [x] Record successful returns in Activity Log.
+- [x] Add feature coverage for cashier-only access and return integrity.
