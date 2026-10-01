@@ -51,3 +51,12 @@ A feature or fix is ready for review when:
 - [x] Keep refund method aligned with the original payment method.
 - [x] Record successful returns in Activity Log.
 - [x] Add feature coverage for cashier-only access and return integrity.
+
+
+## Sprint 26 — Payment Verification Hardening
+
+- [x] Require a rejection reason when an admin rejects a payment proof.
+- [x] Provide a dedicated rejection workspace in the admin verification screen.
+- [x] Record both successful verification and rejection outcomes in Activity Log.
+- [x] Cover rejected-without-reason and successful-verification regressions.
+- [x] Verify operational roles cannot access the payment verification workspace.

@@ -62,6 +62,17 @@ class PaymentVerificationTest extends TestCase
             ->assertForbidden();
     }
 
+    public function test_operational_roles_cannot_access_payment_verification(): void
+    {
+        foreach (['gudang', 'kasir', 'purchasing', 'kurir'] as $role) {
+            $user = User::factory()->create(['role' => $role]);
+
+            $this->actingAs($user)
+                ->get(route('admin.payment-verification.index'))
+                ->assertForbidden();
+        }
+    }
+
     public function test_admin_can_download_payment_proof(): void
     {
         Storage::fake('local');
@@ -150,6 +161,58 @@ class PaymentVerificationTest extends TestCase
         $this->assertSame('rejected', $activity->metadata['payment_status']);
         $this->assertSame('qris', $activity->metadata['payment_method']);
         $this->assertNotEmpty($activity->ip_address);
+    }
+
+    public function test_rejection_requires_a_reason(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        [, $customer] = $this->customerUser();
+
+        $order = Order::factory()->create([
+            'customer_id' => $customer->id,
+            'payment_status' => 'pending',
+            'payment_proof' => 'payment-proofs/proof.pdf',
+        ]);
+
+        $this->actingAs($admin)
+            ->patch(route('admin.payment-verification.update', $order), [
+                'payment_status' => 'rejected',
+            ])
+            ->assertSessionHasErrors('rejection_reason');
+
+        $this->assertSame('pending', $order->fresh()->payment_status);
+        $this->assertDatabaseMissing('activity_logs', [
+            'subject_type' => Order::class,
+            'subject_id' => $order->id,
+            'action' => 'payment.rejected',
+        ]);
+    }
+
+    public function test_confirmed_payment_records_verification_activity(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        [, $customer] = $this->customerUser();
+
+        $order = Order::factory()->create([
+            'customer_id' => $customer->id,
+            'payment_status' => 'pending',
+            'payment_proof' => 'payment-proofs/proof.pdf',
+            'payment_method' => 'bank_transfer',
+        ]);
+
+        $this->actingAs($admin)
+            ->patch(route('admin.payment-verification.update', $order), [
+                'payment_status' => 'paid',
+            ])
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('activity_logs', [
+            'user_id' => $admin->id,
+            'action' => 'payment.verified',
+            'subject_type' => Order::class,
+            'subject_id' => $order->id,
+            'description' => "Pembayaran order {$order->order_number} dikonfirmasi.",
+        ]);
     }
 
     public function test_processed_payment_cannot_be_reviewed_again(): void

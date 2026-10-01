@@ -30,6 +30,7 @@ The dashboard is selected from the authenticated user's `role`:
 
 - **Role Dashboards** — Admin, Super Admin, Gudang, Kasir, Purchasing, Kurir, and Customer dashboards with role-specific operational metrics.
 - **Admin Monitoring** — sales, purchases, orders, products, distributors, clients, suppliers, and couriers.
+- **Payment Verification** — admin review of uploaded payment proofs with explicit rejection reasons and Activity Log auditing.
 - **Admin Reports** — sales, purchases, stock, transactions, customers, and shipping reports.
 - **Master Data** — categories, products, suppliers, customers, distributors, couriers, units, and users.
 - **Purchasing** — purchase orders, purchase history, procurement dashboard, supplier directory, purchase search/filtering, and purchase detail workspace.
