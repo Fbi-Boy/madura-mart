@@ -266,7 +266,6 @@ class PaymentVerificationTest extends TestCase
         $this->assertSame('pending', $order->payment_status);
         $this->assertNull($order->payment_rejection_reason);
         $this->assertNotSame($oldProof, $order->payment_proof);
-        $this->assertNotSame('payment-proofs/old-proof.pdf', $order->payment_proof);
         Storage::disk('local')->assertMissing($oldProof);
         Storage::disk('local')->assertExists($order->payment_proof);
     }
