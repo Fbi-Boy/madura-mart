@@ -44,7 +44,12 @@ class PaymentVerificationController extends Controller
 
         $validated = $request->validate([
             'payment_status' => ['required', 'in:paid,rejected'],
-            'rejection_reason' => ['nullable', 'string', 'max:500'],
+            'rejection_reason' => [
+                'nullable',
+                'string',
+                'max:500',
+                'required_if:payment_status,rejected',
+            ],
         ]);
 
         DB::transaction(function () use ($request, $order, $validated): void {
