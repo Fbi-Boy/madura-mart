@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Kasir;
 
+use App\Models\ActivityLog;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleItem;
@@ -41,6 +42,44 @@ class SaleReturnTest extends TestCase
 
         $this->assertDatabaseHas('products', ['id' => $product->id, 'stock' => 9]);
         $this->assertDatabaseHas('sale_return_items', ['sale_item_id' => $item->id, 'quantity' => 2, 'subtotal' => 25000]);
+    }
+
+    public function test_successful_return_creates_activity_log(): void
+    {
+        $kasir = User::factory()->create(['role' => 'kasir']);
+        $product = Product::factory()->create(['stock' => 5, 'price' => 10000]);
+        $sale = Sale::factory()->create([
+            'user_id' => $kasir->id,
+            'status' => 'paid',
+            'payment_method' => 'cash',
+            'total' => 10000,
+        ]);
+        $item = SaleItem::create([
+            'sale_id' => $sale->id,
+            'product_id' => $product->id,
+            'quantity' => 1,
+            'unit_price' => 10000,
+            'subtotal' => 10000,
+        ]);
+
+        $this->actingAs($kasir)
+            ->post(route('kasir.retur.store'), [
+                'return_number' => 'RET-AUDIT-0001',
+                'sale_id' => $sale->id,
+                'return_date' => now()->format('Y-m-d H:i:s'),
+                'refund_method' => 'cash',
+                'items' => [['sale_item_id' => $item->id, 'quantity' => 1]],
+            ])
+            ->assertRedirect(route('kasir.retur'));
+
+        $return = AppModelsSaleReturn::query()->where('return_number', 'RET-AUDIT-0001')->firstOrFail();
+
+        $this->assertDatabaseHas('activity_logs', [
+            'action' => 'sale.returned',
+            'subject_type' => $return->getMorphClass(),
+            'subject_id' => $return->id,
+            'user_id' => $kasir->id,
+        ]);
     }
 
     public function test_return_cannot_exceed_remaining_quantity(): void
