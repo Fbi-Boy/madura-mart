@@ -39,20 +39,27 @@
                                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Metode: {{ $order->payment_method === 'qris' ? 'QRIS' : 'Transfer Bank' }}</p>
                                 </div>
 
-                                <div class="flex flex-wrap gap-2">
-                                    <a href="{{ route('admin.payment-verification.proof', $order) }}" class="rounded-xl border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 transition hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700">Lihat Bukti</a>
-                                    <form method="POST" action="{{ route('admin.payment-verification.update', $order) }}">
-                                        @csrf
-                                        @method('PATCH')
-                                        <input type="hidden" name="payment_status" value="paid">
-                                        <button class="rounded-xl bg-[#A8F23A] px-3 py-2 text-xs font-semibold text-gray-900 transition hover:brightness-95">Konfirmasi</button>
-                                    </form>
-                                    <form method="POST" action="{{ route('admin.payment-verification.update', $order) }}">
-                                        @csrf
-                                        @method('PATCH')
-                                        <input type="hidden" name="payment_status" value="rejected">
-                                        <button class="rounded-xl border border-red-200 px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50 dark:border-red-900/50 dark:text-red-300 dark:hover:bg-red-900/20">Tolak</button>
-                                    </form>
+                                <div class="flex flex-col items-stretch gap-2 sm:items-end">
+                                    <div class="flex flex-wrap gap-2">
+                                        <a href="{{ route('admin.payment-verification.proof', $order) }}" class="rounded-xl border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 transition hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700">Lihat Bukti</a>
+                                        <form method="POST" action="{{ route('admin.payment-verification.update', $order) }}">
+                                            @csrf
+                                            @method('PATCH')
+                                            <input type="hidden" name="payment_status" value="paid">
+                                            <button class="rounded-xl bg-[#A8F23A] px-3 py-2 text-xs font-semibold text-gray-900 transition hover:brightness-95">Konfirmasi</button>
+                                        </form>
+                                    </div>
+                                    <details class="w-full sm:w-80">
+                                        <summary class="cursor-pointer rounded-xl border border-red-200 px-3 py-2 text-center text-xs font-semibold text-red-700 dark:border-red-900/50 dark:text-red-300">Tolak Pembayaran</summary>
+                                        <form method="POST" action="{{ route('admin.payment-verification.update', $order) }}" class="mt-2 space-y-2 rounded-xl border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-900/40">
+                                            @csrf
+                                            @method('PATCH')
+                                            <input type="hidden" name="payment_status" value="rejected">
+                                            <label class="block text-left text-xs font-semibold text-gray-700 dark:text-gray-200" for="rejection_reason_{{ $order->id }}">Alasan penolakan</label>
+                                            <textarea id="rejection_reason_{{ $order->id }}" name="rejection_reason" rows="3" required maxlength="500" class="w-full rounded-lg border-gray-300 text-sm shadow-sm dark:border-gray-600 dark:bg-gray-800 dark:text-white" placeholder="Jelaskan alasan agar customer dapat memperbaiki pembayaran."></textarea>
+                                            <button class="w-full rounded-xl border border-red-200 px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50 dark:border-red-900/50 dark:text-red-300 dark:hover:bg-red-900/20">Kirim Penolakan</button>
+                                        </form>
+                                    </details>
                                 </div>
                             </div>
                         @endforeach
