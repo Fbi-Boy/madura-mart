@@ -86,6 +86,28 @@ class SystemSettingTest extends TestCase
             ->assertForbidden();
     }
 
+    public function test_negative_transaction_values_are_rejected(): void
+    {
+        $user = User::factory()->create(['role' => 'super-admin']);
+
+        $this->actingAs($user)
+            ->from(route('admin.settings.index'))
+            ->patch(route('admin.settings.update'), [
+                'minimum_order' => '-1',
+                'tax_percent' => '-5',
+                'discount_percent' => '-10',
+                'shipping_fee' => '-1000',
+            ])
+            ->assertSessionHasErrors([
+                'minimum_order',
+                'tax_percent',
+                'discount_percent',
+                'shipping_fee',
+            ]);
+
+        $this->assertDatabaseCount('system_settings', 0);
+    }
+
     public function test_invalid_email_is_rejected(): void
     {
         $user = User::factory()->create(['role' => 'super-admin']);
