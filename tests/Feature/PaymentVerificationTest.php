@@ -62,6 +62,17 @@ class PaymentVerificationTest extends TestCase
             ->assertForbidden();
     }
 
+    public function test_operational_roles_cannot_access_payment_verification(): void
+    {
+        foreach (['gudang', 'kasir', 'purchasing', 'kurir'] as $role) {
+            $user = User::factory()->create(['role' => $role]);
+
+            $this->actingAs($user)
+                ->get(route('admin.payment-verification.index'))
+                ->assertForbidden();
+        }
+    }
+
     public function test_admin_can_download_payment_proof(): void
     {
         Storage::fake('local');
