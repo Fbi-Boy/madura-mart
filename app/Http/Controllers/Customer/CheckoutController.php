@@ -7,6 +7,7 @@ use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\SystemSetting;
+use App\Services\ActivityLogService;
 use App\Services\StockMovementService;
 use App\Services\OrderStateMachine;
 use Illuminate\Http\RedirectResponse;
@@ -68,6 +69,18 @@ class CheckoutController extends Controller
             }
             return $order;
         });
+
+        ActivityLogService::record(
+            'order.created',
+            "Pesanan {$order->order_number} berhasil dibuat melalui checkout customer.",
+            $order,
+            [
+                'total' => (float) $order->total,
+                'payment_method' => $order->payment_method,
+                'item_count' => $order->items()->count(),
+            ],
+            $request,
+        );
 
         $request->session()->forget('customer_cart');
         return redirect()->route('customer.checkout.success', ['order' => $order->getKey()])->with('status', 'Pesanan berhasil dibuat.');

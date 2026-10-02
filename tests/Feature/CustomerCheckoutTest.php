@@ -107,6 +107,13 @@ class CustomerCheckoutTest extends TestCase
         $this->assertSame('pending', $order->payment_status);
         $this->assertNotNull($order->payment_proof);
         Storage::disk('local')->assertExists($order->payment_proof);
+
+        $this->assertDatabaseHas('activity_logs', [
+            'action' => 'payment.proof_submitted',
+            'subject_type' => Order::class,
+            'subject_id' => $order->id,
+            'user_id' => $user->id,
+        ]);
     }
 
 
@@ -224,6 +231,32 @@ class CustomerCheckoutTest extends TestCase
         $this->assertDatabaseHas('orders', [
             'customer_id' => $customer->id,
             'payment_method' => 'qris',
+        ]);
+    }
+
+
+    public function test_customer_checkout_is_recorded_in_activity_log(): void
+    {
+        [$user, $customer] = $this->customerUser();
+        $product = Product::factory()->create([
+            'is_active' => true,
+            'stock' => 5,
+            'price' => 15000,
+        ]);
+
+        $this->withSession([
+            'customer_cart' => [$product->id => 2],
+        ])->actingAs($user)
+            ->post(route('customer.checkout.store'), ['payment_method' => 'qris'])
+            ->assertRedirect();
+
+        $order = Order::query()->where('customer_id', $customer->id)->firstOrFail();
+
+        $this->assertDatabaseHas('activity_logs', [
+            'action' => 'order.created',
+            'subject_type' => Order::class,
+            'subject_id' => $order->id,
+            'user_id' => $user->id,
         ]);
     }
 

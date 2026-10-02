@@ -68,3 +68,10 @@ Sprint 27 — Customer Payment Resubmission Hardening
 - [x] Replace the previous payment proof and remove the obsolete file.
 - [x] Keep paid orders blocked from payment resubmission.
 - [x] Add regression coverage for replacement and paid-order guards.
+
+## Sprint 28 — Operational Activity Audit Coverage
+
+- [x] Record customer checkout order creation in Activity Log.
+- [x] Record customer payment-proof submission and resubmission in Activity Log.
+- [x] Record gudang purchase receiving completion in Activity Log.
+- [x] Add regression coverage for the new operational audit events.

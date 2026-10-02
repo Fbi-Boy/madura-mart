@@ -606,3 +606,7 @@ Retur penjualan hanya dapat diproses oleh Kasir dengan permission penjualan. Sis
 ## Payment Resubmission Integrity
 
 Customer dapat mengirim ulang bukti pembayaran setelah pembayaran ditolak. Saat bukti baru diterima, status kembali menjadi `pending`, alasan penolakan sebelumnya dihapus, dan file bukti lama dihapus setelah penggantian berhasil. Pembayaran yang sudah `paid` tetap tidak dapat dikirim ulang.
+
+## Operational Activity Audit Coverage
+
+Event penting pada alur operasional dicatat ke Activity Log, termasuk pembuatan order melalui checkout, pengiriman ulang bukti pembayaran, dan penerimaan purchase order oleh gudang.

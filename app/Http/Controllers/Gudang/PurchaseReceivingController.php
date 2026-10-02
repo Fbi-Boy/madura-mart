@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Gudang;
 
 use App\Http\Controllers\Controller;
 use App\Models\Purchase;
+use App\Services\ActivityLogService;
 use App\Services\StockMovementService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -138,6 +139,18 @@ class PurchaseReceivingController extends Controller
 
             $lockedPurchase->update(['status' => 'received']);
         });
+
+        ActivityLogService::record(
+            'purchase.received',
+            "Purchase order {$purchase->invoice} berhasil diterima oleh gudang.",
+            $purchase,
+            [
+                'purchase_id' => $purchase->id,
+                'status' => 'received',
+                'item_count' => $purchase->items()->count(),
+            ],
+            $request,
+        );
 
         return to_route('gudang.penerimaan.index')
             ->with('success', 'Purchase order berhasil diterima dan stok diperbarui.');
