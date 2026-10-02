@@ -107,6 +107,13 @@ class CustomerCheckoutTest extends TestCase
         $this->assertSame('pending', $order->payment_status);
         $this->assertNotNull($order->payment_proof);
         Storage::disk('local')->assertExists($order->payment_proof);
+
+        $this->assertDatabaseHas('activity_logs', [
+            'action' => 'payment.proof_submitted',
+            'subject_type' => Order::class,
+            'subject_id' => $order->id,
+            'user_id' => $user->id,
+        ]);
     }
 
 
