@@ -227,4 +227,30 @@ class CustomerCheckoutTest extends TestCase
         ]);
     }
 
+
+    public function test_customer_checkout_is_recorded_in_activity_log(): void
+    {
+        [$user, $customer] = $this->customerUser();
+        $product = Product::factory()->create([
+            'is_active' => true,
+            'stock' => 5,
+            'price' => 15000,
+        ]);
+
+        $this->withSession([
+            'customer_cart' => [$product->id => 2],
+        ])->actingAs($user)
+            ->post(route('customer.checkout.store'), ['payment_method' => 'qris'])
+            ->assertRedirect();
+
+        $order = Order::query()->where('customer_id', $customer->id)->firstOrFail();
+
+        $this->assertDatabaseHas('activity_logs', [
+            'action' => 'order.created',
+            'subject_type' => Order::class,
+            'subject_id' => $order->id,
+            'user_id' => $user->id,
+        ]);
+    }
+
 }
