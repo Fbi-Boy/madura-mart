@@ -318,4 +318,39 @@ class PurchaseReceivingTest extends TestCase
             ->assertForbidden();
     }
 
+
+    public function test_gudang_receiving_is_recorded_in_activity_log(): void
+    {
+        $user = User::factory()->create(['role' => 'gudang']);
+        $supplier = Supplier::factory()->create();
+        $product = Product::factory()->create(['stock' => 4]);
+
+        $purchase = Purchase::factory()->create([
+            'supplier_id' => $supplier->id,
+            'status' => 'draft',
+            'submitted_at' => now(),
+        ]);
+
+        $item = PurchaseItem::create([
+            'purchase_id' => $purchase->id,
+            'product_id' => $product->id,
+            'quantity' => 3,
+            'unit_price' => 12000,
+            'subtotal' => 36000,
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('gudang.penerimaan.receive', $purchase), [
+                'received' => [$item->id => 3],
+            ])
+            ->assertRedirect(route('gudang.penerimaan.index'));
+
+        $this->assertDatabaseHas('activity_logs', [
+            'action' => 'purchase.received',
+            'subject_type' => Purchase::class,
+            'subject_id' => $purchase->id,
+            'user_id' => $user->id,
+        ]);
+    }
+
 }
