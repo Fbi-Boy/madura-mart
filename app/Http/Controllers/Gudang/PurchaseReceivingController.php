@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Gudang;
 
 use App\Http\Controllers\Controller;
 use App\Models\Purchase;
+use App\Services\ActivityLogService;
 use App\Services\StockMovementService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -57,7 +58,19 @@ class PurchaseReceivingController extends Controller
     public function receive(Request $request, Purchase $purchase): RedirectResponse
     {
         if ($purchase->status !== 'draft' || $purchase->submitted_at === null) {
-            return to_route('gudang.penerimaan.index')
+            ActivityLogService::record(
+            'purchase.received',
+            "Purchase order {$purchase->invoice} berhasil diterima oleh gudang.",
+            $purchase,
+            [
+                'purchase_id' => $purchase->id,
+                'status' => 'received',
+                'item_count' => $purchase->items()->count(),
+            ],
+            $request,
+        );
+
+        return to_route('gudang.penerimaan.index')
                 ->with('error', 'Purchase order sudah diproses dan tidak dapat diterima lagi.');
         }
 
