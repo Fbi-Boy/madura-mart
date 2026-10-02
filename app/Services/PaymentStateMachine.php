@@ -22,10 +22,23 @@ class PaymentStateMachine
             ]);
         }
 
+        $previousStatus = $order->payment_status;
+
         $order->update([
             'payment_status' => 'pending',
             'payment_rejection_reason' => null,
         ]);
+
+        ActivityLogService::record(
+            'payment.proof_submitted',
+            "Bukti pembayaran order {$order->order_number} dikirim untuk verifikasi.",
+            $order,
+            [
+                'from' => $previousStatus,
+                'to' => 'pending',
+                'payment_method' => $order->payment_method,
+            ],
+        );
 
         return $order->refresh();
     }
