@@ -11,45 +11,101 @@ use App\Services\StockMovementService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
-use Illuminate\View\View;
+use Illuminate\Validation\ValidationException;
 
 class SaleReturnController extends Controller
 {
-    public function index(): View
-    {
-        $returns = SaleReturn::with(['sale', 'user'])->latest('return_date')->paginate(10);
-        return view('kasir.retur.index', compact('returns'));
+    public function __construct(
+        private StockMovementService $stockMovementService
+    ) {
     }
 
-    public function create(): View
+    /**
+     * Menampilkan daftar retur penjualan.
+     */
+    public function index(Request $request)
     {
-        $sales = Sale::query()->where('status', 'paid')->latest('sale_date')->limit(100)->get(['id', 'invoice', 'sale_date', 'total', 'payment_method']);
-        return view('kasir.retur.create', compact('sales'));
+        $query = SaleReturn::with([
+            'sale',
+            'user',
+            'items.saleItem.product',
+        ])->latest();
+
+        if ($request->filled('search')) {
+            $search = $request->string('search')->toString();
+
+            $query->where(function ($q) use ($search) {
+                $q->where('return_number', 'like', "%{$search}%")
+                    ->orWhereHas('sale', function ($saleQuery) use ($search) {
+                        $saleQuery->where('invoice', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        if ($request->filled('start_date')) {
+            $query->whereDate('return_date', '>=', $request->input('start_date'));
+        }
+
+        if ($request->filled('end_date')) {
+            $query->whereDate('return_date', '<=', $request->input('end_date'));
+        }
+
+        $returns = $query
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('admin.monitoring.retur-penjualan.index', compact('returns'));
     }
 
-    public function store(Request $request): RedirectResponse
+    /**
+     * Form membuat retur dari transaksi penjualan.
+     */
+    public function create(Sale $sale)
+    {
+        $sale->load([
+            'customer',
+            'items.product',
+            'return.items',
+        ]);
+
+        if ($sale->status !== 'paid') {
+            return back()->with('error', 'Hanya transaksi yang sudah dibayar yang dapat diretur.');
+        }
+
+        return view('admin.monitoring.retur-penjualan.create', compact('sale'));
+    }
+
+    /**
+     * Menyimpan retur penjualan.
+     */
+    public function store(Request $request, Sale $sale): RedirectResponse
     {
         $validated = $request->validate([
-            'return_number' => ['required', 'string', 'max:50', 'unique:sale_returns,return_number'],
-            'sale_id' => ['required', Rule::exists('sales', 'id')->where('status', 'paid')],
             'return_date' => ['required', 'date'],
-            'refund_method' => ['required', Rule::in(['cash', 'qris', 'transfer', 'debit'])],
-            'reason' => ['nullable', 'string'],
+            'reason' => ['nullable', 'string', 'max:1000'],
+            'refund_method' => [
+                'required',
+                'string',
+                'in:cash,transfer,qris',
+            ],
             'items' => ['required', 'array', 'min:1'],
-            'items.*.sale_item_id' => ['required', 'distinct', 'exists:sale_items,id'],
+            'items.*.sale_item_id' => ['required', 'integer', 'exists:sale_items,id'],
             'items.*.quantity' => ['required', 'integer', 'min:1'],
         ]);
 
-        DB::transaction(function () use ($validated) {
-            $sale = Sale::query()->whereKey($validated['sale_id'])->where('status', 'paid')->lockForUpdate()->firstOrFail();
+        $return = DB::transaction(function () use ($validated, $sale) {
+            $sale->load('items.product');
 
-            if ($validated['refund_method'] !== $sale->payment_method) {
-                abort(422, 'Metode refund harus mengikuti metode pembayaran transaksi asal.');
+            if ($sale->status !== 'paid') {
+                throw ValidationException::withMessages([
+                    'sale' => 'Transaksi belum dibayar atau tidak dapat diretur.',
+                ]);
             }
 
-            $return = SaleReturn::create([
-                'return_number' => $validated['return_number'],
+            $returnNumber = $this->generateReturnNumber();
+
+            $saleReturn = SaleReturn::create([
+                'return_number' => $returnNumber,
                 'sale_id' => $sale->id,
                 'user_id' => auth()->id(),
                 'return_date' => $validated['return_date'],
@@ -60,40 +116,112 @@ class SaleReturnController extends Controller
 
             $total = 0;
 
-            foreach ($validated['items'] as $input) {
-                $saleItem = SaleItem::query()->whereKey($input['sale_item_id'])->lockForUpdate()->firstOrFail();
+            foreach ($validated['items'] as $item) {
+                $saleItem = $sale->items
+                    ->firstWhere('id', (int) $item['sale_item_id']);
 
-                if ($saleItem->sale_id !== $sale->id) {
-                    abort(422, 'Item retur tidak berasal dari transaksi yang dipilih.');
+                if (!$saleItem) {
+                    throw ValidationException::withMessages([
+                        'items' => 'Item penjualan tidak ditemukan pada transaksi tersebut.',
+                    ]);
                 }
 
-                $returned = (int) SaleReturnItem::query()
+                $alreadyReturned = SaleReturnItem::query()
                     ->where('sale_item_id', $saleItem->id)
                     ->sum('quantity');
 
-                $remaining = $saleItem->quantity - $returned;
+                $availableQuantity = $saleItem->quantity - $alreadyReturned;
 
-                if ($input['quantity'] > $remaining) {
-                    abort(422, 'Jumlah retur melebihi sisa item yang dapat diretur.');
+                if ($item['quantity'] > $availableQuantity) {
+                    throw ValidationException::withMessages([
+                        'items' => "Jumlah retur untuk {$saleItem->product->name} melebihi jumlah yang dapat diretur.",
+                    ]);
                 }
 
-                $subtotal = (float) $saleItem->unit_price * $input['quantity'];
+                $quantity = (int) $item['quantity'];
+                $unitPrice = $saleItem->unit_price;
+                $subtotal = $quantity * $unitPrice;
 
-                $return->items()->create([
+                SaleReturnItem::create([
+                    'sale_return_id' => $saleReturn->id,
                     'sale_item_id' => $saleItem->id,
-                    'quantity' => $input['quantity'],
-                    'unit_price' => $saleItem->unit_price,
+                    'quantity' => $quantity,
+                    'unit_price' => $unitPrice,
                     'subtotal' => $subtotal,
                 ]);
 
-                $product = $saleItem->product()->lockForUpdate()->firstOrFail();
-                StockMovementService::apply($product, $input['quantity'], 'return', auth()->user(), 'sale_return', $return->id, "Retur {$return->return_number}");
+                /*
+                 * Barang yang diretur kembali masuk ke stok.
+                 * StockMovementService menjadi satu-satunya sumber
+                 * perubahan stok.
+                 */
+                $this->stockMovementService->increase(
+                    product: $saleItem->product,
+                    quantity: $quantity,
+                    user: auth()->user(),
+                    type: 'sale_return',
+                    referenceType: SaleReturn::class,
+                    referenceId: $saleReturn->id,
+                    notes: "Retur penjualan {$sale->invoice}"
+                );
+
                 $total += $subtotal;
             }
 
-            $return->update(['total' => $total]);
+            if ($total <= 0) {
+                throw ValidationException::withMessages([
+                    'items' => 'Minimal satu item harus diretur.',
+                ]);
+            }
+
+            $saleReturn->update([
+                'total' => $total,
+            ]);
+
+            return $saleReturn;
         });
 
-        return redirect()->route('kasir.retur')->with('success', 'Retur penjualan berhasil disimpan.');
+        return redirect()
+            ->route('admin.sale-returns.index')
+            ->with(
+                'success',
+                "Retur {$return->return_number} berhasil dibuat."
+            );
+    }
+
+    /**
+     * Menampilkan detail retur.
+     */
+    public function show(SaleReturn $saleReturn)
+    {
+        $saleReturn->load([
+            'sale.customer',
+            'user',
+            'items.saleItem.product',
+        ]);
+
+        return view(
+            'admin.monitoring.retur-penjualan.show',
+            compact('saleReturn')
+        );
+    }
+
+    /**
+     * Membuat nomor retur otomatis.
+     */
+    private function generateReturnNumber(): string
+    {
+        $prefix = 'RET-' . now()->format('Ymd');
+
+        $lastReturn = SaleReturn::query()
+            ->where('return_number', 'like', $prefix . '-%')
+            ->latest('id')
+            ->first();
+
+        $number = $lastReturn
+            ? ((int) substr($lastReturn->return_number, -4)) + 1
+            : 1;
+
+        return $prefix . '-' . str_pad($number, 4, '0', STR_PAD_LEFT);
     }
 }

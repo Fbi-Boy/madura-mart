@@ -1,235 +1,508 @@
 <x-app-layout>
+<div class="space-y-5 font-poppins">
 
-    <x-slot name="header">
-        <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-                <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Dashboard Super Admin</h2>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Management & Analytics · Pantau kondisi sistem dan operasi bisnis.</p>
-            </div>
-            <span class="w-fit rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
-                {{ now()->translatedFormat('d M Y') }}
-            </span>
-        </div>
-    </x-slot>
+    {{-- ================= HERO / HEADER ================= --}}
+    <div class="rounded-2xl border border-black/5 dark:border-white/10 bg-gradient-to-br from-[#171719] via-[#1F1F23] to-[#2A2A2E] dark:from-[#0B1120] dark:via-[#0F1629] dark:to-[#1E293B] p-6 sm:p-8 text-white overflow-hidden relative">
 
-    <div class="py-8">
-        <div class="mx-auto max-w-7xl space-y-6 px-4 sm:px-6 lg:px-8">
-            <div class="rounded-3xl bg-gray-900 p-6 text-white shadow-sm dark:bg-gray-800 sm:p-8">
-                <p class="text-sm font-medium text-[#A8F23A]">System Command Center</p>
-                <div class="mt-2 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-                    <div>
-                        <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">Selamat datang, {{ auth()->user()->name }}</h1>
-                        <p class="mt-2 max-w-2xl text-sm leading-6 text-gray-300">Satu ringkasan untuk melihat pengguna, katalog, transaksi, pesanan, dan area operasional yang membutuhkan perhatian.</p>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                        <a href="{{ route('admin.users.index') }}" class="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-center text-xs font-medium text-gray-200 transition hover:bg-white/10">Users</a>
-                        <a href="{{ route('admin.products.index') }}" class="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-center text-xs font-medium text-gray-200 transition hover:bg-white/10">Products</a>
-                        <a href="{{ route('admin.monitoring.penjualan') }}" class="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-center text-xs font-medium text-gray-200 transition hover:bg-white/10">Sales</a>
-                        <a href="{{ route('admin.report.stok') }}" class="rounded-xl bg-[#A8F23A] px-3 py-2 text-center text-xs font-semibold text-gray-900 transition hover:brightness-95">Stock</a>
-                    </div>
+        {{-- GLOW ACCENTS --}}
+        <div class="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-lime-400/20 blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-blue-500/10 blur-3xl pointer-events-none"></div>
+
+        <div class="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+
+            {{-- KIRI: WELCOME --}}
+            <div class="max-w-2xl">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
+                    <span class="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-lime-400">System Command Center</span>
                 </div>
-            </div>
 
-            <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                @php
-                    $controlCenter = [
-                        ['title' => 'Manajemen User', 'description' => 'Akun, role, status, dan reset password.', 'route' => 'admin.users.index'],
-                        ['title' => 'Role & Permission', 'description' => 'Atur akses role dan override permission.', 'route' => 'admin.roles.index'],
-                        ['title' => 'Pengaturan Sistem', 'description' => 'Identitas toko, transaksi, pembayaran, dan pengiriman.', 'route' => 'admin.settings.index'],
-                        ['title' => 'Activity Log', 'description' => 'Telusuri aktivitas pengguna dan sistem.', 'route' => 'admin.activity-logs.index'],
-                        ['title' => 'Audit Log', 'description' => 'Periksa perubahan data yang memiliki objek terkait.', 'route' => 'admin.audit-logs.index'],
-                        ['title' => 'System Monitoring', 'description' => 'Periksa database, cache, storage, dan kondisi aplikasi.', 'route' => 'admin.system-monitoring.index'],
-                    ];
-                @endphp
-                @foreach ($controlCenter as $control)
-                    <a href="{{ route($control['route']) }}" class="group rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-[#A8F23A]/60 hover:shadow-md dark:border-gray-700 dark:bg-gray-800">
-                        <div class="flex items-start justify-between gap-4">
-                            <div>
-                                <p class="font-semibold text-gray-900 dark:text-white">{{ $control['title'] }}</p>
-                                <p class="mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400">{{ $control['description'] }}</p>
-                            </div>
-                            <span class="rounded-full bg-[#A8F23A]/20 px-2.5 py-1 text-xs font-semibold text-gray-800 transition group-hover:bg-[#A8F23A]">↗</span>
-                        </div>
+                <h1 class="mt-4 text-2xl sm:text-3xl font-bold tracking-tight">
+                    Selamat datang, {{ auth()->user()->name }} 👋
+                </h1>
+                <p class="mt-2 text-sm text-white/60 leading-relaxed max-w-xl">
+                    Satu ringkasan untuk melihat pengguna, katalog, transaksi, pesanan, dan area operasional yang membutuhkan perhatian.
+                </p>
+
+                {{-- QUICK ACCESS BUTTONS --}}
+                <div class="mt-5 flex flex-wrap gap-2">
+                    <a href="{{ route('admin.users.index') }}"
+                       class="h-10 px-4 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-white text-xs font-medium flex items-center gap-2 transition backdrop-blur-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        Users
                     </a>
-                @endforeach
-            </section>
 
-            <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                @php
-                    $kpis = [
-                        ['label' => 'Users', 'value' => $totalUsers, 'hint' => 'seluruh akun sistem'],
-                        ['label' => 'Produk Aktif', 'value' => $activeProducts, 'hint' => 'siap digunakan'],
-                        ['label' => 'Customer Aktif', 'value' => $activeCustomers, 'hint' => 'customer terdaftar'],
-                        ['label' => 'Kurir Aktif', 'value' => $activeCouriers, 'hint' => 'siap menangani order'],
-                    ];
-                @endphp
+                    <a href="{{ route('admin.products.index') }}"
+                       class="h-10 px-4 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-white text-xs font-medium flex items-center gap-2 transition backdrop-blur-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        </svg>
+                        Products
+                    </a>
 
-                @foreach ($kpis as $kpi)
-                    <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ $kpi['label'] }}</p>
-                        <p class="mt-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">{{ number_format($kpi['value'], 0, ',', '.') }}</p>
-                        <p class="mt-1 text-xs text-gray-400 dark:text-gray-500">{{ $kpi['hint'] }}</p>
-                    </div>
-                @endforeach
-            </div>
+                    <a href="{{ route('admin.monitoring.penjualan') }}"
+                       class="h-10 px-4 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-white text-xs font-medium flex items-center gap-2 transition backdrop-blur-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                        Sales
+                    </a>
 
-            <div class="grid gap-6 lg:grid-cols-3">
-                <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Omzet bulan berjalan</p>
-                    <p class="mt-2 text-2xl font-semibold text-gray-900 dark:text-white">Rp {{ number_format($monthlyRevenue, 0, ',', '.') }}</p>
-                    <p class="mt-2 text-xs text-gray-400">Penjualan berstatus paid.</p>
-                </div>
-                <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Pembelian bulan berjalan</p>
-                    <p class="mt-2 text-2xl font-semibold text-gray-900 dark:text-white">Rp {{ number_format($monthlyPurchases, 0, ',', '.') }}</p>
-                    <p class="mt-2 text-xs text-gray-400">Pembelian berstatus received.</p>
-                </div>
-                <div class="rounded-2xl border border-[#A8F23A]/40 bg-[#A8F23A]/10 p-5 dark:bg-[#A8F23A]/5">
-                    <p class="text-sm text-gray-600 dark:text-gray-300">Perlu perhatian</p>
-                    <div class="mt-2 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-                        <a href="{{ route('admin.monitoring.pesanan') }}" class="group block rounded-xl p-2 -m-2 transition hover:bg-white/60 dark:hover:bg-gray-800/60">
-                            <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $pendingOrders }}</p>
-                            <p class="text-xs text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">pesanan berjalan ↗</p>
-                        </a>
-                        <a href="{{ route('admin.report.pengiriman') }}" class="group block rounded-xl p-2 -m-2 transition hover:bg-white/60 dark:hover:bg-gray-800/60">
-                            <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $activeDeliveries }}</p>
-                            <p class="text-xs text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">pengiriman aktif ↗</p>
-                        </a>
-                        <a href="{{ route('admin.monitoring.produk') }}" class="group block rounded-xl p-2 -m-2 transition hover:bg-white/60 dark:hover:bg-gray-800/60">
-                            <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $lowStockProducts }}</p>
-                            <p class="text-xs text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">stok rendah ↗</p>
-                        </a>
-                        <a href="{{ route('admin.monitoring.pembelian') }}" class="group block rounded-xl p-2 -m-2 transition hover:bg-white/60 dark:hover:bg-gray-800/60">
-                            <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $pendingReceiving }}</p>
-                            <p class="text-xs text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">menunggu penerimaan ↗</p>
-                        </a>
-                        <a href="{{ route('admin.monitoring.pembelian') }}" class="group block rounded-xl p-2 -m-2 transition hover:bg-white/60 dark:hover:bg-gray-800/60">
-                            <p class="text-lg font-semibold text-gray-900 dark:text-white">Rp {{ number_format($pendingPurchaseValue, 0, ',', '.') }}</p>
-                            <p class="text-xs text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">nilai pembelian draft ↗</p>
-                        </a>
-                    </div>
+                    <a href="{{ route('admin.report.stok') }}"
+                       class="h-10 px-4 rounded-xl bg-lime-400 hover:bg-lime-500 text-[#171719] text-xs font-bold flex items-center gap-2 transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <rect x="2" y="7" width="20" height="14" rx="2"/>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                        </svg>
+                        Stock
+                    </a>
                 </div>
             </div>
 
-            <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            {{-- KANAN: SYSTEM STATUS CARD --}}
+            <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-5 min-w-[240px]">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-9 h-9 rounded-xl {{ $systemHealth['database'] && $systemHealth['storage'] ? 'bg-lime-400' : 'bg-red-500' }} flex items-center justify-center">
+                        <svg class="w-4 h-4 text-[#171719]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                    </div>
                     <div>
-                        <h3 class="font-semibold text-gray-900 dark:text-white">System Health</h3>
-                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Status dasar lingkungan aplikasi tanpa menampilkan konfigurasi rahasia.</p>
-                    </div>
-                    <span class="inline-flex w-fit items-center rounded-full px-3 py-1 text-xs font-semibold {{ $systemHealth['database'] && $systemHealth['storage'] ? 'bg-[#A8F23A]/20 text-gray-800 dark:text-[#A8F23A]' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' }}">
-                        {{ $systemHealth['database'] && $systemHealth['storage'] ? 'Operational' : 'Attention Required' }}
-                    </span>
-                </div>
-                <div class="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                    <div class="rounded-xl bg-gray-50 p-4 dark:bg-gray-700/50">
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Database</p>
-                        <p class="mt-2 text-sm font-semibold {{ $systemHealth['database'] ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">
-                            {{ $systemHealth['database'] ? 'Connected' : 'Unavailable' }}
+                        <p class="text-[10px] uppercase tracking-wider text-white/50">System Status</p>
+                        <p class="text-xs font-bold {{ $systemHealth['database'] && $systemHealth['storage'] ? 'text-lime-400' : 'text-red-400' }}">
+                            {{ $systemHealth['database'] && $systemHealth['storage'] ? 'All Systems Operational' : 'Attention Required' }}
                         </p>
                     </div>
-                    <div class="rounded-xl bg-gray-50 p-4 dark:bg-gray-700/50">
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Storage</p>
-                        <p class="mt-2 text-sm font-semibold {{ $systemHealth['storage'] ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">
+                </div>
+
+                <div class="space-y-2 pt-3 border-t border-white/10">
+                    <div class="flex items-center justify-between text-[11px]">
+                        <span class="text-white/50">Database</span>
+                        <span class="font-semibold {{ $systemHealth['database'] ? 'text-lime-400' : 'text-red-400' }}">
+                            {{ $systemHealth['database'] ? 'Connected' : 'Down' }}
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between text-[11px]">
+                        <span class="text-white/50">Storage</span>
+                        <span class="font-semibold {{ $systemHealth['storage'] ? 'text-lime-400' : 'text-red-400' }}">
                             {{ $systemHealth['storage'] ? 'Writable' : 'Read-only' }}
-                        </p>
+                        </span>
                     </div>
-                    <div class="rounded-xl bg-gray-50 p-4 dark:bg-gray-700/50">
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Cache</p>
-                        <p class="mt-2 text-sm font-semibold text-gray-900 dark:text-white">{{ $systemHealth['cache_driver'] }}</p>
+                    <div class="flex items-center justify-between text-[11px]">
+                        <span class="text-white/50">Cache</span>
+                        <span class="font-semibold text-white">{{ $systemHealth['cache_driver'] }}</span>
                     </div>
-                    <div class="rounded-xl bg-gray-50 p-4 dark:bg-gray-700/50">
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Queue</p>
-                        <p class="mt-2 text-sm font-semibold text-gray-900 dark:text-white">{{ $systemHealth['queue_driver'] }}</p>
+                    <div class="flex items-center justify-between text-[11px]">
+                        <span class="text-white/50">Queue</span>
+                        <span class="font-semibold text-white">{{ $systemHealth['queue_driver'] }}</span>
                     </div>
                 </div>
-            </section>
-
-            <div class="grid gap-6 xl:grid-cols-[1fr_1.5fr]">
-                <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                    <h3 class="font-semibold text-gray-900 dark:text-white">Distribusi Role</h3>
-                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Komposisi akun berdasarkan role.</p>
-                    <div class="mt-5 space-y-3">
-                        @foreach ($roleSummary as $role => $count)
-                            <div class="flex items-center justify-between rounded-xl bg-gray-50 px-4 py-3 dark:bg-gray-700/50">
-                                <span class="text-sm font-medium text-gray-600 dark:text-gray-300">{{ ucfirst(str_replace('-', ' ', $role)) }}</span>
-                                <span class="font-semibold text-gray-900 dark:text-white">{{ number_format($count, 0, ',', '.') }}</span>
-                            </div>
-                        @endforeach
-                    </div>
-                </section>
-
-                <section class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                    <div class="border-b border-gray-100 px-5 py-4 dark:border-gray-700">
-                        <h3 class="font-semibold text-gray-900 dark:text-white">Pesanan Terbaru</h3>
-                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Monitoring lintas customer.</p>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full min-w-[620px] text-left text-sm">
-                            <thead class="border-b border-gray-100 text-xs uppercase text-gray-400 dark:border-gray-700 dark:text-gray-500">
-                                <tr><th class="px-5 py-3">Order</th><th class="px-5 py-3">Customer</th><th class="px-5 py-3">Status</th><th class="px-5 py-3 text-right">Total</th></tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
-                                @forelse ($recentOrders as $order)
-                                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/40">
-                                        <td class="px-5 py-4 font-medium text-gray-900 dark:text-white">{{ $order->order_number }}</td>
-                                        <td class="px-5 py-4 text-gray-600 dark:text-gray-300">{{ $order->customer?->name ?? '-' }}</td>
-                                        <td class="px-5 py-4 text-gray-500 dark:text-gray-400">{{ ucfirst($order->status) }}</td>
-                                        <td class="px-5 py-4 text-right font-semibold text-gray-900 dark:text-white">Rp {{ number_format((float) $order->total, 0, ',', '.') }}</td>
-                                    </tr>
-                                @empty
-                                    <tr><td colspan="4" class="px-5 py-10 text-center text-gray-400">Belum ada order.</td></tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
             </div>
 
-            <section class="rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                <div class="flex flex-col gap-3 border-b border-gray-100 px-5 py-4 dark:border-gray-700 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                        <h3 class="font-semibold text-gray-900 dark:text-white">Aktivitas Sistem Terbaru</h3>
-                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Jejak aktivitas terakhir yang tercatat di sistem.</p>
-                    </div>
-                    <a href="{{ route('admin.activity-logs.index') }}" class="w-fit rounded-lg bg-[#A8F23A] px-3 py-1.5 text-xs font-semibold text-gray-900 transition hover:brightness-95">Buka Audit Log</a>
-                </div>
-                <div class="divide-y divide-gray-100 dark:divide-gray-700">
-                    @forelse ($recentActivities as $activity)
-                        <div class="flex flex-col gap-2 px-5 py-4 sm:flex-row sm:items-start sm:justify-between">
-                            <div class="min-w-0">
-                                <div class="flex flex-wrap items-center gap-2">
-                                    <span class="rounded-full bg-[#A8F23A]/20 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-gray-700 dark:text-[#A8F23A]">{{ $activity->action }}</span>
-                                    <span class="text-xs text-gray-400 dark:text-gray-500">{{ $activity->user?->name ?? 'System' }}</span>
-                                </div>
-                                <p class="mt-2 text-sm text-gray-700 dark:text-gray-200">{{ $activity->description }}</p>
-                            </div>
-                            <time class="shrink-0 text-xs text-gray-400 dark:text-gray-500">{{ $activity->created_at?->format('d/m/Y H:i') }}</time>
-                        </div>
-                    @empty
-                        <p class="px-5 py-10 text-center text-sm text-gray-400">Belum ada aktivitas tercatat.</p>
-                    @endforelse
-                </div>
-            </section>
-
-            <section class="rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                <div class="border-b border-gray-100 px-5 py-4 dark:border-gray-700">
-                    <h3 class="font-semibold text-gray-900 dark:text-white">Akun Terbaru</h3>
-                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Aktivitas pendaftaran akun terbaru.</p>
-                </div>
-                <div class="grid gap-3 p-5 sm:grid-cols-2 xl:grid-cols-3">
-                    @forelse ($recentUsers as $user)
-                        <div class="rounded-xl bg-gray-50 p-4 dark:bg-gray-700/50">
-                            <p class="font-medium text-gray-900 dark:text-white">{{ $user->name }}</p>
-                            <p class="mt-1 truncate text-xs text-gray-500 dark:text-gray-400">{{ $user->email }}</p>
-                            <span class="mt-3 inline-flex rounded-full bg-[#A8F23A]/20 px-2.5 py-1 text-xs font-medium text-gray-700 dark:text-[#A8F23A]">{{ ucfirst(str_replace('-', ' ', $user->role)) }}</span>
-                        </div>
-                    @empty
-                        <p class="text-sm text-gray-400">Belum ada akun.</p>
-                    @endforelse
-                </div>
-            </section>
         </div>
     </div>
 
+    {{-- ================= KPI CARDS (4) ================= --}}
+    @php
+        $kpis = [
+            ['label' => 'Total Users',       'value' => $totalUsers,       'hint' => 'akun sistem',      'icon' => 'users',    'color' => 'blue'],
+            ['label' => 'Produk Aktif',      'value' => $activeProducts,   'hint' => 'siap digunakan',   'icon' => 'box',      'color' => 'lime'],
+            ['label' => 'Customer Aktif',    'value' => $activeCustomers,  'hint' => 'customer terdaftar','icon' => 'user',     'color' => 'purple'],
+            ['label' => 'Kurir Aktif',       'value' => $activeCouriers,   'hint' => 'siap antar',        'icon' => 'truck',    'color' => 'amber'],
+        ];
+    @endphp
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        @foreach ($kpis as $kpi)
+            <div class="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 p-4">
+                <div class="flex items-center justify-between mb-3">
+                    <p class="text-[10px] font-medium uppercase tracking-wider text-black/45 dark:text-white/45">{{ $kpi['label'] }}</p>
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center
+                        {{ $kpi['color'] === 'blue' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' : '' }}
+                        {{ $kpi['color'] === 'lime' ? 'bg-lime-100 dark:bg-lime-900/30 text-lime-600 dark:text-lime-400' : '' }}
+                        {{ $kpi['color'] === 'purple' ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400' : '' }}
+                        {{ $kpi['color'] === 'amber' ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400' : '' }}">
+                        @if($kpi['icon'] === 'users')
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        @elseif($kpi['icon'] === 'box')
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                <path d="m3.27 6.96 8.73 5.05 8.73-5.05"/><path d="M12 22.08V12"/>
+                            </svg>
+                        @elseif($kpi['icon'] === 'user')
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                        @elseif($kpi['icon'] === 'truck')
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <rect x="1" y="3" width="15" height="13"/>
+                                <path d="M16 8h4l3 3v5h-7V8z"/>
+                                <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+                            </svg>
+                        @endif
+                    </div>
+                </div>
+                <p class="text-xl font-bold text-[#171719] dark:text-white">{{ number_format($kpi['value'], 0, ',', '.') }}</p>
+                <p class="mt-1 text-[10px] text-black/45 dark:text-white/45">{{ $kpi['hint'] }}</p>
+            </div>
+        @endforeach
+    </div>
+
+    {{-- ================= REVENUE + ATTENTION ================= --}}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+        {{-- OMZET --}}
+        <div class="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 p-5">
+            <div class="flex items-center justify-between mb-3">
+                <div class="w-10 h-10 rounded-xl bg-lime-100 dark:bg-lime-900/30 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-lime-600 dark:text-lime-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                    </svg>
+                </div>
+                <span class="text-[10px] uppercase tracking-wider text-lime-600 dark:text-lime-400 font-bold">Revenue</span>
+            </div>
+            <p class="text-[10px] uppercase tracking-wider text-black/45 dark:text-white/45">Omzet Bulan Berjalan</p>
+            <p class="mt-2 text-2xl font-black text-[#171719] dark:text-white">Rp {{ number_format($monthlyRevenue, 0, ',', '.') }}</p>
+            <p class="mt-1 text-[10px] text-black/45 dark:text-white/45">Penjualan berstatus paid</p>
+        </div>
+
+        {{-- PURCHASES --}}
+        <div class="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 p-5">
+            <div class="flex items-center justify-between mb-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                        <path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
+                    </svg>
+                </div>
+                <span class="text-[10px] uppercase tracking-wider text-blue-600 dark:text-blue-400 font-bold">Purchases</span>
+            </div>
+            <p class="text-[10px] uppercase tracking-wider text-black/45 dark:text-white/45">Pembelian Bulan Berjalan</p>
+            <p class="mt-2 text-2xl font-black text-[#171719] dark:text-white">Rp {{ number_format($monthlyPurchases, 0, ',', '.') }}</p>
+            <p class="mt-1 text-[10px] text-black/45 dark:text-white/45">Pembelian berstatus received</p>
+        </div>
+
+        {{-- PERLU PERHATIAN --}}
+        <div class="rounded-2xl border-2 border-amber-400 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-500/30 p-5">
+            <div class="flex items-center gap-2 mb-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-400 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-[#171719]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path d="M12 9v4"/><path d="M12 17h.01"/>
+                        <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-[10px] uppercase tracking-wider text-amber-700 dark:text-amber-400 font-bold">Perlu Perhatian</p>
+                    <p class="text-[10px] text-amber-700/70 dark:text-amber-300/70">Tindak lanjut</p>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <a href="{{ route('admin.monitoring.pesanan') }}"
+                   class="flex items-center justify-between p-2.5 rounded-lg bg-white/60 dark:bg-white/5 hover:bg-white dark:hover:bg-white/10 transition">
+                    <span class="text-[11px] text-black/70 dark:text-white/70">Pesanan berjalan</span>
+                    <span class="text-sm font-bold text-[#171719] dark:text-white">{{ $pendingOrders }}</span>
+                </a>
+                <a href="{{ route('admin.report.pengiriman') }}"
+                   class="flex items-center justify-between p-2.5 rounded-lg bg-white/60 dark:bg-white/5 hover:bg-white dark:hover:bg-white/10 transition">
+                    <span class="text-[11px] text-black/70 dark:text-white/70">Pengiriman aktif</span>
+                    <span class="text-sm font-bold text-[#171719] dark:text-white">{{ $activeDeliveries }}</span>
+                </a>
+                <a href="{{ route('admin.monitoring.produk') }}"
+                   class="flex items-center justify-between p-2.5 rounded-lg bg-white/60 dark:bg-white/5 hover:bg-white dark:hover:bg-white/10 transition">
+                    <span class="text-[11px] text-black/70 dark:text-white/70">Stok rendah</span>
+                    <span class="text-sm font-bold text-[#171719] dark:text-white">{{ $lowStockProducts }}</span>
+                </a>
+                <a href="{{ route('admin.monitoring.pembelian') }}"
+                   class="flex items-center justify-between p-2.5 rounded-lg bg-white/60 dark:bg-white/5 hover:bg-white dark:hover:bg-white/10 transition">
+                    <span class="text-[11px] text-black/70 dark:text-white/70">Menunggu terima</span>
+                    <span class="text-sm font-bold text-[#171719] dark:text-white">{{ $pendingReceiving }}</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {{-- ================= CONTROL CENTER (6) ================= --}}
+    <section class="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 overflow-hidden">
+
+        <div class="px-5 py-4 border-b border-black/5 dark:border-white/10">
+            <h2 class="text-sm font-bold text-[#171719] dark:text-white">Control Center</h2>
+            <p class="mt-0.5 text-[11px] text-black/45 dark:text-white/45">Akses cepat ke pengaturan sistem</p>
+        </div>
+
+        @php
+            $controlCenter = [
+                ['title' => 'Manajemen User',    'description' => 'Akun, role, status, dan reset password.',          'route' => 'admin.users.index',              'icon' => 'users',    'color' => 'blue'],
+                ['title' => 'Role & Permission', 'description' => 'Atur akses role dan override permission.',         'route' => 'admin.roles.index',              'icon' => 'shield',   'color' => 'purple'],
+                ['title' => 'Pengaturan Sistem', 'description' => 'Identitas toko, transaksi, pembayaran.',           'route' => 'admin.settings.index',           'icon' => 'settings', 'color' => 'lime'],
+                ['title' => 'Activity Log',      'description' => 'Telusuri aktivitas pengguna dan sistem.',          'route' => 'admin.activity-logs.index',      'icon' => 'activity', 'color' => 'amber'],
+                ['title' => 'Audit Log',         'description' => 'Periksa perubahan data dengan objek terkait.',     'route' => 'admin.audit-logs.index',         'icon' => 'clipboard','color' => 'red'],
+                ['title' => 'System Monitoring', 'description' => 'Database, cache, storage, dan kondisi aplikasi.',  'route' => 'admin.system-monitoring.index',  'icon' => 'server',   'color' => 'emerald'],
+            ];
+        @endphp
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 p-4">
+            @foreach ($controlCenter as $control)
+                <a href="{{ route($control['route']) }}"
+                   class="group rounded-xl border border-black/5 dark:border-white/10 p-4 hover:border-lime-400 hover:shadow-md hover:-translate-y-0.5 transition-all">
+
+                    <div class="flex items-start justify-between gap-3 mb-3">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center
+                            {{ $control['color'] === 'blue' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' : '' }}
+                            {{ $control['color'] === 'purple' ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400' : '' }}
+                            {{ $control['color'] === 'lime' ? 'bg-lime-100 dark:bg-lime-900/30 text-lime-600 dark:text-lime-400' : '' }}
+                            {{ $control['color'] === 'amber' ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400' : '' }}
+                            {{ $control['color'] === 'red' ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400' : '' }}
+                            {{ $control['color'] === 'emerald' ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400' : '' }}
+                            group-hover:scale-110 transition-transform">
+                            @if($control['icon'] === 'users')
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                                </svg>
+                            @elseif($control['icon'] === 'shield')
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                </svg>
+                            @elseif($control['icon'] === 'settings')
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                                </svg>
+                            @elseif($control['icon'] === 'activity')
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                                </svg>
+                            @elseif($control['icon'] === 'clipboard')
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                                    <rect x="8" y="2" width="8" height="4" rx="1"/>
+                                </svg>
+                            @elseif($control['icon'] === 'server')
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <rect x="2" y="3" width="20" height="14" rx="2"/>
+                                    <path d="M8 21h8"/><path d="M12 17v4"/>
+                                </svg>
+                            @endif
+                        </div>
+
+                        <div class="shrink-0 w-7 h-7 rounded-lg bg-gray-100 dark:bg-white/10 flex items-center justify-center group-hover:bg-lime-400 transition">
+                            <svg class="w-3.5 h-3.5 text-black/50 dark:text-white/50 group-hover:text-[#171719] transition" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path d="M7 17 17 7"/><path d="M7 7h10v10"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <p class="text-xs font-bold text-[#171719] dark:text-white">{{ $control['title'] }}</p>
+                    <p class="mt-1 text-[10px] text-black/45 dark:text-white/45 leading-relaxed">{{ $control['description'] }}</p>
+                </a>
+            @endforeach
+        </div>
+    </section>
+
+    {{-- ================= ROLE DISTRIBUTION + RECENT ORDERS ================= --}}
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
+
+        {{-- ROLE DISTRIBUTION --}}
+        <section class="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 p-5">
+            <div class="flex items-center gap-2 mb-4">
+                <div class="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-[#171719] dark:text-white">Distribusi Role</h3>
+                    <p class="text-[10px] text-black/45 dark:text-white/45">Komposisi akun by role</p>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                @foreach ($roleSummary as $role => $count)
+                    <div class="flex items-center justify-between gap-3 p-3 rounded-xl bg-gray-50 dark:bg-white/5">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <div class="w-6 h-6 rounded-lg bg-lime-400 flex items-center justify-center text-[10px] font-bold text-[#171719] shrink-0">
+                                {{ strtoupper(substr($role, 0, 1)) }}
+                            </div>
+                            <span class="text-xs text-black/70 dark:text-white/70 capitalize truncate">
+                                {{ str_replace('-', ' ', $role) }}
+                            </span>
+                        </div>
+                        <span class="text-sm font-bold text-[#171719] dark:text-white shrink-0">
+                            {{ number_format($count, 0, ',', '.') }}
+                        </span>
+                    </div>
+                @endforeach
+            </div>
+        </section>
+
+        {{-- RECENT ORDERS (2/3) --}}
+        <section class="xl:col-span-2 rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 overflow-hidden">
+            <div class="px-5 py-4 border-b border-black/5 dark:border-white/10 flex items-center justify-between gap-3">
+                <div>
+                    <h3 class="text-sm font-bold text-[#171719] dark:text-white">Pesanan Terbaru</h3>
+                    <p class="mt-0.5 text-[11px] text-black/45 dark:text-white/45">Monitoring lintas customer</p>
+                </div>
+                <a href="{{ route('admin.monitoring.pesanan') }}"
+                   class="text-[11px] font-medium text-lime-600 dark:text-lime-400 hover:underline flex items-center gap-1">
+                    Lihat Semua
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                    </svg>
+                </a>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full min-w-[620px] text-left">
+                    <thead class="border-b border-black/5 dark:border-white/10">
+                        <tr class="text-[10px] uppercase tracking-wider text-black/45 dark:text-white/45">
+                            <th class="px-5 py-3.5 font-medium">Order</th>
+                            <th class="px-5 py-3.5 font-medium">Customer</th>
+                            <th class="px-5 py-3.5 font-medium">Status</th>
+                            <th class="px-5 py-3.5 text-right font-medium">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-black/5 dark:divide-white/10">
+                        @forelse ($recentOrders as $order)
+                            @php
+                                $statusColor = match($order->status) {
+                                    'delivered' => 'bg-lime-100 text-lime-700 dark:bg-lime-900/30 dark:text-lime-400',
+                                    'shipped'   => 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+                                    'cancelled' => 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+                                    'processing'=> 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
+                                    default     => 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+                                };
+                            @endphp
+                            <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition">
+                                <td class="px-5 py-4">
+                                    <p class="text-xs font-semibold text-[#171719] dark:text-white font-mono">{{ $order->order_number }}</p>
+                                </td>
+                                <td class="px-5 py-4">
+                                    <p class="text-xs text-black/70 dark:text-white/70">{{ $order->customer?->name ?? '-' }}</p>
+                                </td>
+                                <td class="px-5 py-4">
+                                    <span class="inline-flex px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider {{ $statusColor }}">
+                                        {{ $order->status }}
+                                    </span>
+                                </td>
+                                <td class="px-5 py-4 text-right">
+                                    <p class="text-xs font-bold text-[#171719] dark:text-white">Rp {{ number_format((float) $order->total, 0, ',', '.') }}</p>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="px-5 py-16 text-center">
+                                    <svg class="w-12 h-12 mx-auto mb-3 text-black/20 dark:text-white/20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                                        <path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
+                                    </svg>
+                                    <p class="text-sm font-medium text-black/50 dark:text-white/50">Belum ada order</p>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    {{-- ================= ACTIVITY LOG ================= --}}
+    <section class="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 overflow-hidden">
+
+        <div class="px-5 py-4 border-b border-black/5 dark:border-white/10 flex items-center justify-between gap-3">
+            <div>
+                <h3 class="text-sm font-bold text-[#171719] dark:text-white">Aktivitas Sistem Terbaru</h3>
+                <p class="mt-0.5 text-[11px] text-black/45 dark:text-white/45">Jejak aktivitas terakhir di sistem</p>
+            </div>
+            <a href="{{ route('admin.activity-logs.index') }}"
+               class="h-9 px-4 rounded-xl bg-lime-400 hover:bg-lime-500 text-[#171719] text-xs font-bold flex items-center gap-1.5 transition">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                </svg>
+                Buka Audit Log
+            </a>
+        </div>
+
+        <div class="divide-y divide-black/5 dark:divide-white/10 max-h-[400px] overflow-y-auto">
+            @forelse ($recentActivities as $activity)
+                <div class="px-5 py-3 flex items-start gap-3 hover:bg-gray-50 dark:hover:bg-white/5 transition">
+                    <div class="mt-1.5 w-2 h-2 rounded-full bg-lime-500 shrink-0"></div>
+                    <div class="min-w-0 flex-1">
+                        <div class="flex flex-wrap items-center gap-2 mb-1">
+                            <span class="px-2 py-0.5 rounded-md bg-lime-100 dark:bg-lime-900/30 text-[9px] font-bold uppercase tracking-wider text-lime-700 dark:text-lime-400">
+                                {{ $activity->action }}
+                            </span>
+                            <span class="text-[10px] text-black/45 dark:text-white/45">{{ $activity->user?->name ?? 'System' }}</span>
+                        </div>
+                        <p class="text-[11px] text-black/70 dark:text-white/70 leading-relaxed">{{ $activity->description }}</p>
+                        <p class="mt-0.5 text-[10px] text-black/40 dark:text-white/40 font-mono">
+                            {{ $activity->created_at?->format('d/m/Y H:i') }}
+                        </p>
+                    </div>
+                </div>
+            @empty
+                <div class="px-5 py-16 text-center">
+                    <svg class="w-12 h-12 mx-auto mb-3 text-black/20 dark:text-white/20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <path d="M14 2v6h6"/>
+                    </svg>
+                    <p class="text-sm font-medium text-black/50 dark:text-white/50">Belum ada aktivitas tercatat</p>
+                </div>
+            @endforelse
+        </div>
+    </section>
+
+    {{-- ================= RECENT USERS ================= --}}
+    <section class="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 overflow-hidden">
+
+        <div class="px-5 py-4 border-b border-black/5 dark:border-white/10">
+            <h3 class="text-sm font-bold text-[#171719] dark:text-white">Akun Terbaru</h3>
+            <p class="mt-0.5 text-[11px] text-black/45 dark:text-white/45">Aktivitas pendaftaran akun terbaru</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 p-4">
+            @forelse ($recentUsers as $user)
+                <div class="rounded-xl border border-black/5 dark:border-white/10 p-4 hover:border-lime-400 transition">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-lime-400 flex items-center justify-center text-sm font-bold text-[#171719] shrink-0">
+                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <p class="text-xs font-bold text-[#171719] dark:text-white truncate">{{ $user->name }}</p>
+                            <p class="mt-0.5 text-[10px] text-black/45 dark:text-white/45 truncate font-mono">{{ $user->email }}</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 flex items-center justify-between gap-2">
+                        <span class="px-2 py-0.5 rounded-md bg-lime-100 dark:bg-lime-900/30 text-[9px] font-bold uppercase tracking-wider text-lime-700 dark:text-lime-400">
+                            {{ str_replace('-', ' ', $user->role) }}
+                        </span>
+                        @if($user->branch)
+                            <span class="text-[10px] text-black/45 dark:text-white/45 truncate">
+                                {{ $user->branch->name }}
+                            </span>
+                        @endif
+                    </div>
+                </div>
+            @empty
+                <div class="col-span-full py-12 text-center">
+                    <p class="text-sm text-black/50 dark:text-white/50">Belum ada akun</p>
+                </div>
+            @endforelse
+        </div>
+    </section>
+
+</div>
+
+<style>
+    .font-poppins, .font-poppins * { font-family: 'Poppins', system-ui, -apple-system, sans-serif; }
+</style>
 </x-app-layout>

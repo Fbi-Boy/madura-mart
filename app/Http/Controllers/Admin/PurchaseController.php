@@ -22,7 +22,6 @@ class PurchaseController extends Controller
             ->with(['supplier', 'user'])
             ->when($request->filled('q'), function ($query) use ($request) {
                 $term = trim((string) $request->input('q'));
-
                 $query->where(function ($query) use ($term) {
                     $query->where('invoice', 'like', "%{$term}%")
                         ->orWhereHas('supplier', fn ($supplier) => $supplier->where('name', 'like', "%{$term}%"));
@@ -30,7 +29,6 @@ class PurchaseController extends Controller
             })
             ->when($request->filled('status'), function ($query) use ($request) {
                 $status = $request->string('status')->toString();
-
                 if ($status === 'submitted') {
                     $query->where('status', 'draft')->whereNotNull('submitted_at');
                 } elseif (in_array($status, ['draft', 'received', 'cancelled'], true)) {
@@ -49,23 +47,19 @@ class PurchaseController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return view('admin.purchases.index', compact('purchases'));
+        return view('purchasing.purchases.index', compact('purchases'));   // ✅ FIX
     }
 
     public function show(Purchase $purchase): View
     {
-        $purchase->load([
-            'supplier',
-            'user',
-            'items.product',
-        ]);
+        $purchase->load(['supplier', 'user', 'items.product']);
 
-        return view('admin.purchases.show', compact('purchase'));
+        return view('purchasing.purchases.show', compact('purchase'));     // ✅ FIX
     }
 
     public function create(): View
     {
-        return view('admin.purchases.create', [
+        return view('purchasing.purchases.create', [                        // ✅ FIX
             'purchaseRoutePrefix' => auth()->user()->role === 'purchasing' ? 'purchasing.purchases' : 'admin.purchases',
             'suppliers' => Supplier::query()->where('is_active', true)->orderBy('name')->get(),
             'products' => Product::query()->where('is_active', true)->orderBy('name')->get(),
@@ -119,14 +113,14 @@ class PurchaseController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'invoice' => ['required','string','max:50','unique:purchases,invoice'],
+            'invoice' => ['required', 'string', 'max:50', 'unique:purchases,invoice'],
             'supplier_id' => ['required', Rule::exists('suppliers', 'id')->where(fn ($query) => $query->where('is_active', true))],
-            'purchase_date' => ['required','date'],
-            'notes' => ['nullable','string'],
-            'items' => ['required','array','min:1'],
-            'items.*.product_id' => ['required','distinct', Rule::exists('products', 'id')->where(fn ($query) => $query->where('is_active', true))],
-            'items.*.quantity' => ['required','integer','min:1'],
-            'items.*.unit_price' => ['required','numeric','min:0'],
+            'purchase_date' => ['required', 'date'],
+            'notes' => ['nullable', 'string'],
+            'items' => ['required', 'array', 'min:1'],
+            'items.*.product_id' => ['required', 'distinct', Rule::exists('products', 'id')->where(fn ($query) => $query->where('is_active', true))],
+            'items.*.quantity' => ['required', 'integer', 'min:1'],
+            'items.*.unit_price' => ['required', 'numeric', 'min:0'],
         ]);
 
         $purchase = DB::transaction(function () use ($data, $request) {

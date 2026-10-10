@@ -3,59 +3,39 @@
 namespace App\Http\Controllers\Kurir;
 
 use App\Http\Controllers\Controller;
-use App\Models\Courier;
 use App\Models\Order;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class DeliveryTaskController extends Controller
 {
-    private function courier(Request $request): Courier
+    public function index(): View
     {
-        return Courier::query()
-            ->where('is_active', true)
-            ->where('email', $request->user()->email)
-            ->firstOrFail();
-    }
+        $courierId = auth()->user()->courier_id ?? null;
 
-    public function index(Request $request): View
-    {
-        $courier = $this->courier($request);
-        $status = $request->string('status')->toString();
-
-        $orders = Order::query()
-            ->where('courier_id', $courier->id)
-            ->whereIn('status', ['pending', 'processing', 'shipped'])
-            ->when(
-                in_array($status, ['pending', 'processing', 'shipped'], true),
-                fn ($query) => $query->where('status', $status)
-            )
-            ->with('customer:id,name,phone')
+        $orders = Order::with(['customer'])
+            ->where('courier_id', $courierId)
+            ->whereNotIn('status', ['delivered', 'cancelled', 'failed'])
             ->latest('order_date')
-            ->paginate(10)
-            ->withQueryString();
+            ->paginate(15);
 
-        $summary = [
-            'all' => Order::query()->where('courier_id', $courier->id)->whereIn('status', ['pending', 'processing', 'shipped'])->count(),
-            'pending' => Order::query()->where('courier_id', $courier->id)->where('status', 'pending')->count(),
-            'processing' => Order::query()->where('courier_id', $courier->id)->where('status', 'processing')->count(),
-            'shipped' => Order::query()->where('courier_id', $courier->id)->where('status', 'shipped')->count(),
-        ];
+        $pendingCount = Order::where('courier_id', $courierId)
+            ->whereIn('status', ['pending', 'processing'])
+            ->count();
 
-        return view('kurir.tugas', compact('courier', 'orders', 'summary', 'status'));
+        $shippingCount = Order::where('courier_id', $courierId)
+            ->where('status', 'shipped')
+            ->count();
+
+        return view('kurir.tugas.index', compact('orders', 'pendingCount', 'shippingCount'));
     }
 
-    public function show(Request $request, Order $order): View
+    public function show(Order $order): View
     {
-        $courier = $this->courier($request);
+        abort_unless($order->courier_id === (auth()->user()->courier_id ?? null), 403);
 
-        abort_unless($order->courier_id === $courier->id, 403);
+        $order->load(['customer', 'items.product', 'statusHistories.user']);
 
-        $order->load([
-            'customer:id,name,phone,email,address,city',
-            'items.product:id,name,sku,unit',
-        ]);
-
-        return view('kurir.tugas-show', compact('courier', 'order'));
+        // ⚠️ PERHATIKAN: view-nya 'kurir.tugas.tugas-show'
+        return view('kurir.tugas.tugas-show', compact('order'));
     }
 }

@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class PermissionOverride extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'role',
         'permission',
@@ -21,10 +18,5 @@ class PermissionOverride extends Model
         return [
             'enabled' => 'boolean',
         ];
-    }
-
-    public function updater()
-    {
-        return $this->belongsTo(User::class, 'updated_by');
     }
 }

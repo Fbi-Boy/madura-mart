@@ -14,11 +14,26 @@ class UserController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = User::query()->orderBy('name');
+        /*
+        |--------------------------------------------------------------------------
+        | User Listing
+        |--------------------------------------------------------------------------
+        | User terbaru ditampilkan paling atas berdasarkan created_at.
+        |
+        | latest() = ORDER BY created_at DESC
+        |--------------------------------------------------------------------------
+        */
+        $query = User::query()->latest();
 
         $search = $request->string('search')->trim()->toString();
         $role = $request->string('role')->trim()->toString();
         $status = $request->string('status')->trim()->toString();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Search
+        |--------------------------------------------------------------------------
+        */
 
         if ($search !== '') {
             $query->where(function ($q) use ($search) {
@@ -27,15 +42,35 @@ class UserController extends Controller
             });
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Filter Role
+        |--------------------------------------------------------------------------
+        */
+
         if ($role !== '') {
             $query->where('role', $role);
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Filter Status
+        |--------------------------------------------------------------------------
+        */
 
         if (in_array($status, ['active', 'inactive'], true)) {
             $query->where('is_active', $status === 'active');
         }
 
-        $users = $query->paginate(10)->withQueryString();
+        /*
+        |--------------------------------------------------------------------------
+        | Pagination
+        |--------------------------------------------------------------------------
+        */
+
+        $users = $query
+            ->paginate(10)
+            ->withQueryString();
 
         return view('admin.users.index', [
             'users' => $users,
@@ -54,6 +89,7 @@ class UserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $data = $this->validated($request);
+
         $data['password'] = Hash::make($data['password']);
         $data['is_active'] = true;
 
@@ -63,11 +99,15 @@ class UserController extends Controller
             'user.created',
             "User {$user->name} berhasil dibuat dengan role {$user->role}.",
             $user,
-            ['role' => $user->role, 'is_active' => true],
+            [
+                'role' => $user->role,
+                'is_active' => true,
+            ],
             $request,
         );
 
-        return to_route('admin.users.index')->with('success', 'User berhasil ditambahkan.');
+        return to_route('admin.users.index')
+            ->with('success', 'User berhasil ditambahkan.');
     }
 
     public function edit(User $user): View
@@ -75,11 +115,23 @@ class UserController extends Controller
         return view('admin.users.edit', compact('user'));
     }
 
-    public function update(Request $request, User $user): RedirectResponse
-    {
+    public function update(
+        Request $request,
+        User $user
+    ): RedirectResponse {
         $data = $this->validated($request, $user);
+
         $oldRole = $user->role;
+
         unset($data['is_active']);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Password
+        |--------------------------------------------------------------------------
+        | Password hanya diubah jika field diisi.
+        |--------------------------------------------------------------------------
+        */
 
         if (blank($data['password'] ?? null)) {
             unset($data['password']);
@@ -87,18 +139,43 @@ class UserController extends Controller
             $data['password'] = Hash::make($data['password']);
         }
 
-        if ($request->user()->is($user) && $data['role'] !== $user->role) {
-            return back()->withInput()->withErrors([
-                'role' => 'Anda tidak dapat mengubah role akun sendiri.',
-            ]);
+        /*
+        |--------------------------------------------------------------------------
+        | Prevent Self Role Change
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $request->user()->is($user)
+            && $data['role'] !== $user->role
+        ) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'role' => 'Anda tidak dapat mengubah role akun sendiri.',
+                ]);
         }
 
-        if ($user->role === 'super-admin' && $data['role'] !== 'super-admin'
+        /*
+        |--------------------------------------------------------------------------
+        | Protect Last Active Super Admin
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $user->role === 'super-admin'
+            && $data['role'] !== 'super-admin'
             && $user->is_active
-            && User::query()->where('role', 'super-admin')->where('is_active', true)->count() <= 1) {
-            return back()->withInput()->withErrors([
-                'role' => 'Minimal satu Super Admin aktif harus tetap tersedia.',
-            ]);
+            && User::query()
+                ->where('role', 'super-admin')
+                ->where('is_active', true)
+                ->count() <= 1
+        ) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'role' => 'Minimal satu Super Admin aktif harus tetap tersedia.',
+                ]);
         }
 
         $user->update($data);
@@ -115,40 +192,87 @@ class UserController extends Controller
             $request,
         );
 
-        return to_route('admin.users.index')->with('success', 'User berhasil diperbarui.');
+        return to_route('admin.users.index')
+            ->with('success', 'User berhasil diperbarui.');
     }
 
-    public function toggleStatus(Request $request, User $user): RedirectResponse
-    {
-        abort_if($request->user()->is($user), 422, 'Akun yang sedang digunakan tidak dapat dinonaktifkan.');
+    public function toggleStatus(
+        Request $request,
+        User $user
+    ): RedirectResponse {
+        /*
+        |--------------------------------------------------------------------------
+        | Prevent Self Deactivation
+        |--------------------------------------------------------------------------
+        */
 
-        if ($user->role === 'super-admin' && $user->is_active
-            && User::query()->where('role', 'super-admin')->where('is_active', true)->count() <= 1) {
+        abort_if(
+            $request->user()->is($user),
+            422,
+            'Akun yang sedang digunakan tidak dapat dinonaktifkan.'
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Protect Last Active Super Admin
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $user->role === 'super-admin'
+            && $user->is_active
+            && User::query()
+                ->where('role', 'super-admin')
+                ->where('is_active', true)
+                ->count() <= 1
+        ) {
             return back()->withErrors([
                 'user' => 'Minimal satu Super Admin aktif harus tetap tersedia.',
             ]);
         }
 
-        $user->update(['is_active' => ! $user->is_active]);
+        $user->update([
+            'is_active' => ! $user->is_active,
+        ]);
 
         ActivityLogService::record(
-            $user->is_active ? 'user.activated' : 'user.deactivated',
-            "User {$user->name} ".($user->is_active ? 'diaktifkan' : 'dinonaktifkan').".",
+            $user->is_active
+                ? 'user.activated'
+                : 'user.deactivated',
+            "User {$user->name} ".(
+                $user->is_active
+                    ? 'diaktifkan'
+                    : 'dinonaktifkan'
+            ).".",
             $user,
-            ['is_active' => $user->is_active],
+            [
+                'is_active' => $user->is_active,
+            ],
             $request,
         );
 
-        return to_route('admin.users.index')->with('success', 'Status user berhasil diperbarui.');
+        return to_route('admin.users.index')
+            ->with('success', 'Status user berhasil diperbarui.');
     }
 
-    public function resetPassword(Request $request, User $user): RedirectResponse
-    {
+    public function resetPassword(
+        Request $request,
+        User $user
+    ): RedirectResponse {
         $request->validate([
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+            ],
         ]);
 
-        $user->update(['password' => Hash::make($request->string('password')->toString())]);
+        $user->update([
+            'password' => Hash::make(
+                $request->string('password')->toString()
+            ),
+        ]);
 
         ActivityLogService::record(
             'user.password_reset',
@@ -158,14 +282,39 @@ class UserController extends Controller
             $request,
         );
 
-        return to_route('admin.users.edit', $user)->with('success', 'Password user berhasil direset.');
+        return to_route('admin.users.edit', $user)
+            ->with('success', 'Password user berhasil direset.');
     }
 
-    public function destroy(Request $request, User $user): RedirectResponse
-    {
-        abort_if($request->user()->is($user), 422, 'Akun yang sedang digunakan tidak dapat dihapus.');
+    public function destroy(
+        Request $request,
+        User $user
+    ): RedirectResponse {
+        /*
+        |--------------------------------------------------------------------------
+        | Prevent Self Delete
+        |--------------------------------------------------------------------------
+        */
 
-        if ($user->role === 'super-admin' && User::query()->where('role', 'super-admin')->where('is_active', true)->count() <= 1) {
+        abort_if(
+            $request->user()->is($user),
+            422,
+            'Akun yang sedang digunakan tidak dapat dihapus.'
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Protect Last Active Super Admin
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $user->role === 'super-admin'
+            && User::query()
+                ->where('role', 'super-admin')
+                ->where('is_active', true)
+                ->count() <= 1
+        ) {
             return back()->withErrors([
                 'user' => 'Minimal satu Super Admin aktif harus tetap tersedia.',
             ]);
@@ -178,24 +327,58 @@ class UserController extends Controller
             'user.deleted',
             "User {$name} akan dihapus dari sistem.",
             $user,
-            ['role' => $role],
+            [
+                'role' => $role,
+            ],
             $request,
         );
 
         $user->delete();
 
-        return to_route('admin.users.index')->with('success', 'User berhasil dihapus.');
+        return to_route('admin.users.index')
+            ->with('success', 'User berhasil dihapus.');
     }
 
-    private function validated(Request $request, ?User $user = null): array
-    {
-        $uniqueEmail = 'unique:users,email'.($user ? ','.$user->id : '');
+    /**
+     * Validate user data.
+     */
+    private function validated(
+        Request $request,
+        ?User $user = null
+    ): array {
+        $uniqueEmail = 'unique:users,email'.(
+            $user
+                ? ','.$user->id
+                : ''
+        );
 
         return $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', $uniqueEmail],
-            'password' => [$user ? 'nullable' : 'required', 'string', 'min:8', 'confirmed'],
-            'role' => ['required', 'in:admin,super-admin,gudang,kasir,purchasing,kurir,customer'],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                $uniqueEmail,
+            ],
+
+            'password' => [
+                $user
+                    ? 'nullable'
+                    : 'required',
+                'string',
+                'min:8',
+                'confirmed',
+            ],
+
+            'role' => [
+                'required',
+                'in:admin,super-admin,gudang,kasir,purchasing,kurir,customer',
+            ],
         ]);
     }
 }

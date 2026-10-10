@@ -1,20 +1,241 @@
 <x-app-layout>
-    <div class="space-y-5">
-        <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div><p class="text-xs font-semibold uppercase tracking-wide text-black/40">Master Data</p><h1 class="mt-1 text-2xl font-bold">Customer</h1><p class="mt-1 text-sm text-black/50">Kelola data customer Madura Mart.</p></div>
-            <a href="{{ route('admin.customers.create') }}" class="inline-flex items-center justify-center rounded-xl bg-[#171719] px-4 py-2.5 text-sm font-semibold text-white">Tambah Customer</a>
+@php
+    // ===== Hitung di ATAS =====
+    $customerCollection = isset($customers)
+        ? collect($customers instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator ? $customers->items() : $customers)
+        : collect();
+
+    $customerCount = isset($customers) && $customers instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator
+        ? $customers->total()
+        : $customerCollection->count();
+
+    $activeCount   = $customerCollection->where('is_active', 1)->count();
+    $inactiveCount = $customerCollection->where('is_active', 0)->count();
+    $citiesCount   = $customerCollection->pluck('city')->filter()->unique()->count();
+@endphp
+
+<div class="space-y-5 font-poppins">
+
+    {{-- ================= HEADER ================= --}}
+    <div class="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-black/5 bg-white dark:border-white/10 dark:bg-white/5 px-5 py-4">
+        <div>
+            <p class="text-[10px] font-medium uppercase tracking-[0.14em] text-black/45 dark:text-white/45">Master Data</p>
+            <h1 class="mt-1 text-xl font-semibold tracking-tight text-[#171719] dark:text-white">Customer</h1>
+            <p class="mt-0.5 text-[11px] text-black/45 dark:text-white/45">Kelola data customer Madura Mart</p>
         </div>
-        @if(session('success')) <div class="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">{{ session('success') }}</div> @endif
-        <div class="overflow-hidden rounded-2xl border border-black/5 bg-white shadow-sm">
-            <div class="overflow-x-auto"><table class="min-w-full text-left text-sm">
-                <thead class="border-b border-black/5 bg-black/[0.02]"><tr><th class="px-5 py-3">Kode</th><th class="px-5 py-3">Customer</th><th class="px-5 py-3">Kontak</th><th class="px-5 py-3">Kota</th><th class="px-5 py-3">Status</th><th class="px-5 py-3 text-right">Aksi</th></tr></thead>
-                <tbody class="divide-y divide-black/5">
-                @forelse($customers as $customer)
-                    <tr><td class="px-5 py-4 font-medium">{{ $customer->code }}</td><td class="px-5 py-4"><div class="font-medium">{{ $customer->name }}</div><div class="text-xs text-black/45">{{ $customer->email ?: '-' }}</div></td><td class="px-5 py-4">{{ $customer->phone ?: '-' }}</td><td class="px-5 py-4">{{ $customer->city ?: '-' }}</td><td class="px-5 py-4"><span class="rounded-full px-2.5 py-1 text-xs font-semibold {{ $customer->is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600' }}">{{ $customer->is_active ? 'Aktif' : 'Nonaktif' }}</span></td><td class="px-5 py-4 text-right"><div class="flex justify-end gap-2"><a href="{{ route('admin.customers.edit', $customer) }}" class="rounded-lg border border-black/10 px-3 py-1.5 text-xs font-semibold">Edit</a><form method="POST" action="{{ route('admin.customers.destroy', $customer) }}" onsubmit="return confirm('Hapus customer ini?')">@csrf @method('DELETE')<button class="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-600">Hapus</button></form></div></td></tr>
-                @empty <tr><td colspan="6" class="px-5 py-10 text-center text-sm text-black/45">Belum ada customer.</td></tr> @endforelse
-                </tbody>
-            </table></div>
-            @if($customers->hasPages()) <div class="border-t border-black/5 px-5 py-4">{{ $customers->links() }}</div> @endif
+
+        <div class="flex items-center gap-2">
+            <span class="text-xs bg-lime-100 dark:bg-lime-900/30 text-lime-700 dark:text-lime-400 px-3 py-1.5 rounded-xl font-medium">
+                {{ $customerCount }} customer
+            </span>
+            <a href="{{ route('admin.customers.create') }}"
+               class="h-10 px-4 rounded-xl bg-lime-400 hover:bg-lime-500 text-[#171719] text-sm font-bold flex items-center gap-2 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path d="M12 5v14"/><path d="M5 12h14"/>
+                </svg>
+                Tambah Customer
+            </a>
         </div>
     </div>
+
+    {{-- ================= ALERT SUCCESS ================= --}}
+    @if (session('success'))
+        <div class="rounded-2xl border border-lime-200 bg-lime-50 dark:border-lime-500/20 dark:bg-lime-500/10 px-4 py-3 flex items-start gap-3">
+            <svg class="w-5 h-5 text-lime-600 dark:text-lime-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path d="M20 6 9 17l-5-5"/>
+            </svg>
+            <p class="text-sm font-medium text-lime-800 dark:text-lime-300">{{ session('success') }}</p>
+        </div>
+    @endif
+
+    {{-- ================= SUMMARY CARDS ================= --}}
+    @php
+        $kpis = [
+            ['label' => 'Total Customer', 'value' => number_format($customerCount, 0, ',', '.'), 'hint' => 'semua customer',  'icon' => 'users', 'color' => 'blue'],
+            ['label' => 'Aktif',          'value' => number_format($activeCount, 0, ',', '.'),   'hint' => 'siap belanja',    'icon' => 'check', 'color' => 'lime'],
+            ['label' => 'Nonaktif',       'value' => number_format($inactiveCount, 0, ',', '.'), 'hint' => 'tidak aktif',     'icon' => 'x',     'color' => 'red'],
+            ['label' => 'Kota Terdaftar', 'value' => number_format($citiesCount, 0, ',', '.'),   'hint' => 'sebaran wilayah', 'icon' => 'map',   'color' => 'purple'],
+        ];
+    @endphp
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        @foreach ($kpis as $kpi)
+            <div class="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 p-4">
+                <div class="flex items-center justify-between mb-3">
+                    <p class="text-[10px] font-medium uppercase tracking-wider text-black/45 dark:text-white/45">{{ $kpi['label'] }}</p>
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center
+                        {{ $kpi['color'] === 'blue' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' : '' }}
+                        {{ $kpi['color'] === 'lime' ? 'bg-lime-100 dark:bg-lime-900/30 text-lime-600 dark:text-lime-400' : '' }}
+                        {{ $kpi['color'] === 'red' ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400' : '' }}
+                        {{ $kpi['color'] === 'purple' ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400' : '' }}">
+                        @if($kpi['icon'] === 'users')
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        @elseif($kpi['icon'] === 'check')
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path d="M20 6 9 17l-5-5"/>
+                            </svg>
+                        @elseif($kpi['icon'] === 'x')
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>
+                            </svg>
+                        @elseif($kpi['icon'] === 'map')
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                        @endif
+                    </div>
+                </div>
+                <p class="text-xl font-bold text-[#171719] dark:text-white">{{ $kpi['value'] }}</p>
+                <p class="mt-1 text-[10px] text-black/45 dark:text-white/45">{{ $kpi['hint'] }}</p>
+            </div>
+        @endforeach
+    </div>
+
+    {{-- ================= TABLE ================= --}}
+    <div class="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 overflow-hidden">
+
+        <div class="px-5 py-4 border-b border-black/5 dark:border-white/10 flex items-center justify-between gap-3">
+            <div>
+                <h2 class="text-sm font-bold text-[#171719] dark:text-white">Daftar Customer</h2>
+                <p class="mt-0.5 text-[11px] text-black/45 dark:text-white/45">{{ $customerCount }} customer terdaftar</p>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full min-w-[900px] text-left">
+                <thead class="border-b border-black/5 dark:border-white/10">
+                    <tr class="text-[10px] uppercase tracking-wider text-black/45 dark:text-white/45">
+                        <th class="px-5 py-3.5 font-medium">Customer</th>
+                        <th class="px-5 py-3.5 font-medium">Kontak</th>
+                        <th class="px-5 py-3.5 font-medium">Kota</th>
+                        <th class="px-5 py-3.5 text-center font-medium">Status</th>
+                        <th class="px-5 py-3.5 text-center font-medium">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-black/5 dark:divide-white/10">
+                    @forelse ($customers as $customer)
+                        @php
+                            $statusColor = $customer->is_active
+                                ? 'bg-lime-100 text-lime-700 dark:bg-lime-900/30 dark:text-lime-400'
+                                : 'bg-gray-100 text-gray-700 dark:bg-white/10 dark:text-white/60';
+                            $statusLabel = $customer->is_active ? 'Aktif' : 'Nonaktif';
+                        @endphp
+                        <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition">
+
+                            {{-- CUSTOMER --}}
+                            <td class="px-5 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900/30 dark:to-purple-900/10 flex items-center justify-center shrink-0">
+                                        <span class="text-lg font-black text-purple-600 dark:text-purple-400">
+                                            {{ strtoupper(substr($customer->name, 0, 1)) }}
+                                        </span>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <p class="text-xs font-semibold text-[#171719] dark:text-white truncate max-w-[220px]">
+                                            {{ $customer->name }}
+                                        </p>
+                                        <p class="text-[10px] text-black/45 dark:text-white/45 mt-0.5 font-mono">
+                                            {{ $customer->code }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </td>
+
+                            {{-- KONTAK --}}
+                            <td class="px-5 py-4">
+                                <p class="text-xs text-black/70 dark:text-white/70 font-mono">
+                                    {{ $customer->phone ?: '-' }}
+                                </p>
+                                <p class="text-[10px] text-black/45 dark:text-white/45 mt-0.5">
+                                    {{ $customer->email ?: '-' }}
+                                </p>
+                            </td>
+
+                            {{-- KOTA --}}
+                            <td class="px-5 py-4">
+                                <span class="inline-flex px-2 py-1 rounded-md bg-gray-100 dark:bg-white/10 text-[10px] font-medium text-black/60 dark:text-white/60">
+                                    {{ $customer->city ?: '-' }}
+                                </span>
+                            </td>
+
+                            {{-- STATUS --}}
+                            <td class="px-5 py-4 text-center">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider {{ $statusColor }}">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                                    {{ $statusLabel }}
+                                </span>
+                            </td>
+
+                            {{-- AKSI --}}
+                            <td class="px-5 py-4">
+                                <div class="flex items-center justify-center gap-2">
+                                    <a href="{{ route('admin.customers.edit', $customer) }}"
+                                       class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 hover:bg-blue-200 dark:hover:bg-blue-900/50 flex items-center justify-center transition"
+                                       title="Edit">
+                                        <svg class="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path d="m4 20 4-1 10-10-3-3L5 16l-1 4Z"/>
+                                            <path d="m13 7 3 3"/>
+                                        </svg>
+                                    </a>
+
+                                    <form method="POST" action="{{ route('admin.customers.destroy', $customer) }}"
+                                          onsubmit="return confirm('Hapus customer ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="w-8 h-8 rounded-lg bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/50 flex items-center justify-center transition"
+                                            title="Hapus">
+                                            <svg class="w-3.5 h-3.5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                <path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                                                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="px-5 py-16 text-center">
+                                <div class="w-16 h-16 rounded-2xl bg-gray-100 dark:bg-white/5 flex items-center justify-center mx-auto mb-4">
+                                    <svg class="w-8 h-8 text-black/20 dark:text-white/20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="9" cy="7" r="4"/>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                    </svg>
+                                </div>
+                                <p class="text-sm font-medium text-black/50 dark:text-white/50">Belum ada customer</p>
+                                <p class="mt-1 text-xs text-black/40 dark:text-white/40">Yuk tambahkan customer pertama Anda</p>
+                                <a href="{{ route('admin.customers.create') }}"
+                                   class="inline-flex items-center gap-1.5 mt-4 h-9 px-4 rounded-xl bg-lime-400 hover:bg-lime-500 text-[#171719] text-xs font-medium transition">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path d="M12 5v14"/><path d="M5 12h14"/>
+                                    </svg>
+                                    Tambah Customer
+                                </a>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        @if ($customers->hasPages())
+            <div class="border-t border-black/5 dark:border-white/10 px-5 py-4">
+                {{ $customers->links() }}
+            </div>
+        @endif
+    </div>
+
+</div>
+
+<style>
+    .font-poppins, .font-poppins * { font-family: 'Poppins', system-ui, -apple-system, sans-serif; }
+</style>
 </x-app-layout>

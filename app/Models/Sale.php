@@ -17,6 +17,8 @@ class Sale extends Model
         'user_id',
         'shift_id',
         'sale_date',
+        'subtotal',
+        'tax',
         'total',
         'payment_method',
         'paid_amount',
@@ -28,11 +30,29 @@ class Sale extends Model
     protected function casts(): array
     {
         return [
-            'sale_date' => 'datetime',
-            'total' => 'decimal:2',
-            'paid_amount' => 'decimal:2',
+            'sale_date'     => 'datetime',
+            'subtotal'      => 'decimal:2',
+            'tax'           => 'decimal:2',
+            'total'         => 'decimal:2',
+            'paid_amount'   => 'decimal:2',
             'change_amount' => 'decimal:2',
         ];
+    }
+
+    public static function nextInvoiceNumber(): int
+    {
+        $today  = now()->format('ymd');
+        $prefix = "INV-{$today}-";
+
+        $lastSale = self::where('invoice', 'like', $prefix . '%')
+            ->orderByDesc('invoice')
+            ->first();
+
+        if (!$lastSale) {
+            return 1;
+        }
+
+        return (int) substr($lastSale->invoice, strlen($prefix)) + 1;
     }
 
     public function customer(): BelongsTo
@@ -45,9 +65,14 @@ class Sale extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
     public function shift(): BelongsTo
     {
-        return $this->belongsTo(CashierShift::class);
+        return $this->belongsTo(CashierShift::class, 'shift_id');
     }
 
     public function items(): HasMany

@@ -7,6 +7,10 @@
 
     <title>{{ config('app.name', 'WAR-MART') }}</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
     <script>
         if (localStorage.getItem('theme') === 'dark') {
             document.documentElement.classList.add('dark');
@@ -18,16 +22,18 @@
 
 <body class="h-screen overflow-hidden bg-[#F8F8FC] dark:bg-[#111113] text-[#171719] dark:text-white transition-colors duration-200">
 
-    <div class="h-screen flex gap-2 p-4 sm:gap-2.5 sm:p-5 lg:gap-3 lg:p-6 overflow-hidden">
+    <!-- PERUBAHAN: Menghapus p-4, gap-2, dan menggunakan h-screen w-full -->
+    <div class="h-screen w-full flex overflow-hidden">
 
         @include('layouts.navigation')
 
-        <div class="flex-1 min-w-0 h-[calc(100vh-2rem)] flex flex-col overflow-hidden">
+        <!-- PERUBAHAN: Menghapus h-[calc(100vh-2rem)] dan menggunakan h-screen -->
+        <div class="flex-1 min-w-0 h-screen flex flex-col overflow-hidden">
 
             {{-- =====================================================
                 GLOBAL HEADER
             ====================================================== --}}
-            <header class="h-[70px] shrink-0 flex items-center justify-between gap-4 px-1 sm:px-2">
+            <header class="h-[70px] shrink-0 flex items-center justify-between gap-4 px-4 sm:px-6 border-b border-slate-200/60 dark:border-slate-800/60">
 
                 {{-- LEFT --}}
                 <div class="min-w-0 flex items-center gap-4">
@@ -115,7 +121,7 @@
                         </svg>
                     </button>
 
-                                        {{-- CABANG --}}
+                    {{-- CABANG --}}
                     <button
                         type="button"
                         class="hidden sm:flex h-[38px] items-center gap-2 rounded-full
@@ -199,8 +205,9 @@
 
 
             {{-- CONTENT SAJA YANG SCROLL --}}
+            <!-- PERUBAHAN: Menambahkan padding di dalam main agar konten tidak menempel ke tepi, tapi sidebar tetap menempel -->
             <main
-                class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-1 sm:px-2 pt-1 pb-6
+                class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-4 sm:px-6 pt-4 pb-6
                        [&::-webkit-scrollbar]:w-1.5
                        [&::-webkit-scrollbar-track]:bg-transparent
                        [&::-webkit-scrollbar-thumb]:rounded-full

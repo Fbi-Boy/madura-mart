@@ -83,7 +83,7 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | ADMIN - REPORT
+    | ADMIN - PAYMENT VERIFICATION
     |--------------------------------------------------------------------------
     */
 
@@ -95,6 +95,12 @@ Route::middleware(['auth', 'active'])->group(function () {
             Route::get('/{order}/proof', [PaymentVerificationController::class, 'downloadProof'])->name('proof')->middleware('permission:payments.verify');
             Route::patch('/{order}', [PaymentVerificationController::class, 'update'])->name('update')->middleware('permission:payments.verify');
         });
+
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN - REPORT
+    |--------------------------------------------------------------------------
+    */
 
     Route::prefix('admin/report')
         ->name('admin.report.')
@@ -108,29 +114,49 @@ Route::middleware(['auth', 'active'])->group(function () {
             Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi');
         });
 
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN - MASTER DATA
+    |--------------------------------------------------------------------------
+    */
+
     Route::prefix('admin')->name('admin.')->middleware('role:admin,super-admin')->group(function () {
         Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index')->middleware('permission:activity-log.view');
         Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index')->middleware('permission:audit-log.view');
         Route::get('/settings', [SystemSettingController::class, 'index'])->name('settings.index')->middleware('permission:system-settings.view');
         Route::patch('/settings', [SystemSettingController::class, 'update'])->name('settings.update')->middleware(['role:super-admin', 'permission:system-settings.update']);
         Route::get('/system-monitoring', [SystemMonitoringController::class, 'index'])->name('system-monitoring.index')->middleware('permission:system-monitoring.view');
+
         Route::resource('categories', CategoryController::class)->except(['show']);
         Route::resource('products', ProductController::class)->except(['show']);
         Route::resource('suppliers', SupplierController::class)->except(['show']);
         Route::resource('customers', CustomerController::class)->except(['show']);
         Route::resource('couriers', CourierController::class)->except(['show']);
+        Route::resource('units', UnitController::class)->except(['show']);
+        Route::resource('purchases', PurchaseController::class)->only(['index', 'create', 'store', 'show']);
+        Route::resource('distributors', DistributorController::class)->except(['show']);
+
         Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.index')->middleware('permission:role-management.view');
         Route::patch('/roles', [RolePermissionController::class, 'update'])->name('roles.update')->middleware('permission:role-management.view');
-        Route::resource('units', UnitController::class)->except(['show']);
-        Route::resource('purchases', PurchaseController::class)->only(['index','create','store','show']);
-        Route::resource('distributors', DistributorController::class)->except(['show']);
     });
+
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN - SUPER ADMIN ONLY
+    |--------------------------------------------------------------------------
+    */
 
     Route::prefix('admin')->name('admin.')->middleware('role:super-admin')->group(function () {
         Route::resource('users', UserController::class)->except(['show']);
-        Route::patch('/users/{user}/status', [UserController::class, 'toggleStatus'])->name('users.status');
-        Route::patch('/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
+        Route::patch('users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
+        Route::patch('users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
     });
+
+    /*
+    |--------------------------------------------------------------------------
+    | PURCHASING
+    |--------------------------------------------------------------------------
+    */
 
     Route::prefix('purchasing')->name('purchasing.')->middleware('role:purchasing')->group(function () {
         Route::resource('purchases', PurchaseController::class)->only(['index', 'create', 'store', 'show']);
@@ -141,9 +167,80 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
+    | KASIR
+    |--------------------------------------------------------------------------
+    */
+
+    Route::prefix('kasir')
+        ->name('kasir.')
+        ->middleware('role:kasir')
+        ->group(function () {
+            // ===== TRANSAKSI BARU =====
+            Route::get('/transaksi-baru', [SaleController::class, 'create'])->name('transaksi-baru');
+            Route::post('/transaksi-baru', [SaleController::class, 'store'])->name('transaksi-baru.store');
+
+            // ===== RIWAYAT & STRUK =====
+            Route::get('/riwayat-transaksi', [SaleController::class, 'index'])->name('riwayat-transaksi');
+            Route::get('/transaksi/{sale}/struk', [SaleController::class, 'receipt'])->name('transaksi-struk');
+
+            // ===== RETUR =====
+            Route::get('/retur', [SaleReturnController::class, 'index'])->name('retur');
+            Route::get('/retur/baru', [SaleReturnController::class, 'create'])->name('retur.create');
+            Route::post('/retur', [SaleReturnController::class, 'store'])->name('retur.store');
+
+            // ===== SHIFT =====
+            Route::get('/buka-shift', [CashierShiftController::class, 'openForm'])->name('buka-shift');
+            Route::post('/buka-shift', [CashierShiftController::class, 'open'])->name('buka-shift.store');
+            Route::get('/tutup-shift', [CashierShiftController::class, 'closeForm'])->name('tutup-shift');
+            Route::post('/tutup-shift', [CashierShiftController::class, 'close'])->name('tutup-shift.store');
+            Route::get('/riwayat-shift', [CashierShiftController::class, 'history'])->name('riwayat-shift');
+        });
+
+    /*
+    |--------------------------------------------------------------------------
     | GUDANG
     |--------------------------------------------------------------------------
     */
+
+    Route::prefix('gudang')
+        ->name('gudang.')
+        ->middleware('role:gudang')
+        ->group(function () {
+            Route::get('/stock-opname', [StockOpnameController::class, 'index'])->name('stock-opname.index');
+            Route::post('/stock-opname', [StockOpnameController::class, 'store'])->name('stock-opname.store');
+            Route::get('/penerimaan', [PurchaseReceivingController::class, 'index'])->name('penerimaan.index');
+            Route::get('/penerimaan/{purchase}', [PurchaseReceivingController::class, 'show'])->name('penerimaan.show');
+            Route::post('/penerimaan/{purchase}', [PurchaseReceivingController::class, 'receive'])->name('penerimaan.receive');
+            Route::get('/barang-keluar', [OutboundController::class, 'index'])->name('barang-keluar.index');
+            Route::get('/riwayat-stok', [StockHistoryController::class, 'index'])->name('riwayat-stok.index');
+        });
+
+    /*
+    |--------------------------------------------------------------------------
+    | KURIR
+    |--------------------------------------------------------------------------
+    */
+
+    Route::prefix('kurir')
+        ->name('kurir.')
+        ->middleware('role:kurir')
+        ->group(function () {
+
+            Route::get('/dashboard', [\App\Http\Controllers\Kurir\DashboardController::class, 'index'])
+                ->name('dashboard');
+
+            Route::get('/pengiriman', [DeliveryTaskController::class, 'index'])
+                ->name('pengiriman.index');
+
+            Route::get('/pengiriman/riwayat', [DeliveryHistoryController::class, 'index'])
+                ->name('pengiriman.riwayat');
+
+            Route::get('/pengiriman/{order}', [DeliveryTaskController::class, 'show'])
+                ->name('pengiriman.show');
+
+            Route::patch('/pengiriman/{order}/status', [DeliveryStatusController::class, 'update'])
+                ->name('pengiriman.status');
+        });
 
     /*
     |--------------------------------------------------------------------------
@@ -159,6 +256,12 @@ Route::middleware(['auth', 'active'])->group(function () {
             Route::get('/{slug}', [CatalogController::class, 'show'])->name('show');
         });
 
+    /*
+    |--------------------------------------------------------------------------
+    | CUSTOMER - CART
+    |--------------------------------------------------------------------------
+    */
+
     Route::prefix('customer/cart')
         ->name('customer.cart.')
         ->middleware('role:customer')
@@ -169,14 +272,26 @@ Route::middleware(['auth', 'active'])->group(function () {
             Route::delete('/items', [CartController::class, 'remove'])->name('remove');
         });
 
+    /*
+    |--------------------------------------------------------------------------
+    | CUSTOMER - CHECKOUT
+    |--------------------------------------------------------------------------
+    */
+
     Route::prefix('customer/checkout')
         ->name('customer.checkout.')
         ->middleware('role:customer')
         ->group(function () {
-            Route::get('/', [CheckoutController::class, 'show'])->name('index');
+            Route::get('/', [CheckoutController::class, 'index'])->name('index');      // ✅ FIX: index
             Route::post('/', [CheckoutController::class, 'store'])->name('store');
             Route::get('/success/{order}', [CheckoutController::class, 'success'])->name('success');
         });
+
+    /*
+    |--------------------------------------------------------------------------
+    | CUSTOMER - ADDRESS
+    |--------------------------------------------------------------------------
+    */
 
     Route::get('/customer/address', [AddressController::class, 'edit'])
         ->name('customer.address.edit')
@@ -185,6 +300,12 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::patch('/customer/address', [AddressController::class, 'update'])
         ->name('customer.address.update')
         ->middleware('role:customer');
+
+    /*
+    |--------------------------------------------------------------------------
+    | CUSTOMER - ORDERS
+    |--------------------------------------------------------------------------
+    */
 
     Route::prefix('customer/orders')
         ->name('customer.orders.')
@@ -195,6 +316,12 @@ Route::middleware(['auth', 'active'])->group(function () {
             Route::patch('/{order}/cancel', [OrderController::class, 'cancel'])->name('cancel');
         });
 
+    /*
+    |--------------------------------------------------------------------------
+    | CUSTOMER - PAYMENT
+    |--------------------------------------------------------------------------
+    */
+
     Route::prefix('customer/orders/{order}/payment')
         ->name('customer.payment.')
         ->middleware('role:customer')
@@ -203,72 +330,16 @@ Route::middleware(['auth', 'active'])->group(function () {
             Route::post('/', [PaymentController::class, 'store'])->name('store')->middleware('throttle:payment-upload');
         });
 
-    Route::prefix('gudang')
-        ->name('gudang.')
-        ->middleware('role:gudang')
-        ->group(function () {
-            Route::get('/stock-opname', [StockOpnameController::class, 'index'])->name('stock-opname.index');
-            Route::post('/stock-opname', [StockOpnameController::class, 'store'])->name('stock-opname.store');
-            Route::get('/penerimaan', [PurchaseReceivingController::class, 'index'])->name('penerimaan.index');
-            Route::get('/penerimaan/{purchase}', [PurchaseReceivingController::class, 'show'])->name('penerimaan.show');
-            Route::get('/barang-keluar', [OutboundController::class, 'index'])->name('barang-keluar.index');
-            Route::get('/riwayat-stok', [StockHistoryController::class, 'index'])->name('riwayat-stok.index');
-            Route::post('/penerimaan/{purchase}', [PurchaseReceivingController::class, 'receive'])->name('penerimaan.receive');
-        });
-
     /*
     |--------------------------------------------------------------------------
-    | KURIR
+    | PROFILE
     |--------------------------------------------------------------------------
     */
 
-    Route::prefix('kurir')
-        ->name('kurir.')
-        ->middleware('role:kurir')
-        ->group(function () {
-            Route::get('/pengiriman', [DeliveryTaskController::class, 'index'])
-                ->name('pengiriman.index');
-            Route::get('/pengiriman/riwayat', [DeliveryHistoryController::class, 'index'])
-                ->name('pengiriman.riwayat');
-            Route::get('/pengiriman/{order}', [DeliveryTaskController::class, 'show'])
-                ->name('pengiriman.show');
-
-            Route::patch('/pengiriman/{order}/status', [DeliveryStatusController::class, 'update'])
-                ->name('pengiriman.status');
-        });
-
-    /*
-    |--------------------------------------------------------------------------
-    | KASIR
-    |--------------------------------------------------------------------------
-    */
-
-    Route::prefix('kasir')
-        ->name('kasir.')
-        ->middleware('role:kasir')
-        ->group(function () {
-            Route::get('/transaksi-baru', [SaleController::class, 'create'])->name('transaksi-baru');
-            Route::post('/transaksi-baru', [SaleController::class, 'store'])->name('transaksi-baru.store');
-            Route::get('/riwayat-transaksi', [SaleController::class, 'index'])->name('riwayat-transaksi');
-            Route::get('/transaksi/{sale}/struk', [SaleController::class, 'receipt'])->name('transaksi-struk');
-            Route::get('/retur', [SaleReturnController::class, 'index'])->name('retur');
-            Route::get('/retur/baru', [SaleReturnController::class, 'create'])->name('retur.create');
-            Route::post('/retur', [SaleReturnController::class, 'store'])->name('retur.store');
-            Route::get('/buka-shift', [CashierShiftController::class, 'openForm'])->name('buka-shift');
-            Route::post('/buka-shift', [CashierShiftController::class, 'open'])->name('buka-shift.store');
-            Route::get('/tutup-shift', [CashierShiftController::class, 'closeForm'])->name('tutup-shift');
-            Route::post('/tutup-shift', [CashierShiftController::class, 'close'])->name('tutup-shift.store');
-            Route::get('/riwayat-shift', [CashierShiftController::class, 'history'])->name('riwayat-shift');
-        });
-
-    Route::get('/profile', [ProfileController::class, 'edit'])
-        ->name('profile.edit');
-
-    Route::patch('/profile', [ProfileController::class, 'update'])
-        ->name('profile.update');
-
-    Route::delete('/profile', [ProfileController::class, 'destroy'])
-        ->name('profile.destroy');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 require __DIR__.'/auth.php';
+

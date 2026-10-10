@@ -3,145 +3,217 @@
 namespace App\Http\Controllers\Kasir;
 
 use App\Http\Controllers\Controller;
+use App\Models\CashierShift;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Sale;
+use App\Models\SaleItem;
 use App\Services\StockMovementService;
-use App\Models\CashierShift;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class SaleController extends Controller
 {
+    public function create(): View
+    {
+        $customers = Customer::orderBy('name')->get(['id', 'name']);
+
+        $products = Product::where('is_active', true)
+            ->orderBy('name')
+            ->get();
+
+        $productData = $products->map(fn ($p) => [
+            'id'    => $p->id,
+            'sku'   => $p->sku ?? '',
+            'name'  => $p->name ?? 'Tanpa Nama',
+            'price' => (float) ($p->price ?? 0),
+            'stock' => (int) ($p->stock ?? 0),
+            'unit'  => $p->unit ?? '',
+        ])->values()->toArray();
+
+        $shiftAktif = CashierShift::where('user_id', auth()->id())
+            ->whereNull('closed_at')
+            ->latest('opened_at')
+            ->first();
+
+        return view('kasir.transaksi-baru.index', compact(
+            'customers',
+            'products',
+            'productData',
+            'shiftAktif'
+        ));
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'invoice'            => ['required', 'string', 'max:50', 'unique:sales,invoice'],
+                'customer_id'        => ['nullable', 'exists:customers,id'],
+                'sale_date'          => ['required', 'date'],
+                'payment_method'     => ['required', 'in:cash,transfer,qris,debit'],
+                'paid_amount'        => ['nullable', 'numeric', 'min:0'],
+                'diskon'             => ['nullable', 'numeric', 'min:0'],
+                'items'              => ['required', 'array', 'min:1'],
+                'items.*.product_id' => ['required', 'exists:products,id'],
+                'items.*.quantity'   => ['required', 'integer', 'min:1'],
+            ]);
+
+            $sale = DB::transaction(function () use ($validated) {
+                $shift = CashierShift::where('user_id', auth()->id())
+                    ->whereNull('closed_at')
+                    ->latest('opened_at')
+                    ->lockForUpdate()
+                    ->first();
+
+                if (!$shift) {
+                    abort(422, 'Anda belum membuka shift. Silakan buka shift terlebih dahulu.');
+                }
+
+                $subtotal = 0;
+                $itemsData = [];
+
+                foreach ($validated['items'] as $input) {
+                    $product = Product::whereKey($input['product_id'])->lockForUpdate()->firstOrFail();
+
+                    $productPrice = (float) $product->price;
+                    $currentStock = (int) $product->stock;
+
+                    if ($currentStock < $input['quantity']) {
+                        abort(422, "Stok produk {$product->name} tidak mencukupi. Tersisa: {$currentStock} {$product->unit}.");
+                    }
+
+                    $lineSubtotal = $productPrice * $input['quantity'];
+                    $subtotal += $lineSubtotal;
+
+                    $itemsData[] = [
+                        'product'    => $product,
+                        'quantity'   => $input['quantity'],
+                        'unit_price' => $productPrice,
+                        'subtotal'   => $lineSubtotal,
+                    ];
+                }
+
+                // Diskon (maksimal = subtotal)
+                $diskon = (float) ($validated['diskon'] ?? 0);
+                $diskon = min(max(0, $diskon), $subtotal);
+
+                // Pajak dihitung setelah diskon
+                $afterDiskon = $subtotal - $diskon;
+                $tax = round($afterDiskon * 0.11);
+                $total = $afterDiskon + $tax;
+
+                $paid = $validated['payment_method'] === 'cash'
+                    ? (float) ($validated['paid_amount'] ?? 0)
+                    : $total;
+
+                if ($validated['payment_method'] === 'cash' && $paid < $total) {
+                    abort(422, 'Nominal pembayaran kurang dari total tagihan.');
+                }
+
+                $sale = Sale::create([
+                    'invoice'        => $validated['invoice'],
+                    'customer_id'    => $validated['customer_id'] ?: null,
+                    'user_id'        => auth()->id(),
+                    'shift_id'       => $shift->id,
+                    'sale_date'      => $validated['sale_date'],
+                    'subtotal'       => $subtotal,
+                    'diskon'         => $diskon,
+                    'tax'            => $tax,
+                    'total'          => $total,
+                    'payment_method' => $validated['payment_method'],
+                    'paid_amount'    => $paid,
+                    'change_amount'  => max(0, $paid - $total),
+                    'status'         => 'paid',
+                ]);
+
+                foreach ($itemsData as $data) {
+                    SaleItem::create([
+                        'sale_id'    => $sale->id,
+                        'product_id' => $data['product']->id,
+                        'quantity'   => $data['quantity'],
+                        'unit_price' => $data['unit_price'],
+                        'subtotal'   => $data['subtotal'],
+                    ]);
+
+                    $data['product']->decrement('stock', $data['quantity']);
+
+                    try {
+                        StockMovementService::apply(
+                            $data['product'],
+                            -$data['quantity'],
+                            'sale',
+                            auth()->user(),
+                            'sale',
+                            $sale->id,
+                            "Penjualan {$sale->invoice}"
+                        );
+                    } catch (\Throwable $e) {
+                        // ignore
+                    }
+                }
+
+                return $sale;
+            });
+
+            $sale->load(['items.product', 'user']);
+
+            return response()->json([
+                'success' => true,
+                'sale' => [
+                    'invoice'  => $sale->invoice,
+                    'kasir'    => $sale->user->name ?? '-',
+                    'date'     => $sale->sale_date->format('d/m/Y H:i'),
+                    'items'    => $sale->items->map(fn($it) => [
+                        'name'  => $it->product->name ?? 'Tanpa Nama',
+                        'qty'   => $it->quantity,
+                        'price' => (float) $it->unit_price,
+                    ])->toArray(),
+                    'subtotal' => (float) $sale->subtotal,
+                    'diskon'   => (float) $sale->diskon,
+                    'pajak'    => (float) $sale->tax,
+                    'total'    => (float) $sale->total,
+                    'paid'     => (float) $sale->paid_amount,
+                    'change'   => (float) $sale->change_amount,
+                ],
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal.',
+                'errors'  => $e->errors(),
+            ], 422);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'line'    => $e->getLine(),
+                'file'    => basename($e->getFile()),
+            ], 500);
+        }
+    }
+
     public function index(): View
     {
-        $sales = Sale::with(['customer', 'user'])
+        $sales = Sale::with(['items.product', 'customer', 'user', 'shift'])
             ->where('user_id', auth()->id())
             ->latest('sale_date')
-            ->paginate(10);
+            ->paginate(20);
 
         return view('kasir.riwayat-transaksi.index', compact('sales'));
     }
 
     public function receipt(Sale $sale): View
     {
-        abort_unless($sale->user_id === auth()->id(), 403);
+        $user = auth()->user();
+        $isAdmin = in_array($user->role, ['admin', 'super-admin'], true);
 
-        $sale->load(['customer:id,name', 'user:id,name', 'items.product:id,name,unit']);
+        abort_unless($sale->user_id === $user->id || $isAdmin, 403);
 
-        return view('kasir.struk.index', compact('sale'));
-    }
+        $sale->load(['items.product', 'customer', 'user', 'shift']);
 
-    public function create(): View
-    {
-        $shift = CashierShift::where('user_id', auth()->id())->where('status', 'open')->firstOrFail();
-
-        $products = Product::query()
-            ->where('is_active', true)
-            ->orderBy('name')
-            ->get(['id', 'name', 'sku', 'price', 'stock']);
-
-        $customers = Customer::query()
-            ->where('is_active', true)
-            ->orderBy('name')
-            ->get(['id', 'name']);
-
-        $productData = $products->map(fn ($product) => [
-            'id' => $product->id,
-            'sku' => $product->sku,
-            'price' => (float) $product->price,
-        ])->values();
-
-        return view('kasir.transaksi-baru.index', compact('products', 'customers', 'productData'));
-    }
-
-    public function store(Request $request): RedirectResponse
-    {
-        $validated = $request->validate([
-            'invoice' => ['required', 'string', 'max:50', 'unique:sales,invoice'],
-            'customer_id' => ['nullable', Rule::exists('customers', 'id')->where('is_active', true)],
-            'sale_date' => ['required', 'date'],
-            'payment_method' => ['required', Rule::in(['cash', 'transfer', 'qris', 'debit'])],
-            'paid_amount' => ['nullable', 'numeric', 'min:0', 'required_if:payment_method,cash'],
-            'notes' => ['nullable', 'string'],
-            'items' => ['required', 'array', 'min:1'],
-            'items.*.product_id' => ['required', 'distinct', Rule::exists('products', 'id')->where('is_active', true)],
-            'items.*.quantity' => ['required', 'integer', 'min:1'],
-        ]);
-
-        DB::transaction(function () use ($validated) {
-            $shift = CashierShift::query()
-                ->where('user_id', auth()->id())
-                ->where('status', 'open')
-                ->lockForUpdate()
-                ->firstOrFail();
-
-            $saleDate = now()->parse($validated['sale_date']);
-            if ($saleDate->lt($shift->opened_at)) {
-                abort(422, 'Tanggal transaksi tidak boleh sebelum shift dibuka.');
-            }
-
-            $sale = Sale::create([
-                'invoice' => $validated['invoice'],
-                'customer_id' => $validated['customer_id'] ?? null,
-                'user_id' => auth()->id(),
-                'shift_id' => $shift->id,
-                'sale_date' => $validated['sale_date'],
-                'total' => 0,
-                'payment_method' => $validated['payment_method'],
-                'paid_amount' => 0,
-                'change_amount' => 0,
-                'status' => 'paid',
-                'notes' => $validated['notes'] ?? null,
-            ]);
-
-            $total = 0;
-
-            foreach ($validated['items'] as $item) {
-                $product = Product::query()
-                    ->whereKey($item['product_id'])
-                    ->where('is_active', true)
-                    ->lockForUpdate()
-                    ->firstOrFail();
-
-                if ($product->stock < $item['quantity']) {
-                    abort(422, "Stok produk {$product->name} tidak mencukupi.");
-                }
-
-                $unitPrice = (float) $product->price;
-                $subtotal = $unitPrice * $item['quantity'];
-
-                $sale->items()->create([
-                    'product_id' => $product->id,
-                    'quantity' => $item['quantity'],
-                    'unit_price' => $unitPrice,
-                    'subtotal' => $subtotal,
-                ]);
-
-                StockMovementService::apply($product, -$item['quantity'], 'sale', auth()->user(), 'sale', $sale->id, "Penjualan {$sale->invoice}");
-                $total += $subtotal;
-            }
-
-            $paidAmount = $validated['payment_method'] === 'cash'
-                ? (float) ($validated['paid_amount'] ?? 0)
-                : $total;
-
-            if ($paidAmount < $total) {
-                abort(422, 'Nominal pembayaran tidak mencukupi.');
-            }
-
-            $sale->update([
-                'total' => $total,
-                'paid_amount' => $paidAmount,
-                'change_amount' => max(0, $paidAmount - $total),
-            ]);
-        });
-
-        return redirect()
-            ->route('kasir.riwayat-transaksi')
-            ->with('success', 'Transaksi penjualan berhasil disimpan.');
+        return view('kasir.transaksi-baru.struk', compact('sale'));
     }
 }

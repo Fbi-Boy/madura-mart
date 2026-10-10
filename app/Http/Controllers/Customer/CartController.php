@@ -4,86 +4,99 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 class CartController extends Controller
 {
-    public function index(Request $request): View
+    /**
+     * Tampilkan halaman keranjang.
+     */
+    public function index(): View
     {
-        $cart = $request->session()->get('customer_cart', []);
+        $cart = session()->get('cart', []);
+        $items = collect();   // ← pakai Collection
+        $total = 0;
 
-        $products = Product::query()
-            ->whereIn('id', array_keys($cart))
-            ->where('is_active', true)
-            ->where('stock', '>', 0)
-            ->get(['id', 'name', 'sku', 'price', 'stock', 'unit']);
+        foreach ($cart as $productId => $quantity) {
+            $product = Product::find($productId);
 
-        $items = $products->map(function (Product $product) use ($cart) {
-            $quantity = min((int) ($cart[$product->id] ?? 0), $product->stock);
+            if (!$product) {
+                continue;
+            }
 
-            return [
-                'product' => $product,
-                'quantity' => $quantity,
-                'subtotal' => $quantity * (float) $product->price,
-            ];
-        })->filter(fn (array $item) => $item['quantity'] > 0)->values();
+            $subtotal = (float) $product->price * (int) $quantity;
+            $total += $subtotal;
 
-        $total = $items->sum('subtotal');
+            $items->push([
+                'product'  => $product,
+                'quantity' => (int) $quantity,
+                'subtotal' => $subtotal,
+            ]);
+        }
 
         return view('customer.cart.index', compact('items', 'total'));
     }
 
-    public function add(Request $request, Product $product): RedirectResponse
+    /**
+     * Tambah produk ke keranjang.
+     */
+    public function add(Request $request, Product $product)
     {
-        abort_unless($product->is_active && $product->stock > 0, 404);
-
-        $data = $request->validate([
-            'quantity' => ['required', 'integer', 'min:1'],
+        $validated = $request->validate([
+            'quantity' => ['nullable', 'integer', 'min:1'],
         ]);
 
-        $cart = $request->session()->get('customer_cart', []);
-        $current = (int) ($cart[$product->id] ?? 0);
-        $cart[$product->id] = min($current + $data['quantity'], $product->stock);
+        $quantity = (int) ($validated['quantity'] ?? 1);
 
-        $request->session()->put('customer_cart', $cart);
+        if ($product->stock < $quantity) {
+            return back()->with('status', 'Stok tidak mencukupi.');
+        }
 
-        return back()->with('status', 'Produk ditambahkan ke keranjang.');
+        $cart = session()->get('cart', []);
+        $currentQty = (int) ($cart[$product->id] ?? 0);
+        $newQty = min($currentQty + $quantity, $product->stock);
+
+        $cart[$product->id] = $newQty;
+        session()->put('cart', $cart);
+
+        return redirect()->route('customer.cart.index')
+            ->with('status', 'Produk ditambahkan ke keranjang.');
     }
 
-    public function update(Request $request): RedirectResponse
+    /**
+     * Update quantity produk di keranjang.
+     */
+    public function update(Request $request)
     {
-        $data = $request->validate([
-            'product_id' => ['required', 'integer', 'exists:products,id'],
-            'quantity' => ['required', 'integer', 'min:1'],
+        $validated = $request->validate([
+            'product_id' => ['required', 'exists:products,id'],
+            'quantity'   => ['required', 'integer', 'min:1'],
         ]);
 
-        $product = Product::query()
-            ->whereKey($data['product_id'])
-            ->where('is_active', true)
-            ->where('stock', '>', 0)
-            ->firstOrFail();
+        $product = Product::find($validated['product_id']);
+        $quantity = min((int) $validated['quantity'], $product->stock);
 
-        $cart = $request->session()->get('customer_cart', []);
-        abort_unless(array_key_exists($product->id, $cart), 404);
+        $cart = session()->get('cart', []);
+        $cart[$product->id] = $quantity;
+        session()->put('cart', $cart);
 
-        $cart[$product->id] = min($data['quantity'], $product->stock);
-        $request->session()->put('customer_cart', $cart);
-
-        return back()->with('status', 'Jumlah keranjang diperbarui.');
+        return back()->with('status', 'Keranjang diperbarui.');
     }
 
-    public function remove(Request $request): RedirectResponse
+    /**
+     * Hapus produk dari keranjang.
+     */
+    public function remove(Request $request)
     {
-        $data = $request->validate([
-            'product_id' => ['required', 'integer'],
+        $validated = $request->validate([
+            'product_id' => ['required', 'exists:products,id'],
         ]);
 
-        $cart = $request->session()->get('customer_cart', []);
-        unset($cart[$data['product_id']]);
-
-        $request->session()->put('customer_cart', $cart);
+        $cart = session()->get('cart', []);
+        unset($cart[$validated['product_id']]);
+        session()->put('cart', $cart);
 
         return back()->with('status', 'Produk dihapus dari keranjang.');
     }
