@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;              // ← TAMBAH
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;  // ← TAMBAH HasApiTokens
 
     /**
      * Kolom yang bisa diisi massal.
@@ -50,33 +51,21 @@ class User extends Authenticatable
     |--------------------------------------------------------------------------
     */
 
-    /**
-     * Cabang tempat user bertugas.
-     */
     public function branch(): BelongsTo
     {
         return $this->belongsTo(Branch::class);
     }
 
-    /**
-     * Semua transaksi penjualan yang dibuat user (kasir).
-     */
     public function sales(): HasMany
     {
         return $this->hasMany(Sale::class);
     }
 
-    /**
-     * Semua shift yang pernah dibuka user.
-     */
     public function shifts(): HasMany
     {
         return $this->hasMany(CashierShift::class);
     }
 
-    /**
-     * Activity log yang terkait user.
-     */
     public function activityLogs(): HasMany
     {
         return $this->hasMany(ActivityLog::class);
@@ -129,25 +118,16 @@ class User extends Authenticatable
     |--------------------------------------------------------------------------
     */
 
-    /**
-     * Cek apakah user memiliki permission tertentu.
-     * Berdasarkan role + permission_overrides.
-     *
-     * Contoh: $user->hasPermission('sales.manage')
-     */
     public function hasPermission(string $permission): bool
     {
-        // Super-admin bypass: selalu punya semua permission
         if ($this->isSuperAdmin()) {
             return true;
         }
 
-        // Admin default punya semua permission
         if ($this->isAdmin()) {
             return true;
         }
 
-        // Cek override di tabel permission_overrides
         $override = PermissionOverride::where('role', $this->role)
             ->where('permission', $permission)
             ->first();
@@ -156,13 +136,9 @@ class User extends Authenticatable
             return (bool) $override->enabled;
         }
 
-        // Default: sesuai permission bawaan role
         return in_array($permission, $this->defaultPermissions(), true);
     }
 
-    /**
-     * Default permission per role (dipakai kalau tidak ada override).
-     */
     protected function defaultPermissions(): array
     {
         return match ($this->role) {
@@ -199,9 +175,6 @@ class User extends Authenticatable
     |--------------------------------------------------------------------------
     */
 
-    /**
-     * Ambil shift yang sedang aktif untuk user ini.
-     */
     public function activeShift(): ?CashierShift
     {
         return $this->shifts()
@@ -210,9 +183,6 @@ class User extends Authenticatable
             ->first();
     }
 
-    /**
-     * Cek apakah user punya shift aktif.
-     */
     public function hasActiveShift(): bool
     {
         return $this->activeShift() !== null;
