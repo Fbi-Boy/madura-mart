@@ -82,6 +82,18 @@
         <form method="POST" action="{{ route('kasir.buka-shift.store') }}" class="space-y-5">
             @csrf
 
+            @if ($errors->any())
+                <div class="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-300">
+                    {{ $errors->first() }}
+                </div>
+            @endif
+
+            @if (session('success'))
+                <div class="rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-green-700 dark:border-green-500/20 dark:bg-green-500/10 dark:text-green-300">
+                    {{ session('success') }}
+                </div>
+            @endif
+
             {{-- INFO CABANG & KASIR --}}
             <div class="rounded-2xl border border-black/5 bg-white dark:border-white/10 dark:bg-white/5 p-5">
                 <h3 class="text-sm font-semibold text-[#171719] dark:text-white">Informasi Penugasan</h3>

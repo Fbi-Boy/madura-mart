@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Customer;
 
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\Order;

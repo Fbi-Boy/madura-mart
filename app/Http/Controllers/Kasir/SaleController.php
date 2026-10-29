@@ -19,7 +19,7 @@ class SaleController extends Controller
 {
     public function create(): View
     {
-        $customers = Customer::orderBy('name')->get(['id', 'name']);
+       $customers = Customer::orderBy('name')->get(['id', 'name']);
         $products = Product::where('is_active', true)
             ->orderBy('name')
             ->get();
