@@ -23,6 +23,7 @@ class SaleController extends Controller
     public function create(): View
     {
         $customers = Customer::orderBy('name')->get(['id', 'name']);
+
         $products = Product::where('is_active', true)
             ->orderBy('name')
             ->get();
@@ -49,12 +50,12 @@ class SaleController extends Controller
         ));
     }
 
-public function downloadPdf(Request $request, Sale $sale)
-{
-    $request->query->set('download', '1');
+    public function downloadPdf(Request $request, Sale $sale)
+    {
+        $request->query->set('download', '1');
 
-    return $this->receipt($sale, $request);
-}
+        return $this->receipt($sale, $request);
+    }
 
     public function store(Request $request)
     {
@@ -250,20 +251,61 @@ public function downloadPdf(Request $request, Sale $sale)
         $sale->load(['items.product', 'customer', 'user', 'shift']);
 
         if ($request->boolean('download')) {
-            $lineCount = 14;
+            $widthPoints = 80 * 72 / 25.4;
+
+            $estimatedLines = 18;
+            $itemCount = $sale->items->count();
 
             foreach ($sale->items as $item) {
-                $name = (string) ($item->product->name ?? 'Produk tidak tersedia');
-                $lineCount += max(1, (int) ceil(strlen($name) / 22)) + 2;
+                $productName = (string) (
+                    $item->product->name ?? 'Produk tidak tersedia'
+                );
+
+                $quantityPrice = $item->quantity
+                    . ' × Rp '
+                    . number_format($item->unit_price, 0, ',', '.');
+
+                $amount = 'Rp '
+                    . number_format($item->subtotal, 0, ',', '.');
+
+                $nameLines = max(
+                    1,
+                    (int) ceil(mb_strlen($productName) / 32)
+                );
+
+                $detailLines = max(
+                    1,
+                    (int) ceil(mb_strlen($quantityPrice) / 20),
+                    (int) ceil(mb_strlen($amount) / 14)
+                );
+
+                $estimatedLines += $nameLines + $detailLines + 2;
             }
 
-            $heightMm = max(100, 36 + ($lineCount * 4.2));
-            $widthPoints = 80 * 72 / 25.4;
+            $estimatedLines += 8;
+
+            $heightMm = max(
+                80,
+                30 + ($estimatedLines * 3.5) + ($itemCount * 1.5)
+            );
+
             $heightPoints = $heightMm * 72 / 25.4;
 
-            return Pdf::loadView('kasir.transaksi-baru.struk-pdf', compact('sale'))
-                ->setPaper([0, 0, $widthPoints, $heightPoints])
-                ->download('Struk-' . preg_replace('/[^A-Za-z0-9_-]/', '_', $sale->invoice) . '.pdf');
+            $pdf = Pdf::loadView(
+                'kasir.transaksi-baru.struk-pdf',
+                compact('sale')
+            )->setPaper([
+                0,
+                0,
+                $widthPoints,
+                $heightPoints,
+            ]);
+
+            return $pdf->download(
+                'Struk-' .
+                preg_replace('/[^A-Za-z0-9_-]/', '_', $sale->invoice) .
+                '.pdf'
+            );
         }
 
         return view('kasir.transaksi-baru.struk', compact('sale'));
