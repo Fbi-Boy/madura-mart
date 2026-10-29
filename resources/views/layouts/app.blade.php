@@ -15,6 +15,8 @@
         if (localStorage.getItem('theme') === 'dark') {
             document.documentElement.classList.add('dark');
         }
+
+            window.authUserId = @json(auth()->id());
     </script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])

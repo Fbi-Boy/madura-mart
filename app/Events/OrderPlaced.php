@@ -20,7 +20,8 @@ class OrderPlaced implements ShouldBroadcast
         int $orderId,
         float $total,
         string $userName,
-        public int $userId
+        public int $userId,
+        public string $invoice = ''
     ) {
         $this->order_id = $orderId;
         $this->total = $total;
@@ -45,6 +46,7 @@ class OrderPlaced implements ShouldBroadcast
             'order_id' => $this->order_id,
             'total' => $this->total,
             'user_name' => $this->user_name,
+            'invoice' => $this->invoice,
         ];
     }
 }

@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Foundation\Application;
@@ -12,12 +13,16 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+    ->withBroadcasting(
+        __DIR__.'/../routes/channels.php',
+        ['middleware' => ['web', 'auth']]
+    )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'active'     => \App\Http\Middleware\ActiveUserMiddleware::class,
-            'role'       => \App\Http\Middleware\RoleMiddleware::class,
+            'active' => \App\Http\Middleware\ActiveUserMiddleware::class,
+            'role' => \App\Http\Middleware\RoleMiddleware::class,
             'permission' => \App\Http\Middleware\PermissionMiddleware::class,
-            'api.role'   => \App\Http\Middleware\ApiRoleMiddleware::class,   // ← BARU
+            'api.role' => \App\Http\Middleware\ApiRoleMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
