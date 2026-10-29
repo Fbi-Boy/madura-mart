@@ -331,7 +331,7 @@
                 <h3 class="text-[#171719] dark:text-white text-lg">Transaksi Berhasil</h3>
             </div>
 
-            <div id="strukArea" class="bg-white text-black rounded-xl p-4 font-mono text-[11px] leading-relaxed border border-black/10">
+            <div id="strukArea" class="bg-white text-black rounded-xl p-6 font-mono text-[12px] leading-relaxed border border-black/10 w-full max-w-sm">
                 <div class="text-center border-b border-dashed border-black/30 pb-2 mb-2">
                     <p class="text-base font-bold">WAR-MART</p>
                     <p>Jl. Contoh No. 123</p>
@@ -372,7 +372,7 @@
                     <path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/>
                     <rect x="6" y="14" width="12" height="8" rx="1"/>
                 </svg>
-                Cetak Struk
+                Unduh PDF Struk
             </button>
 
             <button type="button" @click="tutupStruk()"
@@ -428,6 +428,7 @@ function saleForm() {
     const nextInvoice = {{ $nextInvoice ?? 1 }};
     const csrfToken   = '{{ csrf_token() }}';
     const storeUrl    = '{{ route('kasir.transaksi-baru.store') }}';
+    const receiptUrl  = @json(route('kasir.transaksi-struk', ['sale' => '__SALE_ID__']));
 
     return {
         products,
@@ -700,25 +701,15 @@ function saleForm() {
         },
 
         cetakStruk() {
-            const el = document.getElementById('strukArea');
-            if (!el) return;
-            const win = window.open('', '', 'width=400,height=600');
-            win.document.write(`<html><head><title>Struk - ${this.lastTransaction?.invoice || ''}</title>
-                <style>
-                    * { margin:0; padding:0; box-sizing:border-box; }
-                    body { font-family:'Courier New',monospace; font-size:12px; line-height:1.5; padding:16px; width:300px; margin:0 auto; }
-                    .flex { display:flex; justify-content:space-between; }
-                    .text-center { text-align:center; }
-                    .border-t { border-top:1px dashed #333; }
-                    .border-b { border-bottom:1px dashed #333; }
-                    .my-2 { margin:8px 0; } .pb-2 { padding-bottom:8px; } .mb-2 { margin-bottom:8px; }
-                    .mt-2 { margin-top:8px; } .pt-2 { padding-top:8px; }
-                    .text-base { font-size:16px; font-weight:bold; } .text-sm { font-size:13px; font-weight:bold; }
-                    .mb-1 { margin-bottom:4px; }
-                </style></head><body>${el.innerHTML}</body></html>`);
-            win.document.close();
-            win.focus();
-            setTimeout(() => { win.print(); }, 250);
+            const saleId = this.lastTransaction?.id;
+
+            if (!saleId) {
+                alert('ID transaksi tidak ditemukan. Silakan periksa data transaksi.');
+                return;
+            }
+
+            const url = receiptUrl.replace('__SALE_ID__', encodeURIComponent(saleId));
+            window.location.href = `${url}?download=pdf`;
         },
 
         tutupStruk() {

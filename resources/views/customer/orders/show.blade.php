@@ -297,8 +297,21 @@
                 </div>
             </section>
 
+
             {{-- ACTIONS --}}
             <section class="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 p-5 space-y-2">
+                @if ($order->payment_status === 'paid')
+                    <a href="{{ route('customer.orders.invoice', $order) }}"
+                       class="w-full h-10 rounded-xl bg-lime-400 hover:bg-lime-500 text-[#171719] text-xs font-bold flex items-center justify-center gap-2 transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <path d="m7 10 5 5 5-5"/>
+                            <path d="M12 15V3"/>
+                        </svg>
+                        Unduh Invoice PDF
+                    </a>
+                @endif
+
                 <a href="{{ route('customer.orders.index') }}"
                    class="w-full h-10 rounded-xl bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 text-[#171719] dark:text-white text-xs font-medium flex items-center justify-center gap-2 transition">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">

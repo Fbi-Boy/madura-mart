@@ -10,16 +10,19 @@ use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleItem;
 use App\Services\StockMovementService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use App\Models\SaleReturn;
+use App\Models\SaleReturnItem;
 
 class SaleController extends Controller
 {
     public function create(): View
     {
-       $customers = Customer::orderBy('name')->get(['id', 'name']);
+        $customers = Customer::orderBy('name')->get(['id', 'name']);
         $products = Product::where('is_active', true)
             ->orderBy('name')
             ->get();
@@ -45,6 +48,13 @@ class SaleController extends Controller
             'shiftAktif'
         ));
     }
+
+public function downloadPdf(Request $request, Sale $sale)
+{
+    $request->query->set('download', '1');
+
+    return $this->receipt($sale, $request);
+}
 
     public function store(Request $request)
     {
@@ -103,7 +113,6 @@ class SaleController extends Controller
 
                 $diskon = (float) ($validated['diskon'] ?? 0);
                 $diskon = min(max(0, $diskon), $subtotal);
-
                 $afterDiskon = $subtotal - $diskon;
                 $tax = round($afterDiskon * 0.11);
                 $total = $afterDiskon + $tax;
@@ -180,6 +189,7 @@ class SaleController extends Controller
             return response()->json([
                 'success' => true,
                 'sale' => [
+                    'id' => $sale->id,
                     'invoice' => $sale->invoice,
                     'kasir' => $sale->user->name ?? '-',
                     'date' => $sale->sale_date->format('d/m/Y H:i'),
@@ -224,7 +234,7 @@ class SaleController extends Controller
         return view('kasir.riwayat-transaksi.index', compact('sales'));
     }
 
-    public function receipt(Sale $sale): View
+    public function receipt(Sale $sale, Request $request)
     {
         $user = Auth::user();
 
@@ -238,6 +248,23 @@ class SaleController extends Controller
         );
 
         $sale->load(['items.product', 'customer', 'user', 'shift']);
+
+        if ($request->boolean('download')) {
+            $lineCount = 14;
+
+            foreach ($sale->items as $item) {
+                $name = (string) ($item->product->name ?? 'Produk tidak tersedia');
+                $lineCount += max(1, (int) ceil(strlen($name) / 22)) + 2;
+            }
+
+            $heightMm = max(100, 36 + ($lineCount * 4.2));
+            $widthPoints = 80 * 72 / 25.4;
+            $heightPoints = $heightMm * 72 / 25.4;
+
+            return Pdf::loadView('kasir.transaksi-baru.struk-pdf', compact('sale'))
+                ->setPaper([0, 0, $widthPoints, $heightPoints])
+                ->download('Struk-' . preg_replace('/[^A-Za-z0-9_-]/', '_', $sale->invoice) . '.pdf');
+        }
 
         return view('kasir.transaksi-baru.struk', compact('sale'));
     }

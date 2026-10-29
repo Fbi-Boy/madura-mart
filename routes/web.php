@@ -182,6 +182,7 @@ Route::middleware(['auth', 'active'])->group(function () {
             // ===== RIWAYAT & STRUK =====
             Route::get('/riwayat-transaksi', [SaleController::class, 'index'])->name('riwayat-transaksi');
             Route::get('/transaksi/{sale}/struk', [SaleController::class, 'receipt'])->name('transaksi-struk');
+            Route::get('/transaksi/{sale}/struk/pdf',[SaleController::class, 'downloadPdf'])->name('transaksi-pdf');
 
             // ===== RETUR =====
             Route::get('/retur', [SaleReturnController::class, 'index'])->name('retur');
@@ -312,6 +313,7 @@ Route::middleware(['auth', 'active'])->group(function () {
         ->middleware('role:customer')
         ->group(function () {
             Route::get('/', [OrderController::class, 'index'])->name('index');
+            Route::get('/{order}/invoice', [OrderController::class, 'invoice'])->name('invoice');
             Route::get('/{order}', [OrderController::class, 'show'])->name('show');
             Route::patch('/{order}/cancel', [OrderController::class, 'cancel'])->name('cancel');
         });

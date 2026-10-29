@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Customer;
 
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\Order;
@@ -10,6 +9,7 @@ use App\Models\Product;
 use App\Services\ActivityLogService;
 use App\Services\StockMovementService;
 use App\Services\OrderStateMachine;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -43,7 +43,10 @@ class OrderController extends Controller
     {
         $customer = $this->customer($request);
 
-        abort_unless($customer && $order->customer_id === $customer->id, 404);
+        abort_unless(
+            $customer && $order->customer_id === $customer->id,
+            404
+        );
 
         $order->load([
             'items.product:id,name,sku,unit',
@@ -62,17 +65,54 @@ class OrderController extends Controller
         $currentStatusIndex = $statusOrder->search($order->status);
 
         if ($order->status === 'cancelled') {
-            $trackingSteps[] = ['key' => 'cancelled', 'label' => 'Pesanan dibatalkan'];
+            $trackingSteps[] = [
+                'key' => 'cancelled',
+                'label' => 'Pesanan dibatalkan',
+            ];
         }
 
-        return view('customer.orders.show', compact('order', 'trackingSteps', 'currentStatusIndex'));
+        return view(
+            'customer.orders.show',
+            compact('order', 'trackingSteps', 'currentStatusIndex')
+        );
+    }
+
+    public function invoice(Request $request, Order $order)
+    {
+        $customer = $this->customer($request);
+
+        abort_unless(
+            $customer && $order->customer_id === $customer->id,
+            404
+        );
+
+        abort_unless(
+            $order->payment_status === 'paid',
+            403,
+            'Invoice hanya tersedia untuk pesanan yang sudah dibayar.'
+        );
+
+        $order->load([
+            'customer',
+            'items.product:id,name,sku,unit',
+        ]);
+
+        $pdf = Pdf::loadView('invoices.invoice', compact('order'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->download(
+            'invoice-' . $order->order_number . '.pdf'
+        );
     }
 
     public function cancel(Request $request, Order $order): RedirectResponse
     {
         $customer = $this->customer($request);
 
-        abort_unless($customer && $order->customer_id === $customer->id, 404);
+        abort_unless(
+            $customer && $order->customer_id === $customer->id,
+            404
+        );
 
         DB::transaction(function () use ($order, $customer, $request): void {
             $lockedOrder = Order::query()
