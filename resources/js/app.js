@@ -1,4 +1,5 @@
 import Alpine from 'alpinejs';
+import './bootstrap';
 import { createIcons, Download, Activity, CalendarDays, SlidersHorizontal } from 'lucide';
 
 window.Alpine = Alpine;
