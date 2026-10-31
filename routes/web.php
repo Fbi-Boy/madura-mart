@@ -128,7 +128,18 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/system-monitoring', [SystemMonitoringController::class, 'index'])->name('system-monitoring.index')->middleware('permission:system-monitoring.view');
 
         Route::resource('categories', CategoryController::class)->except(['show']);
-        Route::resource('products', ProductController::class)->except(['show']);
+                // Produk: Admin dan Super Admin dapat melihat, mengedit, dan menghapus
+        Route::resource('products', ProductController::class)
+            ->except(['show', 'create', 'store']);
+
+        // Tambah produk: khusus Super Admin
+        Route::middleware('role:super-admin')->group(function () {
+            Route::get('/products/create', [ProductController::class, 'create'])
+                ->name('products.create');
+
+            Route::post('/products', [ProductController::class, 'store'])
+                ->name('products.store');
+        });
         Route::resource('suppliers', SupplierController::class)->except(['show']);
         Route::resource('customers', CustomerController::class)->except(['show']);
         Route::resource('couriers', CourierController::class)->except(['show']);

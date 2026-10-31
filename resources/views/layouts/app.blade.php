@@ -17,6 +17,7 @@
         }
 
             window.authUserId = @json(auth()->id());
+            window.authUserRole = @json(auth()->user()->role);
     </script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])

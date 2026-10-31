@@ -19,18 +19,17 @@
             margin: 0;
             padding: 0;
             width: 80mm;
-            background: #ffffff;
-            color: #000000;
             font-family: "DejaVu Sans Mono", monospace;
             font-size: 8px;
             line-height: 1.45;
+            color: #000000;
+            background: #ffffff;
         }
 
         .receipt {
-            width: 80mm;
-            padding: 4mm;
-            margin: 0;
-            background: #ffffff;
+            width: 74mm;
+            margin: 0 3mm;
+            padding: 4mm 0;
         }
 
         .header {
@@ -51,28 +50,28 @@
             margin: 0;
         }
 
-        .line {
-            display: table;
+        table {
             width: 100%;
+            border-collapse: collapse;
             table-layout: fixed;
         }
 
-        .line .left,
-        .line .right {
-            display: table-cell;
+        td {
+            padding: 1px 0;
             vertical-align: top;
             overflow-wrap: break-word;
             word-wrap: break-word;
         }
 
-        .line .left {
-            width: 38%;
+        .label {
+            width: 30%;
             text-align: left;
         }
 
-        .line .right {
-            width: 62%;
+        .value {
+            width: 70%;
             text-align: right;
+            word-wrap: break-word;
         }
 
         .separator {
@@ -80,28 +79,33 @@
             margin: 6px 0;
         }
 
-        .item {
+        .product {
             margin-bottom: 5px;
             page-break-inside: avoid;
         }
 
-        .item-name {
+        .product-name {
             margin-bottom: 2px;
             overflow-wrap: break-word;
             word-wrap: break-word;
         }
 
-        .item-detail .left {
+        .product-table .quantity {
             width: 58%;
+            text-align: left;
         }
 
-        .item-detail .right {
+        .product-table .amount {
             width: 42%;
+            text-align: right;
+            word-wrap: break-word;
         }
 
-        .total {
+        .total td {
             font-size: 9px;
             font-weight: bold;
+            padding-top: 2px;
+            padding-bottom: 2px;
         }
 
         .footer {
@@ -120,82 +124,83 @@
             <p>Jakarta Selatan</p>
         </div>
 
-        <div class="line">
-            <span class="left">No</span>
-            <span class="right">{{ $sale->invoice }}</span>
-        </div>
-
-        <div class="line">
-            <span class="left">Kasir</span>
-            <span class="right">{{ $sale->user->name ?? '-' }}</span>
-        </div>
-
-        <div class="line">
-            <span class="left">Pelanggan</span>
-            <span class="right">{{ $sale->customer->name ?? 'Umum' }}</span>
-        </div>
-
-        <div class="line">
-            <span class="left">Tanggal</span>
-            <span class="right">{{ \Carbon\Carbon::parse($sale->sale_date)->format('d/m/Y H:i') }}</span>
-        </div>
+        <table>
+            <tr>
+                <td class="label">No</td>
+                <td class="value">{{ $sale->invoice }}</td>
+            </tr>
+            <tr>
+                <td class="label">Kasir</td>
+                <td class="value">{{ $sale->user->name ?? '-' }}</td>
+            </tr>
+            <tr>
+                <td class="label">Pelanggan</td>
+                <td class="value">{{ $sale->customer->name ?? 'Umum' }}</td>
+            </tr>
+            <tr>
+                <td class="label">Tanggal</td>
+                <td class="value">{{ \Carbon\Carbon::parse($sale->sale_date)->format('d/m/Y H:i') }}</td>
+            </tr>
+        </table>
 
         <div class="separator"></div>
 
         @foreach ($sale->items as $item)
-            <div class="item">
-                <div class="item-name">
+            <div class="product">
+                <div class="product-name">
                     {{ $item->product->name ?? 'Produk tidak tersedia' }}
                 </div>
 
-                <div class="line item-detail">
-                    <span class="left">
-                        {{ $item->quantity }} × Rp {{ number_format($item->unit_price, 0, ',', '.') }}
-                    </span>
-                    <span class="right">
-                        Rp {{ number_format($item->subtotal, 0, ',', '.') }}
-                    </span>
-                </div>
+                <table class="product-table">
+                    <tr>
+                        <td class="quantity">
+                            {{ $item->quantity }} × Rp {{ number_format($item->unit_price, 0, ',', '.') }}
+                        </td>
+                        <td class="amount">
+                            Rp {{ number_format($item->subtotal, 0, ',', '.') }}
+                        </td>
+                    </tr>
+                </table>
             </div>
         @endforeach
 
         <div class="separator"></div>
 
-        <div class="summary">
-            <div class="line">
-                <span class="left">Subtotal</span>
-                <span class="right">Rp {{ number_format($sale->subtotal, 0, ',', '.') }}</span>
-            </div>
+        <table>
+            <tr>
+                <td class="label">Subtotal</td>
+                <td class="value">Rp {{ number_format($sale->subtotal, 0, ',', '.') }}</td>
+            </tr>
 
             @if ((float) $sale->diskon > 0)
-                <div class="line">
-                    <span class="left">Diskon</span>
-                    <span class="right">Rp {{ number_format($sale->diskon, 0, ',', '.') }}</span>
-                </div>
+                <tr>
+                    <td class="label">Diskon</td>
+                    <td class="value">Rp {{ number_format($sale->diskon, 0, ',', '.') }}</td>
+                </tr>
             @endif
 
-            <div class="line">
-                <span class="left">Pajak</span>
-                <span class="right">Rp {{ number_format($sale->tax, 0, ',', '.') }}</span>
-            </div>
+            <tr>
+                <td class="label">Pajak</td>
+                <td class="value">Rp {{ number_format($sale->tax, 0, ',', '.') }}</td>
+            </tr>
+        </table>
 
-            <div class="separator"></div>
+        <div class="separator"></div>
 
-            <div class="line total">
-                <span class="left">TOTAL</span>
-                <span class="right">Rp {{ number_format($sale->total, 0, ',', '.') }}</span>
-            </div>
-
-            <div class="line">
-                <span class="left">Bayar</span>
-                <span class="right">Rp {{ number_format($sale->paid_amount, 0, ',', '.') }}</span>
-            </div>
-
-            <div class="line">
-                <span class="left">Kembali</span>
-                <span class="right">Rp {{ number_format($sale->change_amount, 0, ',', '.') }}</span>
-            </div>
-        </div>
+        <table>
+            <tr class="total">
+                <td class="label">TOTAL</td>
+                <td class="value">Rp {{ number_format($sale->total, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td class="label">Bayar</td>
+                <td class="value">Rp {{ number_format($sale->paid_amount, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td class="label">Kembali</td>
+                <td class="value">Rp {{ number_format($sale->change_amount, 0, ',', '.') }}</td>
+            </tr>
+        </table>
 
         <div class="footer">
             Terima kasih 🙏
