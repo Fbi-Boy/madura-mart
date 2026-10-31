@@ -128,7 +128,7 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/system-monitoring', [SystemMonitoringController::class, 'index'])->name('system-monitoring.index')->middleware('permission:system-monitoring.view');
 
         Route::resource('categories', CategoryController::class)->except(['show']);
-        Route::resource('products', ProductController::class)->except(['show']);
+        Route::resource('products', ProductController::class)->only(['index', 'edit', 'update', 'destroy']);
         Route::resource('suppliers', SupplierController::class)->except(['show']);
         Route::resource('customers', CustomerController::class)->except(['show']);
         Route::resource('couriers', CourierController::class)->except(['show']);
@@ -147,6 +147,9 @@ Route::middleware(['auth', 'active'])->group(function () {
     */
 
     Route::prefix('admin')->name('admin.')->middleware('role:super-admin')->group(function () {
+        Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+        Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+
         Route::resource('users', UserController::class)->except(['show']);
         Route::patch('users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
         Route::patch('users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
