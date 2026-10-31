@@ -89,6 +89,7 @@ class ProductController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Produk berhasil ditambahkan.',
+                'redirect' => route('admin.products.index'),
                 'data' => [
                     'id' => $product->id,
                     'name' => $product->name,

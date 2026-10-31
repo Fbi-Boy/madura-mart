@@ -175,10 +175,15 @@ function initializeProductAjax() {
                     .flat()[0];
 
                 showAppToast({
-                    type: 'error',
-                    title: 'Periksa data produk',
-                    message: firstError || 'Ada input yang belum sesuai.',
+                    type: 'success',
+                    title: 'Produk berhasil disimpan!',
+                    message: `${result.data?.name || 'Produk baru'} berhasil ditambahkan.`,
                 });
+
+                // Tunggu toast terlihat, kemudian kembali ke daftar produk.
+                window.setTimeout(() => {
+                    window.location.href = result.redirect;
+                }, 1200);
 
                 return;
             }
