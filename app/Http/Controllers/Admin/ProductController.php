@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\ProductCreated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
@@ -33,7 +34,7 @@ class ProductController extends Controller
 
     public function store(ProductStoreRequest $request): RedirectResponse
     {
-        DB::transaction(function () use ($request): void {
+        $product = DB::transaction(function () use ($request): Product {
             $data = $request->validated();
             $initialStock = (int) ($data['stock'] ?? 0);
             $data['stock'] = 0;
@@ -53,7 +54,11 @@ class ProductController extends Controller
                     'Stok awal produk',
                 );
             }
+
+            return $product;
         });
+
+        ProductCreated::dispatch($product->load('category'));
 
         return to_route('admin.products.index')->with('success', 'Produk berhasil ditambahkan.');
     }
