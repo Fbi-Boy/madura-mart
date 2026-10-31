@@ -59,13 +59,14 @@
     @endif
 
     {{-- FORM PRODUK --}}
-    <form
-        id="product-create-form"
-        data-ajax-form="product-create"
-        method="POST"
-        action="{{ route('admin.products.store') }}"
-        class="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 overflow-hidden"
-    >
+        <form
+            id="product-create-form"
+            data-ajax-form="product-create"
+            data-success-redirect="{{ route('admin.products.index') }}"
+            method="POST"
+            action="{{ route('admin.products.store') }}"
+            class="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-white/5 overflow-hidden"
+        >
         @csrf
 
         <div class="px-5 py-4 border-b border-black/5 dark:border-white/10 flex items-center gap-3">
