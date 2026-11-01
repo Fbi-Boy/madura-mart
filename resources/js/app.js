@@ -1,3 +1,4 @@
+
 import Alpine from 'alpinejs';
 import './bootstrap';
 import {
@@ -167,26 +168,31 @@ function initializeProductAjax() {
 
             const result = await response.json().catch(() => ({}));
 
-            // Validasi Laravel.
+            // ========================================
+            // VALIDASI LARAVEL
+            // ========================================
+
             if (response.status === 422) {
-                showProductValidationErrors(form, result.errors || {});
+                showProductValidationErrors(
+                    form,
+                    result.errors || {}
+                );
 
                 const firstError = Object.values(result.errors || {})
                     .flat()[0];
 
                 showAppToast({
-                    type: 'success',
-                    title: 'Produk berhasil disimpan!',
-                    message: `${result.data?.name || 'Produk baru'} berhasil ditambahkan.`,
+                    type: 'error',
+                    title: 'Periksa data produk',
+                    message: firstError || 'Ada input yang belum sesuai.',
                 });
-
-                // Tunggu toast terlihat, kemudian kembali ke daftar produk.
-                window.setTimeout(() => {
-                    window.location.href = result.redirect;
-                }, 1200);
 
                 return;
             }
+
+            // ========================================
+            // RESPONSE ERROR
+            // ========================================
 
             if (!response.ok) {
                 throw new Error(
@@ -194,7 +200,10 @@ function initializeProductAjax() {
                 );
             }
 
-            // Bersihkan form setelah berhasil.
+            // ========================================
+            // BERHASIL MENYIMPAN PRODUK
+            // ========================================
+
             form.reset();
 
             clearProductValidationErrors(form);
@@ -204,6 +213,24 @@ function initializeProductAjax() {
                 title: 'Produk berhasil disimpan!',
                 message: `${result.data?.name || 'Produk baru'} sudah ditambahkan ke katalog Madura Mart.`,
             });
+
+            // ========================================
+            // REDIRECT KE DAFTAR PRODUK
+            // ========================================
+
+            const redirectUrl =
+                result.redirect || form.dataset.successRedirect;
+
+            if (redirectUrl) {
+                window.setTimeout(() => {
+                    window.location.assign(redirectUrl);
+                }, 1200);
+            } else {
+                console.error(
+                    'URL redirect tidak ditemukan:',
+                    result
+                );
+            }
 
         } catch (error) {
             console.error('Product create error:', error);
@@ -534,3 +561,7 @@ function formatRupiah(value) {
         maximumFractionDigits: 0,
     }).format(Number(value) || 0);
 }
+
+
+
+
